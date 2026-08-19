@@ -1,32 +1,82 @@
-# React + TypeScript + Vite
+# IEIH Esports Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A comprehensive full-stack Esports Scouting, Player Recruitment, and Tactical AI Chat application. The platform consists of a React web frontend, a Node.js/Express backend server, and a mobile application built with Expo.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🎯 Purpose of the Application
 
-## React Compiler
+The **IEIH Esports Hub** is designed to streamline esports team management and talent acquisition:
+1. **Player Scouting & Recruitment:** Allows talent scouts and managers to view active player rosters and submit direct scouting offers.
+2. **EEAI Tactical Chatbot:** An integrated AI assistant providing real-time gameplay tactical analysis and strategy suggestions for players and coaches.
+3. **Multi-Platform Support:** Accessible via a responsive web interface (Netlify) and a native mobile application (Android/iOS via Expo).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 📂 Project Structure
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```text
+ieih-app/
+├── backend/                 # Node.js + Express + TypeScript Backend API
+│   ├── src/                 # Source code (server, routes, controllers)
+│   ├── tsconfig.json        # TypeScript configuration
+│   └── package.json         # Backend dependencies & scripts
+│
+├── frontend/                # React + Vite + TypeScript Frontend Client
+│   ├── src/                 # Client source code (components, API services)
+│   ├── src/services/api.ts  # API communication service (Netlify/Local switch)
+│   ├── tailwind.config.js   # Tailwind CSS styling configuration
+│   └── package.json         # Frontend dependencies & scripts
+│
+├── mobile/                  # Expo (React Native) Mobile Application
+│   ├── App.tsx              # Mobile entry point and UI screens
+│   ├── app.json             # Expo project configuration
+│   └── package.json         # Mobile dependencies & scripts
+│
+├── package.json             # Root-level configuration
+└── README.md                # Documentation (this file)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 🛠️ Technology Stack & Purpose
+
+| Component | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Monorepo Structure** | Node.js | Unified project management and scripts. |
+| **Backend** | Express | Handles REST API endpoints (health checks, players list, scout offers, AI chat). |
+| **Backend** | TypeScript / `tsx` | Type-safety and modern ES module execution. |
+| **Backend** | CORS & dotenv | Enables Cross-Origin requests and secures environment variables. |
+| **Frontend** | React 19 | UI component architecture and state management. |
+| **Frontend** | Vite | Ultra-fast local development server and bundler. |
+| **Frontend** | Tailwind CSS | Utility-first styling for responsive layouts. |
+| **Frontend** | Lucide React | Modern, lightweight iconography. |
+| **Mobile** | Expo / React Native | Single codebase for compiling cross-platform iOS & Android mobile apps. |
+| **Mobile** | EAS Build | Cloud compilation of release binaries (`.apk`, `.aab`, `.ipa`). |
+| **Deployment** | Netlify | Automated continuous integration and web hosting. |
+| **Deployment** | Render | Managed cloud hosting for the continuous Express backend service. |
+
+---
+
+## 🚀 Running the App Locally
+
+### 1. Backend Server
+```bash
+cd backend
+npm install
+npm run dev   # Runs the Express server on port 5001
+```
+
+### 2. Frontend Client
+```bash
+cd frontend
+npm install
+npm run dev   # Runs Vite on http://localhost:5173
+```
+
+### 3. Mobile App
+```bash
+cd mobile
+npm install
+npx expo start # Opens Expo developer tools to run on Expo Go or Simulators
+```
