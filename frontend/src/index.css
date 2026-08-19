@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-cyber-cyan: #00F0FF;
+    --color-neon-purple: #8B5CF6;
+    --color-hud-bg: #07070D;
+    --color-hud-surface: #0D0E1A;
+    --color-hud-card: #121426;
+    --color-hud-border: #242848;
+  }
+
+  body {
+    background-color: #07070D;
+    color: #F1F5F9;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #07070D;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #242848;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00F0FF;
+  }
+}
+
+/* Cyber & HUD Utilities */
+.cyber-clip {
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+
+.cyber-clip-sm {
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.cyber-clip-r {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.cyber-clip-badge {
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+.hud-glass {
+  background: rgba(18, 20, 38, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(36, 40, 72, 0.8);
+}
+
+.hud-glass-cyan {
+  background: rgba(0, 240, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+.hud-glass-purple {
+  background: rgba(139, 92, 246, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+/* Glow Text & Borders */
+.glow-text-cyan {
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.7), 0 0 24px rgba(0, 240, 255, 0.3);
+}
+
+.glow-text-purple {
+  text-shadow: 0 0 12px rgba(139, 92, 246, 0.7), 0 0 24px rgba(139, 92, 246, 0.3);
+}
+
+.glow-text-gold {
+  text-shadow: 0 0 12px rgba(255, 184, 0, 0.7), 0 0 24px rgba(255, 184, 0, 0.3);
+}
+
+.glow-text-red {
+  text-shadow: 0 0 12px rgba(255, 70, 85, 0.7), 0 0 24px rgba(255, 70, 85, 0.3);
+}
+
+/* Scanline Effect */
+.scanlines-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Animated Grid Background */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, rgba(139, 92, 246, 0.05) 35%, transparent 70%);
+}
+
+/* Radar polygon styling */
+.radar-grid {
+  stroke: rgba(0, 240, 255, 0.2);
+  stroke-width: 1;
+}
+
+.radar-fill {
+  fill: rgba(0, 240, 255, 0.25);
+  stroke: #00F0FF;
+  stroke-width: 2;
+}
+
+/* Animations */
+@keyframes hudPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.animate-hud-pulse {
+  animation: hudPulse 3s ease-in-out infinite;
+}
+
+@keyframes holographicShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.holo-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(0, 240, 255, 0.08) 25%,
+    rgba(139, 92, 246, 0.08) 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    rgba(0, 240, 255, 0.12) 100%
+  );
+  background-size: 200% 200%;
+  animation: holographicShimmer 8s linear infinite;
+}

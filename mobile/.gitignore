@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Expo temporary & build folders
+.expo/
+.eas/
+dist/
+web-build/
+
+# Native Mobile Bundles & Secrets
+*.apk
+*.aab
+*.ipa
+*.keystore
+*.jks
+
+# Environment
+.env
+.env.local
+
+# OS & Editors
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log

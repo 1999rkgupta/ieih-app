@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# TypeScript Compiled Output
+dist/
+
+# Environment Secrets
+.env
+.env.local
+
+# OS & Editor
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
