@@ -15,6 +15,7 @@ import { CareerBoard } from './components/careers/CareerBoard';
 import { EEAICompanion } from './components/ai/EEAICompanion';
 import { OnboardingWizard } from './components/onboarding/OnboardingWizard';
 import { UniversalSearchModal } from './components/search/UniversalSearchModal';
+import { CreatePostModal } from './components/common/CreatePostModal';
 import { useTheme } from './context/ThemeContext';
 
 import { 
@@ -43,6 +44,7 @@ export function App() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isRecruitOpen, setIsRecruitOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [activeClip, setActiveClip] = useState<HighlightClip | null>(null);
 
   // Global ⌘K / Ctrl+K and '/' shortcut listener
@@ -298,6 +300,20 @@ export function App() {
         }}
       />
 
+      {/* Create Hub Post Modal */}
+      <CreatePostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
+        currentUser={currentUser}
+        onAddHighlight={(newClip) => {
+          const updated = {
+            ...currentUser,
+            clips: [newClip, ...(currentUser.clips || [])]
+          };
+          handleSavePassport(updated);
+        }}
+      />
+
       {/* Footer */}
       <Footer />
 
@@ -305,6 +321,7 @@ export function App() {
       <BottomNavBar
         currentTab={currentTab}
         onNavigate={handleNavigate}
+        onOpenPost={() => setIsPostModalOpen(true)}
       />
     </div>
   );
