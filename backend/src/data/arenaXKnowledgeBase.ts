@@ -213,7 +213,7 @@ export function queryBackendKnowledgeBase(query: string, userGame?: string) {
       replyText: `**In simple words:** ${bestEntry.definition}\n\n**In competitive play (${bestEntry.game}):** ${bestEntry.strategy}\n\n**Counterplay & Risk:** ${bestEntry.counterplay}\n\n**Actionable Drill:** ${bestEntry.drill}`,
       tacticalCard: {
         title: `${bestEntry.game}: ${bestEntry.entity}`,
-        category: `${bestEntry.topic} [Grounding: ARENA-X DB]`,
+        category: `${bestEntry.topic} [Tactical Playbook]`,
         keyPoints: [
           `Core Concept: ${bestEntry.definition}`,
           `Mechanic: ${bestEntry.mechanics}`,
@@ -226,10 +226,10 @@ export function queryBackendKnowledgeBase(query: string, userGame?: string) {
   }
 
   return {
-    replyText: `Telemetry analysis: Based on the ARENA-X Knowledge Base, competitive success requires disciplined trade spacing and macro zone foresight. What tactical scenario would you like to review?`,
+    replyText: `Competitive success requires disciplined trade spacing and macro zone foresight. What tactical scenario or match mechanics would you like to review?`,
     tacticalCard: {
-      title: 'ARENA-X Tactical Advisory',
-      category: 'Esports Grounding Database',
+      title: 'Competitive Tactical Advisory',
+      category: 'Pro Tactical Intelligence',
       keyPoints: [
         'BGMI: Erangel compounds, vehicle convoys, edge rotations, endgame smoke walls',
         'Free Fire MAX: Gloo-wall peeking, Bermuda high-ground, Clash Squad economy',

@@ -536,7 +536,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
       replyText: formattedReply,
       tacticalCard: {
         title: `${bestEntry.game}: ${bestEntry.entity}`,
-        category: `${bestEntry.topic} [Grounding: ARENA-X DB]`,
+        category: `${bestEntry.topic} [Tactical Playbook]`,
         keyPoints: [
           `Core Concept: ${bestEntry.definition}`,
           `Mechanic: ${bestEntry.mechanics}`,
@@ -553,7 +553,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
     if (q.includes('rotate') || q.includes('rotation') || q.includes('br') || q.includes('zone')) {
       const cl = QUICK_REFERENCE_CHECKLISTS.rotation;
       return {
-        replyText: `Here is the official **${cl.title}** from the ARENA-X Esports Knowledge Base:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
+        replyText: `Here is the official **${cl.title}**:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
         tacticalCard: {
           title: cl.title,
           category: 'Tactical Standard Operating Procedure',
@@ -566,7 +566,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
     if (q.includes('fight') || q.includes('teamfight') || q.includes('combat')) {
       const cl = QUICK_REFERENCE_CHECKLISTS.teamfight;
       return {
-        replyText: `Here is the official **${cl.title}** from the ARENA-X Esports Knowledge Base:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
+        replyText: `Here is the official **${cl.title}**:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
         tacticalCard: {
           title: cl.title,
           category: 'Combat Protocol',
@@ -579,7 +579,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
     if (q.includes('vod') || q.includes('review') || q.includes('demo')) {
       const cl = QUICK_REFERENCE_CHECKLISTS.vod;
       return {
-        replyText: `Here is the official **${cl.title}** from the ARENA-X Esports Knowledge Base:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
+        replyText: `Here is the official **${cl.title}**:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
         tacticalCard: {
           title: cl.title,
           category: 'Analytical Framework',
@@ -592,7 +592,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
     if (q.includes('tourney') || q.includes('tournament') || q.includes('lan')) {
       const cl = QUICK_REFERENCE_CHECKLISTS.tournament;
       return {
-        replyText: `Here is the official **${cl.title}** from the ARENA-X Esports Knowledge Base:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
+        replyText: `Here is the official **${cl.title}**:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
         tacticalCard: {
           title: cl.title,
           category: 'Competitive Operations',
@@ -605,7 +605,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
     if (q.includes('career') || q.includes('portfolio') || q.includes('scout') || q.includes('trial')) {
       const cl = QUICK_REFERENCE_CHECKLISTS.career;
       return {
-        replyText: `Here is the official **${cl.title}** from the ARENA-X Esports Knowledge Base:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
+        replyText: `Here is the official **${cl.title}**:\n\n${cl.items.map(i => `• ${i}`).join('\n')}`,
         tacticalCard: {
           title: cl.title,
           category: 'Scout Evaluation Matrix',
@@ -620,7 +620,7 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
   if (q.includes('rule') || q.includes('rules') || q.includes('principles') || q.includes('coaching rule')) {
     const randomRules = AI_COACH_50_RULES.slice(0, 5);
     return {
-      replyText: `According to the **ARENA-X 50 Rules of Esports Coaching**:\n\n${randomRules.map((r, i) => `${i + 1}. ${r}`).join('\n')}\n\n*Reference: ARENA-X AI Coach Knowledge Base (Appendix E)*`,
+      replyText: `Here are core competitive principles from the **Esports Coaching Standard**:\n\n${randomRules.map((r, i) => `${i + 1}. ${r}`).join('\n')}`,
       tacticalCard: {
         title: 'Core Coaching Principles',
         category: 'Esports Philosophy & Ethics',
@@ -632,10 +632,10 @@ export function queryKnowledgeBase(query: string, userGame?: string): {
 
   // Default fallback grounded in the knowledge base
   return {
-    replyText: `Based on the **ARENA-X Esports Knowledge Base**, competitive excellence requires separating individual mechanics from macro decision-making. Could you specify your game (BGMI, Free Fire MAX, or VALORANT) and the tactical scenario (e.g. rotation, compound breach, gloo-wall discipline, site retake, or scouting trials)?`,
+    replyText: `Competitive excellence requires separating individual mechanics from macro decision-making. Could you specify your game (BGMI, Free Fire MAX, or VALORANT) and the tactical scenario (e.g. rotation, compound breach, gloo-wall discipline, site retake, or scouting trials)?`,
     tacticalCard: {
       title: 'Tactical Query Optimization',
-      category: 'ARENA-X Grounding Engine',
+      category: 'Pro Tactical Advisory',
       keyPoints: [
         'Ask about BGMI: Erangel compounds, zone reading, vehicle convoys, Miramar ridges.',
         'Ask about Free Fire MAX: Gloo-wall peeks, Bermuda high-ground, Clash Squad economy, Rusher resets.',

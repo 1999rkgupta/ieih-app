@@ -59,17 +59,17 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     {
       id: 'init_welcome',
       sender: 'assistant',
-      text: `Hello ${currentUser.gamerTag}. I am EE AI — powered by the official **ARENA-X Esports & Competitive Gaming Knowledge Base** (200+ Pages: BGMI, Free Fire MAX, VALORANT, Industry Careers, and Tournament Literacy).\n\nI am synchronized with your **${currentUser.primaryGame}** passport profile (Level ${currentUser.level} Contender, ${currentUser.primaryRole}). You can ask me tactical questions or **attach match photos/screenshots and tournament documents** for direct AI analysis.`,
+      text: `Hello ${currentUser.gamerTag}. I am EE AI — your personal Competitive Esports Coach & Tactical Intelligence Companion.\n\nI am synchronized with your **${currentUser.primaryGame}** passport profile (Level ${currentUser.level} Contender, ${currentUser.primaryRole}). You can ask me tactical questions, strategy breakdowns, game mechanics, or **attach match photos/screenshots and tournament documents** for direct AI analysis.`,
       timestamp: 'Online',
       tacticalCard: {
-        title: `${currentUser.primaryGame} Grounded Playbook`,
-        category: 'ARENA-X Knowledge Base v1.0',
+        title: `${currentUser.primaryGame} Competitive Playbook`,
+        category: 'Pro Coaching Engine v4.2',
         keyPoints: [
           `Athlete Handle: ${currentUser.gamerTag} (${currentUser.passportNumber})`,
           `Verified Primary Role: ${currentUser.primaryRole}`,
-          `Multimodal Support: Attach match screenshots, VOD frames & rulebook PDFs`
+          `Multimodal Support: Attach match screenshots, VOD frames & rulebook documents`
         ],
-        actionItem: 'Ask a specific tactical question or click the attachment icon to analyze a photo/document.'
+        actionItem: 'Ask a tactical question or attach a photo/document for in-depth strategic analysis.'
       }
     }
   ]);
@@ -150,7 +150,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     setPendingAttachments([]);
     setIsTyping(true);
 
-    // AI Tactical Response Generation Grounded in ARENA-X Database
+    // AI Tactical Response Generation Grounded in Competitive Knowledge Base
     setTimeout(() => {
       soundManager.playSuccessBeep();
 
@@ -163,14 +163,14 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
 
       if (hasImage && !text.trim()) {
         const firstImg = attachmentsToSend.find(a => a.type === 'image')!;
-        replyText = `I have received and parsed your uploaded gameplay screenshot: **${firstImg.name}**.\n\n**Visual Telemetry Analysis:**\n• **Combat & Spacing:** Reticle placement and engagement distance match competitive ${currentUser.primaryGame} standards.\n• **Information Advantage:** Before committing to this duel, verify whether trade support is within 15 meters.\n• **VOD Review Rule:** According to the **ARENA-X VOD Review Protocol** (Appendix B), inspect if you had hard cover and if enemy utility was active.\n\nWould you like me to generate a specific drill or break down rotation options for this position?`;
+        replyText = `I have received and parsed your uploaded gameplay screenshot: **${firstImg.name}**.\n\n**Visual Telemetry Analysis:**\n• **Combat & Spacing:** Reticle placement and engagement distance match competitive ${currentUser.primaryGame} standards.\n• **Information Advantage:** Before committing to this duel, verify whether trade support is within 15 meters.\n• **VOD Review Protocol:** Inspect whether you have immediate hard cover within one stride and confirm whether enemy utility is active.\n\nWould you like me to generate a specific drill or break down rotation options for this position?`;
         tacticalCard = {
           title: `Visual Telemetry: ${firstImg.name}`,
           category: 'Screenshot & VOD Diagnostics',
           keyPoints: [
             `Analyzed File: ${firstImg.name} (${firstImg.sizeFormatted})`,
             `Primary Game Alignment: ${currentUser.primaryGame}`,
-            `Status: Processed against ARENA-X Tactical Model`
+            `Status: Tactical Breakdown Complete`
           ],
           actionItem: 'Run the Team Fight Checklist (First-Contact, Trade, Flank, Reset) on this scenario.',
           checklist: [
@@ -182,14 +182,14 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
         };
       } else if (hasDoc && !text.trim()) {
         const firstDoc = attachmentsToSend.find(a => a.type === 'document')!;
-        replyText = `I have ingested and analyzed your document: **${firstDoc.name}** (${firstDoc.sizeFormatted}).\n\n**Tournament & Compliance Audit (ARENA-X Database):**\n• **Roster Verification:** Match player passport numbers with official tournament registration sheets.\n• **Integrity Clause:** Ensure recording/POV software is active throughout match brackets.\n• **Dispute Windows:** Official rulebooks mandate protests must be submitted within 15 minutes of match conclusion.\n\nAll athletes on your roster should complete their pre-match technical and latency checks.`;
+        replyText = `I have ingested and analyzed your document: **${firstDoc.name}** (${firstDoc.sizeFormatted}).\n\n**Tournament & Compliance Audit:**\n• **Roster Verification:** Match player passport numbers with official tournament registration sheets.\n• **Integrity Clause:** Ensure recording/POV software is active throughout match brackets.\n• **Dispute Windows:** Official rulebooks mandate protests must be submitted within 15 minutes of match conclusion.\n\nAll athletes on your roster should complete their pre-match technical and latency checks.`;
         tacticalCard = {
           title: `Document Audit: ${firstDoc.name}`,
           category: 'Tournament & Rulebook Compliance',
           keyPoints: [
             `Verified Document: ${firstDoc.name}`,
             `Format: ${firstDoc.fileExtension.toUpperCase()} Document`,
-            `Audit Standard: ARENA-X Tournament Readiness`
+            `Audit Standard: Official Tournament Regulations`
           ],
           actionItem: 'Verify player registration IDs in your team roster before the tournament check-in deadline.',
           checklist: [
@@ -261,18 +261,18 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
               <Bot className="w-3.5 h-3.5" />
-              <span>ARENA-X Grounded Engine</span>
+              <span>Competitive Intelligence Engine</span>
             </div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-xs font-semibold border border-amber-500/20">
               <BookOpen className="w-3.5 h-3.5" />
-              <span>200+ Pages Esports Knowledge Base</span>
+              <span>Pro Playbooks & Meta Strategies</span>
             </div>
           </div>
           <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
             EE AI Tactical Coach & Advisor
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
-            Direct real-time strategic analysis grounded in the official ARENA-X Knowledge Base. Upload gameplay screenshots, scoreboard photos, or tournament documents for diagnostic feedback.
+            Direct real-time strategic analysis. Upload gameplay screenshots, scoreboard photos, or tournament documents for diagnostic feedback.
           </p>
         </div>
       </div>
@@ -422,7 +422,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           {isTyping && (
             <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-sky-600 dark:text-sky-400 font-semibold shadow-sm">
               <Sparkles className="w-3.5 h-3.5 animate-spin" />
-              <span>Analyzing Uploaded Telemetry & ARENA-X Database...</span>
+              <span>Analyzing Tactical Telemetry & Match Data...</span>
             </div>
           )}
 
