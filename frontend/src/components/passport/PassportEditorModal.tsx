@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
-import { X, Save, ShieldCheck, Sparkles, Gamepad2, Crosshair, User, Cpu } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, Save, ShieldCheck, Sparkles, Gamepad2, Crosshair, User, Cpu, Upload, Trash2, Camera } from 'lucide-react';
 import { PlayerPassport, GameType, RoleType, SkillTier, AvailabilityStatus } from '../../types';
 import { soundManager } from '../../utils/audio';
+
+const PRESET_AVATARS = [
+  'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=400&auto=format&fit=crop&q=80'
+];
 
 interface PassportEditorModalProps {
   passport: PlayerPassport;
@@ -16,6 +25,22 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<PlayerPassport>({ ...passport });
   const [activeSubTab, setActiveSubTab] = useState<'profile' | 'stats' | 'gear'>('profile');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        if (result) {
+          soundManager.playSuccessBeep();
+          setFormData(prev => ({ ...prev, avatarUrl: result }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleGamePerformanceChange = (field: string, val: any) => {
     const game = formData.primaryGame;
@@ -135,6 +160,81 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1 bg-white dark:bg-[#111726]">
           {activeSubTab === 'profile' && (
             <div className="space-y-4">
+              {/* Profile Picture Section */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 space-y-3">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wider">
+                  Profile Picture
+                </label>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-slate-300 dark:border-white/20 shrink-0 bg-slate-900 flex items-center justify-center">
+                    {formData.avatarUrl ? (
+                      <img src={formData.avatarUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white font-black text-lg font-mono">
+                        {formData.gamerTag.slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileUpload}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        Upload Photo
+                      </button>
+                      {formData.avatarUrl && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            soundManager.playClickSound();
+                            setFormData(prev => ({ ...prev, avatarUrl: '' }));
+                          }}
+                          className="px-3 py-1.5 text-rose-500 hover:bg-rose-500/10 rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Preset Avatars Row */}
+                    <div className="flex items-center gap-2 pt-1">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">Presets:</span>
+                      <div className="flex items-center gap-1.5">
+                        {PRESET_AVATARS.map((avatar, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              soundManager.playClickSound();
+                              setFormData(prev => ({ ...prev, avatarUrl: avatar }));
+                            }}
+                            className={`w-7 h-7 rounded-lg overflow-hidden border transition-all ${
+                              formData.avatarUrl === avatar
+                                ? 'border-sky-500 ring-2 ring-sky-500/40 scale-105'
+                                : 'border-slate-300 dark:border-white/10 hover:border-sky-400 opacity-80 hover:opacity-100'
+                            }`}
+                          >
+                            <img src={avatar} alt="Preset" className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 block mb-1">GamerTag / Handle</label>

@@ -183,6 +183,10 @@ export function App() {
               onShare={() => setIsShareOpen(true)}
               onScout={() => setIsRecruitOpen(true)}
               onOpenClip={clip => setActiveClip(clip)}
+              onUpdateAvatar={(newAvatarUrl) => {
+                const updated = { ...selectedPlayer, avatarUrl: newAvatarUrl };
+                handleSavePassport(updated);
+              }}
             />
           </div>
         )}

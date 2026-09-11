@@ -198,15 +198,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 onNavigate('passport');
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all duration-200 select-none ${
+              className={`flex items-center gap-2 py-1 pl-1.5 pr-2.5 rounded-full border transition-all duration-200 select-none ${
                 currentTab === 'passport'
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
                   : 'bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 shadow-sm'
               }`}
               title="View Profile"
             >
-              <div className="text-left leading-tight">
-                <span className="text-xs font-bold tracking-tight block truncate max-w-[110px]">
+              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20 bg-slate-900 flex items-center justify-center">
+                {currentUser.avatarUrl ? (
+                  <img src={currentUser.avatarUrl} alt={currentUser.gamerTag} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[10px] font-bold font-mono text-sky-400">
+                    {currentUser.gamerTag.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div className="text-left leading-tight hidden xs:block">
+                <span className="text-xs font-bold tracking-tight block truncate max-w-[100px]">
                   {currentUser.gamerTag}
                 </span>
                 <span className={`text-[9px] font-semibold block ${
@@ -249,17 +258,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSwitchUser(p);
                         setUserDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between gap-2 text-xs transition-all ${
+                      className={`w-full px-2.5 py-1.5 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
                         p.id === currentUser.id
                           ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
                           : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
                       }`}
                     >
-                      <div className="truncate">
+                      <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 bg-slate-900 flex items-center justify-center">
+                        {p.avatarUrl ? (
+                          <img src={p.avatarUrl} alt={p.gamerTag} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-[9px] font-bold font-mono text-sky-400">
+                            {p.gamerTag.slice(0, 2).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div className="truncate flex-1 min-w-0">
                         <div className="font-semibold text-xs truncate text-slate-900 dark:text-white">{p.gamerTag}</div>
                         <div className="text-[10px] text-slate-500 dark:text-slate-400">{p.primaryGame} • {p.primaryRole}</div>
                       </div>
-                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400 shrink-0">
                         L{p.level}
                       </span>
                     </button>
