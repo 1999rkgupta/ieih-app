@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { X, Copy, Check, Share2, ShieldCheck } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
-import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface SharePassportModalProps {
   passport: PlayerPassport;
@@ -50,26 +49,23 @@ export const SharePassportModal: React.FC<SharePassportModalProps> = ({ passport
 
         {/* Digital Preview Card */}
         <div className="my-5 p-4 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 relative overflow-hidden group">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <InstagramAvatar size="lg" className="border-2 border-slate-200 dark:border-white/20" />
-              <div className="absolute -bottom-1 -right-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 p-1 rounded-full">
-                <ShieldCheck className="w-3 h-3" />
-              </div>
-            </div>
-
+          <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h4 className="font-bold text-base text-slate-900 dark:text-white truncate">
                   {passport.gamerTag}
                 </h4>
+                <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
                 <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-full font-mono">
                   {passport.tier}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{passport.realName} • {passport.primaryGame}</p>
-              <p className="text-xs font-mono text-sky-600 dark:text-sky-400 font-semibold mt-0.5">{passport.passportNumber}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{passport.realName} • {passport.primaryGame}</p>
+              <p className="text-xs font-mono text-sky-600 dark:text-sky-400 font-semibold mt-1">{passport.passportNumber}</p>
             </div>
+            <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 rounded-lg shrink-0">
+              L{passport.level}
+            </span>
           </div>
         </div>
 

@@ -5,7 +5,8 @@ import {
   MapPin, 
   ShieldCheck, 
   Sparkles, 
-  CheckCircle2
+  CheckCircle2,
+  User
 } from 'lucide-react';
 import { CollegiateClub } from '../../types';
 import { soundManager } from '../../utils/audio';
@@ -117,8 +118,8 @@ export const CollegiateCampus: React.FC<CollegiateCampusProps> = ({ clubs }) => 
 
                 {/* Captain info */}
                 <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <img src={club.captain.avatar} alt="Captain" className="w-6 h-6 rounded-full object-cover" />
+                  <div className="flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-sky-500" />
                     <span>Lead: <strong className="text-slate-900 dark:text-white font-semibold">{club.captain.gamerTag}</strong></span>
                   </div>
                   <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">{club.contactEmail}</span>

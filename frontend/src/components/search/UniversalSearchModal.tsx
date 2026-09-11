@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import { PlayerPassport, Tournament, CollegiateClub, JobOpportunity } from '../../types';
 import { soundManager } from '../../utils/audio';
-import { InstagramAvatar } from '../common/InstagramAvatar';
 
 export type SearchCategory = 'all' | 'players' | 'tournaments' | 'colleges' | 'careers' | 'actions' | 'ai';
 
@@ -56,7 +55,6 @@ export interface SearchResultItem {
   badge?: string;
   badgeColor?: string;
   icon?: React.ReactNode;
-  avatarUrl?: string;
   data?: any;
   action: () => void;
 }
@@ -292,11 +290,11 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
           category: 'players',
           title: player.gamerTag,
           subtitle: `${player.realName} • ${player.primaryGame} ${player.primaryRole} • ${player.city}, ${player.state} (${player.passportNumber})`,
-          badge: player.tier,
+          badge: `L${player.level} • ${player.tier}`,
           badgeColor: player.tier === 'Legend' 
             ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
             : 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20',
-          avatarUrl: player.avatarUrl,
+          icon: <ShieldCheck className="w-5 h-5 text-sky-500" />,
           data: player,
           action: () => {
             soundManager.playClickSound();
@@ -651,13 +649,9 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    {/* Visual Icon / Avatar */}
+                    {/* Visual Icon */}
                     <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 flex items-center justify-center bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
-                      {item.avatarUrl ? (
-                        <InstagramAvatar size="md" className="w-full h-full" />
-                      ) : (
-                        item.icon || <Compass className="w-5 h-5 text-sky-500" />
-                      )}
+                      {item.icon || <Compass className="w-5 h-5 text-sky-500" />}
                     </div>
 
                     {/* Text Details */}

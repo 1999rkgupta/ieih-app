@@ -26,7 +26,6 @@ import { soundManager } from '../../utils/audio';
 import { MOCK_TICKER_ITEMS } from '../../data/mockData';
 import { useTheme } from '../../context/ThemeContext';
 import { IEIHLogo } from '../common/IEIHLogo';
-import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface NavbarProps {
   currentTab: string;
@@ -199,18 +198,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 onNavigate('passport');
               }}
-              className={`flex items-center gap-2 py-1 pl-1 pr-2.5 rounded-full border transition-all duration-200 select-none ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all duration-200 select-none ${
                 currentTab === 'passport'
                   ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
                   : 'bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 shadow-sm'
               }`}
               title="View Profile"
             >
-              <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20">
-                <InstagramAvatar size="sm" className="w-full h-full" />
-              </div>
-              <div className="text-left leading-tight hidden xs:block">
-                <span className="text-xs font-bold tracking-tight block truncate max-w-[100px]">
+              <div className="text-left leading-tight">
+                <span className="text-xs font-bold tracking-tight block truncate max-w-[110px]">
                   {currentUser.gamerTag}
                 </span>
                 <span className={`text-[9px] font-semibold block ${
@@ -253,19 +249,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSwitchUser(p);
                         setUserDropdownOpen(false);
                       }}
-                      className={`w-full p-2 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
+                      className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between gap-2 text-xs transition-all ${
                         p.id === currentUser.id
                           ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
                           : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
                       }`}
                     >
-                      <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-white/10">
-                        <InstagramAvatar size="sm" className="w-full h-full" />
-                      </div>
                       <div className="truncate">
                         <div className="font-semibold text-xs truncate text-slate-900 dark:text-white">{p.gamerTag}</div>
                         <div className="text-[10px] text-slate-500 dark:text-slate-400">{p.primaryGame} • {p.primaryRole}</div>
                       </div>
+                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[10px] font-mono font-bold text-slate-600 dark:text-slate-400">
+                        L{p.level}
+                      </span>
                     </button>
                   ))}
                 </div>

@@ -240,12 +240,7 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
                 className="p-5 rounded-2xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-500/40 shadow-sm hover:shadow-md cursor-pointer transition-all flex flex-col justify-between space-y-4 group"
               >
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={player.avatarUrl}
-                      alt={player.gamerTag}
-                      className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-white/10 group-hover:scale-105 transition-transform"
-                    />
+                  <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-1.5">
                         <h4 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
@@ -253,11 +248,14 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
                         </h4>
                         <ShieldCheck className="w-4 h-4 text-sky-500" />
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{player.realName} • {player.state}</p>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full mt-1 inline-block">
-                        {player.tier} • Lvl {player.level}
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{player.realName} • {player.state}</p>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full mt-1.5 inline-block">
+                        {player.tier}
                       </span>
                     </div>
+                    <span className="text-xs font-mono font-bold px-2 py-1 bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-white/10">
+                      L{player.level}
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 text-center text-xs pt-1">

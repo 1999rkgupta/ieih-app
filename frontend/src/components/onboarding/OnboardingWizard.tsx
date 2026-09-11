@@ -21,15 +21,6 @@ interface OnboardingWizardProps {
   onCancel?: () => void;
 }
 
-const CYBER_AVATARS = [
-  'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=400&auto=format&fit=crop&q=80'
-];
-
 export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   onComplete,
   onCancel
@@ -43,7 +34,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   const [age, setAge] = useState(19);
   const [state, setState] = useState('Maharashtra');
   const [city, setCity] = useState('Mumbai');
-  const [selectedAvatar, setSelectedAvatar] = useState(CYBER_AVATARS[0]);
 
   // Step 2 State
   const [primaryGame, setPrimaryGame] = useState<GameType>('VALORANT');
@@ -90,7 +80,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       passportNumber: `IND-ESP-2026-${Math.floor(1000 + Math.random() * 9000)}`,
       gamerTag: gamerTag || 'PIONEER_ATHLETE',
       realName: realName || 'Pro Contender',
-      avatarUrl: selectedAvatar,
+      avatarUrl: '',
       bannerUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&auto=format&fit=crop&q=80',
       age: age || 20,
       state: state || 'India',
@@ -282,7 +272,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               Create Your Player Identity
             </h3>
             <p className="text-sm text-text-muted mt-1">
-              Choose your competitive handle and verified avatar for the Indian esports passport registry.
+              Choose your competitive handle and identity details for the Indian esports passport registry.
             </p>
           </div>
 
@@ -340,35 +330,6 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   onChange={e => setCity(e.target.value)}
                   className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all"
                 />
-              </div>
-            </div>
-
-            {/* Avatar Picker */}
-            <div className="pt-2">
-              <label className="text-xs font-semibold text-text-secondary block mb-2.5">SELECT PROFILE AVATAR</label>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                {CYBER_AVATARS.map((avatar, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => {
-                      soundManager.playClickSound();
-                      setSelectedAvatar(avatar);
-                    }}
-                    className={`relative rounded-2xl overflow-hidden aspect-square border-2 transition-all group ${
-                      selectedAvatar === avatar
-                        ? 'border-text-primary shadow-md scale-105'
-                        : 'border-surface-border hover:border-text-secondary opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={avatar} alt="Avatar option" className="w-full h-full object-cover" />
-                    {selectedAvatar === avatar && (
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <Check className="w-5 h-5 text-white drop-shadow" />
-                      </div>
-                    )}
-                  </button>
-                ))}
               </div>
             </div>
           </div>
@@ -554,13 +515,18 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-surface-base border border-surface-border max-w-sm mx-auto text-left flex items-center gap-3.5 shadow-sm">
-            <img src={selectedAvatar} alt="Avatar" className="w-12 h-12 rounded-xl object-cover border border-surface-border" />
+          <div className="p-4 rounded-2xl bg-surface-base border border-surface-border max-w-sm mx-auto text-left flex items-center justify-between shadow-sm">
             <div className="min-w-0">
-              <div className="font-bold text-sm text-text-primary truncate">{gamerTag || 'PIONEER'}</div>
-              <div className="text-xs text-text-muted">{primaryGame} • {primaryRole}</div>
-              <div className="text-[11px] font-mono font-medium text-accent-cyan mt-0.5">IND-ESP-2026-NEW</div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm text-text-primary truncate">{gamerTag || 'PIONEER'}</span>
+                <ShieldCheck className="w-4 h-4 text-accent-cyan shrink-0" />
+              </div>
+              <div className="text-xs text-text-muted mt-0.5">{primaryGame} • {primaryRole}</div>
+              <div className="text-[11px] font-mono font-medium text-accent-cyan mt-1">IND-ESP-2026-NEW</div>
             </div>
+            <span className="px-2.5 py-1 bg-surface-border text-text-primary font-bold text-xs rounded-lg font-mono">
+              Lvl 1
+            </span>
           </div>
         </div>
       )}

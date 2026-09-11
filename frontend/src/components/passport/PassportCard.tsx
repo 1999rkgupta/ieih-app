@@ -17,7 +17,6 @@ import {
 import { PlayerPassport, GameType, HighlightClip } from '../../types';
 import { RadarChart } from './RadarChart';
 import { soundManager } from '../../utils/audio';
-import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface PassportCardProps {
   passport: PlayerPassport;
@@ -100,24 +99,17 @@ export const PassportCard: React.FC<PassportCardProps> = ({
       {/* Main Content Body */}
       <div className="px-5 sm:px-8 pb-8 pt-0 relative">
         {/* Player Profile Identity Row */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-14 sm:-mt-16 mb-6 relative z-20">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-            {/* Avatar - Instagram default profile icon */}
-            <div className="relative group self-start">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white dark:border-[#101622] shadow-md bg-slate-200 dark:bg-slate-700/80 flex items-center justify-center">
-                <InstagramAvatar size="xl" className="w-full h-full" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 px-2.5 py-0.5 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[11px] rounded-full shadow-md font-mono">
-                L{passport.level}
-              </div>
-            </div>
-
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pt-6 mb-6 relative z-20">
+          <div className="flex flex-col gap-2">
             {/* Gamertag & Real Name */}
             <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight">
                   {passport.gamerTag}
                 </h1>
+                <span className="px-2.5 py-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-xs rounded-lg shadow-sm font-mono">
+                  L{passport.level}
+                </span>
                 {passport.currentTeam && (
                   <span className="px-2.5 py-0.5 bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                     [{passport.currentTeam.tag}] {passport.currentTeam.name}

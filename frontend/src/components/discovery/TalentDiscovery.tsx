@@ -310,40 +310,30 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
               key={player.id}
               className="group relative rounded-3xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-500/40 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden p-5 space-y-4"
             >
-              {/* Header Row: Avatar, Info, and Synergy Score */}
+              {/* Header Row: Info and Synergy Score */}
               <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="relative shrink-0">
-                    <img
-                      src={player.avatarUrl}
-                      alt={player.gamerTag}
-                      className="w-13 h-13 rounded-full object-cover border border-slate-200 dark:border-white/10 group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute -bottom-1 -right-1 px-1.5 py-0.2 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-[9px] font-bold rounded-full">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
+                      {player.gamerTag}
+                    </h3>
+                    <span className="px-1.5 py-0.5 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-[10px] font-bold rounded-md">
                       L{player.level}
-                    </div>
+                    </span>
+                    {player.isVerified && (
+                      <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
+                    )}
                   </div>
-
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
-                        {player.gamerTag}
-                      </h3>
-                      {player.isVerified && (
-                        <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {player.realName} • {player.city}, {player.state}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full">
-                        {player.tier}
-                      </span>
-                      <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                        {player.availability}
-                      </span>
-                    </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    {player.realName} • {player.city}, {player.state}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full">
+                      {player.tier}
+                    </span>
+                    <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      {player.availability}
+                    </span>
                   </div>
                 </div>
 

@@ -177,16 +177,18 @@ export const CareerBoard: React.FC<CareerBoardProps> = ({ jobs, currentUser }) =
             </p>
 
             {/* Passport Preview card attached */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 flex items-center gap-3">
-              <img src={currentUser.avatarUrl} alt="Avatar" className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-white/10" />
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="font-bold text-sm text-slate-900 dark:text-white">{currentUser.gamerTag}</span>
                   <ShieldCheck className="w-3.5 h-3.5 text-sky-500" />
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{currentUser.primaryGame} • {currentUser.primaryRole} • Lvl {currentUser.level}</p>
-                <p className="text-xs font-mono text-sky-600 dark:text-sky-400 font-semibold">{currentUser.passportNumber}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{currentUser.primaryGame} • {currentUser.primaryRole}</p>
+                <p className="text-xs font-mono text-sky-600 dark:text-sky-400 font-semibold mt-0.5">{currentUser.passportNumber}</p>
               </div>
+              <span className="px-2.5 py-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-xs rounded-lg font-mono">
+                L{currentUser.level}
+              </span>
             </div>
 
             {appliedSuccess ? (

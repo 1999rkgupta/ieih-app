@@ -54,55 +54,45 @@ export const PlayerCompareModal: React.FC<PlayerCompareModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Player 1 Card */}
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#151c2c] border border-sky-500/30 relative overflow-hidden shadow-sm">
-              <div className="flex items-center gap-3">
-                <img
-                  src={player1.avatarUrl}
-                  alt={player1.gamerTag}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-sky-500"
-                />
+              <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="font-bold text-base text-slate-900 dark:text-white">
                       {player1.gamerTag}
                     </h4>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full font-mono">
-                      L{player1.level}
-                    </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{player1.realName} • {player1.state}</p>
-                  <div className="flex items-center gap-2 mt-1 text-xs font-semibold">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{player1.realName} • {player1.state}</p>
+                  <div className="flex items-center gap-2 mt-2 text-xs font-semibold">
                     <span className="text-sky-600 dark:text-sky-400">{player1.primaryGame}</span>
                     <span>•</span>
                     <span className="text-slate-500 dark:text-slate-400">{player1.primaryRole}</span>
                   </div>
                 </div>
+                <span className="text-xs font-semibold px-2 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-lg font-mono border border-sky-500/20">
+                  L{player1.level}
+                </span>
               </div>
             </div>
 
             {/* Player 2 Card */}
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#151c2c] border border-rose-500/30 relative overflow-hidden shadow-sm">
-              <div className="flex items-center gap-3">
-                <img
-                  src={player2.avatarUrl}
-                  alt={player2.gamerTag}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-rose-500"
-                />
+              <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="font-bold text-base text-slate-900 dark:text-white">
                       {player2.gamerTag}
                     </h4>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-full font-mono">
-                      L{player2.level}
-                    </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{player2.realName} • {player2.state}</p>
-                  <div className="flex items-center gap-2 mt-1 text-xs font-semibold">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{player2.realName} • {player2.state}</p>
+                  <div className="flex items-center gap-2 mt-2 text-xs font-semibold">
                     <span className="text-rose-600 dark:text-rose-400">{player2.primaryGame}</span>
                     <span>•</span>
                     <span className="text-slate-500 dark:text-slate-400">{player2.primaryRole}</span>
                   </div>
                 </div>
+                <span className="text-xs font-semibold px-2 py-1 bg-rose-500/10 text-rose-600 dark:text-rose-400 rounded-lg font-mono border border-rose-500/20">
+                  L{player2.level}
+                </span>
               </div>
             </div>
           </div>
