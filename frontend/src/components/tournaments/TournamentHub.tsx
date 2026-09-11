@@ -262,7 +262,7 @@ export const TournamentHub: React.FC<TournamentHubProps> = ({
           tournament={activeModalTournament}
           currentUser={currentUser}
           isRegistered={registeredIds.includes(activeModalTournament.id)}
-          onRegistered={handleRegisterSuccess}
+          onRegistered={() => handleRegisterSuccess(activeModalTournament.id)}
           onClose={() => setActiveModalTournament(null)}
         />
       )}

@@ -62,6 +62,11 @@ class SoundManager {
     }
   }
 
+  // Tab switch audio
+  public playTabSwitchSound() {
+    this.playClickSound();
+  }
+
   // Cyber chirp for filters & radar
   public playGlitchChirp() {
     if (this.isMuted) return;
