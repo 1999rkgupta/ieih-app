@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
+import { BottomNavBar } from './components/layout/BottomNavBar';
 import { Footer } from './components/layout/Footer';
 import { HeroCommandCenter } from './components/home/HeroCommandCenter';
 import { PassportCard } from './components/passport/PassportCard';
@@ -124,7 +125,7 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-28 sm:pb-32 relative z-10">
         {/* Tab 1: Hub Command Center (Home) */}
         {currentTab === 'home' && (
           <HeroCommandCenter
@@ -295,6 +296,12 @@ export function App() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Instagram-Style Fixed Bottom Menu Bar */}
+      <BottomNavBar
+        currentTab={currentTab}
+        onNavigate={handleNavigate}
+      />
     </div>
   );
 }

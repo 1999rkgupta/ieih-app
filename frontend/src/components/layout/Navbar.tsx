@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ShieldCheck, 
   Volume2, 
   VolumeX, 
   Zap, 
-  Menu, 
-  X, 
-  Home, 
-  Trophy, 
   Search, 
-  User, 
-  GraduationCap, 
-  Briefcase, 
-  Bot,
   ChevronDown,
   Sun,
-  Moon,
-  Radar
+  Moon
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
@@ -44,7 +34,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [tickerIndex, setTickerIndex] = useState(0);
 
@@ -60,15 +49,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     const muted = soundManager.toggleMute();
     setIsMuted(muted);
   };
-
-  const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'discovery', label: 'Talent Radar', icon: Radar },
-    { id: 'tournaments', label: 'Tournaments', icon: Trophy },
-    { id: 'campus', label: 'Campus', icon: GraduationCap },
-    { id: 'careers', label: 'Careers', icon: Briefcase },
-    { id: 'ai', label: 'EE AI', icon: Bot },
-  ];
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#090c13]/85 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/10 transition-colors duration-200">
@@ -213,45 +193,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Center Desktop Nav Items & Universal Search */}
-        <div className="hidden lg:flex items-center gap-3">
-          <nav className="flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 p-1 rounded-full border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
-            {navItems.map(item => {
-              const Icon = item.icon;
-              const isActive = currentTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    soundManager.playClickSound();
-                    onNavigate(item.id);
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 select-none ${
-                    isActive
-                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Quick Omnisearch Trigger (Desktop) */}
+        {/* Center: Universal Omnisearch Bar (Desktop) */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
           <button
             onClick={() => {
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/10 transition-all text-xs group cursor-pointer shadow-xs"
+            className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/10 transition-all text-xs group cursor-pointer shadow-xs"
             title="Search across all players, tournaments, colleges, jobs & commands (⌘K)"
           >
-            <Search className="w-3.5 h-3.5 text-sky-500 group-hover:scale-110 transition-transform" />
-            <span className="font-medium text-slate-600 dark:text-slate-300">
-              Search entire app...
-            </span>
+            <div className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-sky-500 group-hover:scale-110 transition-transform" />
+              <span className="font-medium text-slate-600 dark:text-slate-300">
+                Search entire app...
+              </span>
+            </div>
             <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-semibold bg-white dark:bg-white/10 text-slate-500 dark:text-slate-300 rounded border border-slate-200/80 dark:border-white/10 shadow-2xs">
               ⌘K
             </kbd>
@@ -259,14 +216,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Right Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Mobile Search Button */}
           <button
             onClick={() => {
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="p-2 lg:hidden rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all"
+            className="p-2 md:hidden rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all"
             title="Search app (⌘K)"
             aria-label="Open search"
           >
@@ -305,86 +262,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playSuccessBeep();
               onNavigate('onboarding');
             }}
-            className="hidden sm:flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-full transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-full transition-all shadow-sm"
           >
             <Zap className="w-3.5 h-3.5 fill-current" />
-            <span>Mint Passport</span>
-          </button>
-
-          {/* Mobile menu hamburger */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full"
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            <span className="hidden xs:inline">Mint</span>
+            <span>Passport</span>
           </button>
         </div>
       </div>
-
-      {/* Mobile Navigation Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden p-3 bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 space-y-1 animate-fadeIn">
-          {/* Mobile Omnisearch Quick Link */}
-          <button
-            onClick={() => {
-              soundManager.playClickSound();
-              setMobileMenuOpen(false);
-              onOpenSearch();
-            }}
-            className="w-full p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-300 transition-all mb-2"
-          >
-            <div className="flex items-center gap-2">
-              <Search className="w-4 h-4 text-sky-500" />
-              <span>Search entire app...</span>
-            </div>
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-white/10 rounded border border-sky-300 dark:border-sky-500/40">
-              ⌘K
-            </kbd>
-          </button>
-          {/* Mobile Profile Card Link */}
-          <button
-            onClick={() => {
-              soundManager.playClickSound();
-              onNavigate('passport');
-              setMobileMenuOpen(false);
-            }}
-            className={`w-full p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all mb-1.5 border ${
-              currentTab === 'passport'
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold border-transparent'
-                : 'bg-slate-100/70 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200'
-            }`}
-          >
-            <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20">
-              <InstagramAvatar size="sm" className="w-full h-full" />
-            </div>
-            <span>Profile ({currentUser.gamerTag})</span>
-          </button>
-
-          {navItems.map(item => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  soundManager.playClickSound();
-                  onNavigate(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`w-full p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
-                  isActive 
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold' 
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
     </header>
   );
 };
