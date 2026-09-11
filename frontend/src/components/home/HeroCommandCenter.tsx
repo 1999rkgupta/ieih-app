@@ -58,7 +58,7 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
 
           {/* Subheading */}
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal">
-            The professional gaming identity and tournament network for Indian esports athletes. Mint your cryptographic <strong className="text-slate-900 dark:text-white font-semibold">E-Player Passport</strong>, get scouted by Tier-1 franchises, and compete in verified arenas.
+            The professional gaming identity and tournament network for Indian esports athletes. Mint your cryptographic profile, get scouted by Tier-1 franchises, and compete in verified arenas.
           </p>
 
           {/* Hero CTAs */}
