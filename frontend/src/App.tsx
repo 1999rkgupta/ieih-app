@@ -13,6 +13,8 @@ import { CollegiateCampus } from './components/campus/CollegiateCampus';
 import { CareerBoard } from './components/careers/CareerBoard';
 import { EEAICompanion } from './components/ai/EEAICompanion';
 import { OnboardingWizard } from './components/onboarding/OnboardingWizard';
+import { UniversalSearchModal } from './components/search/UniversalSearchModal';
+import { useTheme } from './context/ThemeContext';
 
 import { 
   getStoredPlayers, 
@@ -28,16 +30,45 @@ import { PlayerPassport, HighlightClip } from './types';
 import { soundManager } from './utils/audio';
 
 export function App() {
+  const { theme, toggleTheme } = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [allPlayers, setAllPlayers] = useState<PlayerPassport[]>(getStoredPlayers());
   const [currentUser, setCurrentUser] = useState<PlayerPassport>(getCurrentUserPassport());
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerPassport>(currentUser);
+  const [isMuted, setIsMuted] = useState(soundManager.getMuted());
 
   // Modals
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isRecruitOpen, setIsRecruitOpen] = useState(false);
   const [activeClip, setActiveClip] = useState<HighlightClip | null>(null);
+
+  // Global ⌘K / Ctrl+K and '/' shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // ⌘K or Ctrl+K to toggle Omnisearch
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        soundManager.playClickSound();
+        setIsSearchOpen(prev => !prev);
+      }
+      // Quick '/' trigger when not inside an input
+      else if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        e.preventDefault();
+        soundManager.playClickSound();
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleToggleMute = () => {
+    const muted = soundManager.toggleMute();
+    setIsMuted(muted);
+  };
 
   // Handle Tab navigation
   const handleNavigate = (tab: string) => {
@@ -89,6 +120,7 @@ export function App() {
         currentUser={currentUser}
         allPlayers={allPlayers}
         onSwitchUser={handleSwitchUser}
+        onOpenSearch={() => setIsSearchOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -231,6 +263,35 @@ export function App() {
           onClose={() => setActiveClip(null)}
         />
       )}
+
+      {/* Universal Omnisearch Engine Modal (⌘K) */}
+      <UniversalSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        players={allPlayers}
+        tournaments={MOCK_TOURNAMENTS}
+        colleges={MOCK_COLLEGIATE_CLUBS}
+        jobs={MOCK_JOBS}
+        currentUser={currentUser}
+        onNavigate={handleNavigate}
+        onSelectPlayer={handleSelectPlayer}
+        onToggleTheme={toggleTheme}
+        isDarkMode={theme === 'dark'}
+        isMuted={isMuted}
+        onToggleMute={handleToggleMute}
+        onSelectTournament={(tourney) => {
+          handleNavigate('tournaments');
+        }}
+        onSelectCollege={(college) => {
+          handleNavigate('campus');
+        }}
+        onSelectJob={(job) => {
+          handleNavigate('careers');
+        }}
+        onAskAI={(prompt) => {
+          handleNavigate('ai');
+        }}
+      />
 
       {/* Footer */}
       <Footer />

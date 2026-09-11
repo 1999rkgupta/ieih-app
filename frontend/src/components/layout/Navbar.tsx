@@ -15,7 +15,8 @@ import {
   Bot,
   ChevronDown,
   Sun,
-  Moon
+  Moon,
+  Radar
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
@@ -30,6 +31,7 @@ interface NavbarProps {
   currentUser: PlayerPassport;
   allPlayers: PlayerPassport[];
   onSwitchUser: (player: PlayerPassport) => void;
+  onOpenSearch: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -37,7 +39,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate,
   currentUser,
   allPlayers,
-  onSwitchUser
+  onSwitchUser,
+  onOpenSearch
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
@@ -60,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'discovery', label: 'Talent Radar', icon: Search },
+    { id: 'discovery', label: 'Talent Radar', icon: Radar },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'campus', label: 'Campus', icon: GraduationCap },
     { id: 'careers', label: 'Careers', icon: Briefcase },
@@ -210,33 +213,66 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Center Desktop Nav Items (Spotify-style pill items) */}
-        <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 p-1 rounded-full border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
-          {navItems.map(item => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  soundManager.playClickSound();
-                  onNavigate(item.id);
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 select-none ${
-                  isActive
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+        {/* Center Desktop Nav Items & Universal Search */}
+        <div className="hidden lg:flex items-center gap-3">
+          <nav className="flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 p-1 rounded-full border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
+            {navItems.map(item => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    soundManager.playClickSound();
+                    onNavigate(item.id);
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 select-none ${
+                    isActive
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Quick Omnisearch Trigger (Desktop) */}
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              onOpenSearch();
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/10 transition-all text-xs group cursor-pointer shadow-xs"
+            title="Search across all players, tournaments, colleges, jobs & commands (⌘K)"
+          >
+            <Search className="w-3.5 h-3.5 text-sky-500 group-hover:scale-110 transition-transform" />
+            <span className="font-medium text-slate-600 dark:text-slate-300">
+              Search entire app...
+            </span>
+            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-semibold bg-white dark:bg-white/10 text-slate-500 dark:text-slate-300 rounded border border-slate-200/80 dark:border-white/10 shadow-2xs">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
 
         {/* Right Controls */}
         <div className="flex items-center gap-2">
+          {/* Mobile Search Button */}
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              onOpenSearch();
+            }}
+            className="p-2 lg:hidden rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all"
+            title="Search app (⌘K)"
+            aria-label="Open search"
+          >
+            <Search className="w-4 h-4 text-sky-500" />
+          </button>
+
           {/* Theme Switcher Toggle */}
           <button
             onClick={() => {
@@ -289,6 +325,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden p-3 bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 space-y-1 animate-fadeIn">
+          {/* Mobile Omnisearch Quick Link */}
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              setMobileMenuOpen(false);
+              onOpenSearch();
+            }}
+            className="w-full p-2.5 rounded-xl text-xs font-semibold flex items-center justify-between bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-300 transition-all mb-2"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-sky-500" />
+              <span>Search entire app...</span>
+            </div>
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-white/10 rounded border border-sky-300 dark:border-sky-500/40">
+              ⌘K
+            </kbd>
+          </button>
           {/* Mobile Profile Card Link */}
           <button
             onClick={() => {
