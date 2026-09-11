@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Volume2, 
   VolumeX, 
@@ -6,7 +6,10 @@ import {
   Search, 
   ChevronDown,
   Sun,
-  Moon
+  Moon,
+  Bell,
+  CheckCheck,
+  Clock
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
@@ -35,7 +38,72 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { theme, toggleTheme } = useTheme();
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [tickerIndex, setTickerIndex] = useState(0);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const [notifications, setNotifications] = useState([
+    {
+      id: 'notif-1',
+      title: 'Skyesports Grand Slam: Round 2 Match',
+      desc: 'Check in for your Swiss-stage match starting in 30 mins.',
+      time: '15m ago',
+      unread: true,
+      tag: 'Tournament',
+      tagColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+      actionTab: 'tournaments'
+    },
+    {
+      id: 'notif-2',
+      title: 'IIT Bombay Esports: Tryout Invitation',
+      desc: 'Team Captain sent an official invite for collegiate scrims.',
+      time: '1h ago',
+      unread: true,
+      tag: 'Campus',
+      tagColor: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20',
+      actionTab: 'campus'
+    },
+    {
+      id: 'notif-3',
+      title: 'Trust Escrow Verified: ₹25 Lakhs Locked',
+      desc: 'Krafton India Series escrow guarantee approved by auditor.',
+      time: '3h ago',
+      unread: true,
+      tag: 'Security',
+      tagColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+      actionTab: 'tournaments'
+    },
+    {
+      id: 'notif-4',
+      title: 'EE AI Companion: Aim Telemetry Ready',
+      desc: 'Weekly clutch conversion & radar benchmark analysis generated.',
+      time: 'Yesterday',
+      unread: false,
+      tag: 'AI Coach',
+      tagColor: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20',
+      actionTab: 'ai'
+    }
+  ]);
+
+  // Click outside to close notifications dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotificationsOpen(false);
+      }
+    };
+    if (notificationsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [notificationsOpen]);
+
+  const unreadCount = notifications.filter(n => n.unread).length;
+
+  const handleMarkAllRead = () => {
+    soundManager.playSuccessBeep();
+    setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+  };
 
   // Live ticker rotation
   useEffect(() => {
@@ -229,6 +297,105 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Search className="w-4 h-4 text-sky-500" />
           </button>
+
+          {/* Notifications Dropdown Container */}
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => {
+                soundManager.playClickSound();
+                setNotificationsOpen(!notificationsOpen);
+              }}
+              className={`relative p-2 rounded-full border transition-all duration-200 shadow-sm ${
+                notificationsOpen
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent'
+                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Notifications"
+              aria-label="View notifications"
+            >
+              <Bell className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-[#090c13] shadow-sm animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {/* Notification Dropdown Panel */}
+            {notificationsOpen && (
+              <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+                {/* Header */}
+                <div className="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+                      Notifications
+                    </span>
+                    {unreadCount > 0 && (
+                      <span className="px-1.5 py-0.2 text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-full">
+                        {unreadCount} new
+                      </span>
+                    )}
+                  </div>
+
+                  {unreadCount > 0 && (
+                    <button
+                      onClick={handleMarkAllRead}
+                      className="text-[11px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 flex items-center gap-1 transition-colors"
+                    >
+                      <CheckCheck className="w-3.5 h-3.5" />
+                      <span>Mark all read</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Notification Items List */}
+                <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5 p-1.5">
+                  {notifications.map(n => (
+                    <div
+                      key={n.id}
+                      onClick={() => {
+                        soundManager.playClickSound();
+                        setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, unread: false } : item));
+                        onNavigate(n.actionTab);
+                        setNotificationsOpen(false);
+                      }}
+                      className={`p-3 rounded-xl cursor-pointer transition-all flex items-start gap-3 ${
+                        n.unread
+                          ? 'bg-sky-50/50 dark:bg-sky-500/5 hover:bg-sky-50 dark:hover:bg-sky-500/10'
+                          : 'hover:bg-slate-50 dark:hover:bg-white/5 opacity-80'
+                      }`}
+                    >
+                      <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-sky-500" style={{ visibility: n.unread ? 'visible' : 'hidden' }}></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-0.5">
+                          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${n.tagColor}`}>
+                            {n.tag}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                            <Clock className="w-2.5 h-2.5" />
+                            {n.time}
+                          </span>
+                        </div>
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                          {n.title}
+                        </h4>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-snug">
+                          {n.desc}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="p-2 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-center">
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    All notifications verified by IEIH Trust Protocol
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Theme Switcher Toggle */}
           <button
