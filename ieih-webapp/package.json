@@ -1,0 +1,17 @@
+{
+  "name": "ieih-platform-root",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:mobile": "npm --prefix mobile run start",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "build:apk": "npm --prefix mobile run build:android",
+    "build:ipa": "npm --prefix mobile run build:ios",
+    "cap:sync": "npm --prefix frontend run cap:sync",
+    "cap:open:android": "npm --prefix frontend run cap:open:android"
+  }
+}
