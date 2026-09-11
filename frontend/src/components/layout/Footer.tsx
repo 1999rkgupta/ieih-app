@@ -6,9 +6,9 @@ export const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-white dark:bg-[#0c111d] border-t border-slate-200 dark:border-white/10 mt-20 relative transition-colors duration-200 pb-24 sm:pb-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 xl:gap-8">
           {/* Col 1: Identity & Mission */}
-          <div className="space-y-4 md:col-span-1">
+          <div className="space-y-4">
             <IEIHLogo size="md" subtitle="India Esports Hub" />
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               India Esports Innovation Hub (भारत ईस्पोर्ट्स इनोवेशन हब) — National infrastructure powering digital esports athlete passports, fair play audits, and tournament escrow.
@@ -19,7 +19,20 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 2: Core Platform Portals */}
+          {/* Col 2: About Us (Proposed Platform Concept) */}
+          <div className="space-y-3">
+            <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200 tracking-wider uppercase">
+              About Us
+            </h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              <strong className="font-semibold text-slate-900 dark:text-slate-200 block mb-1">
+                Proposed Platform Concept:
+              </strong>
+              A unified ecosystem connecting gamers, esports players, coaches, teams, organisations, tournament organisers, creators/casters, sponsors, and educational campuses.
+            </p>
+          </div>
+
+          {/* Col 3: Core Platform Portals */}
           <div className="space-y-3">
             <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200 tracking-wider uppercase">
               Platform
