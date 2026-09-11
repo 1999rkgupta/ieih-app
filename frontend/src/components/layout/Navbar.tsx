@@ -9,7 +9,17 @@ import {
   Moon,
   Bell,
   CheckCheck,
-  Clock
+  Clock,
+  Menu,
+  X,
+  Home,
+  User,
+  Radar,
+  Trophy,
+  GraduationCap,
+  Briefcase,
+  Bot,
+  ArrowRight
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
@@ -39,8 +49,33 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
   const [tickerIndex, setTickerIndex] = useState(0);
   const notifRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const all7Keys = [
+    { id: 'home', label: 'Home', subtitle: 'Command Center & Live Radar', icon: Home },
+    { id: 'passport', label: 'E-Player Passport', subtitle: 'Verified Esports Identity & Stats', icon: User },
+    { id: 'discovery', label: 'Talent Radar', subtitle: 'Scouting & Player Discovery', icon: Radar },
+    { id: 'tournaments', label: 'Tournaments', subtitle: 'National Cups & Verified Brackets', icon: Trophy },
+    { id: 'campus', label: 'Campus Network', subtitle: '250+ Inter-University Chapters', icon: GraduationCap },
+    { id: 'careers', label: 'Careers Board', subtitle: 'Pro Team & Production Contracts', icon: Briefcase },
+    { id: 'ai', label: 'EE AI Companion', subtitle: 'Tactical Coaching & VOD Insights', icon: Bot },
+  ];
+
+  // Click outside to close 3-line menu drawer
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuDrawerOpen(false);
+      }
+    };
+    if (menuDrawerOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuDrawerOpen]);
 
   const [notifications, setNotifications] = useState([
     {
@@ -423,18 +458,111 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-sky-500" />}
           </button>
 
-          {/* Mint CTA Button */}
-          <button
-            onClick={() => {
-              soundManager.playSuccessBeep();
-              onNavigate('onboarding');
-            }}
-            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-full transition-all shadow-sm"
-          >
-            <Zap className="w-3.5 h-3.5 fill-current" />
-            <span className="hidden xs:inline">Mint</span>
-            <span>Passport</span>
-          </button>
+          {/* 3-Line Menu Button with All 7 Keys */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => {
+                soundManager.playClickSound();
+                setMenuDrawerOpen(!menuDrawerOpen);
+              }}
+              className={`p-2 rounded-full border transition-all duration-200 shadow-sm flex items-center justify-center ${
+                menuDrawerOpen
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent'
+                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Menu (All 7 Keys)"
+              aria-label="Toggle navigation menu"
+            >
+              {menuDrawerOpen ? (
+                <X className="w-4 h-4 transition-transform rotate-90 duration-200" />
+              ) : (
+                <Menu className="w-4 h-4" />
+              )}
+            </button>
+
+            {/* 3-Line Menu Drawer Dropdown Panel */}
+            {menuDrawerOpen && (
+              <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+                {/* Header */}
+                <div className="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+                      Navigation Menu
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 rounded-full">
+                      7 Keys
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-400">IEIH v2.6</span>
+                </div>
+
+                {/* The 7 Keys List */}
+                <div className="p-2 max-h-[70vh] overflow-y-auto space-y-1">
+                  {all7Keys.map((item, idx) => {
+                    const Icon = item.icon;
+                    const isActive = currentTab === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          soundManager.playClickSound();
+                          onNavigate(item.id);
+                          setMenuDrawerOpen(false);
+                        }}
+                        className={`w-full p-2.5 rounded-xl text-left flex items-center justify-between gap-3 transition-all duration-150 ${
+                          isActive
+                            ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold border border-sky-500/20 shadow-xs'
+                            : 'hover:bg-slate-100/80 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-transparent'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            isActive
+                              ? 'bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 shadow-sm'
+                              : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300'
+                          }`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+
+                          <div className="truncate">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                                {item.label}
+                              </span>
+                              <span className="text-[9px] font-mono text-slate-400">#{idx + 1}</span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                              {item.subtitle}
+                            </p>
+                          </div>
+                        </div>
+
+                        <ArrowRight className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+                          isActive ? 'text-sky-600 dark:text-sky-400 translate-x-0.5' : 'text-slate-400 opacity-40'
+                        }`} />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Footer Action: Mint Passport CTA */}
+                <div className="p-2.5 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]">
+                  <button
+                    onClick={() => {
+                      soundManager.playSuccessBeep();
+                      onNavigate('onboarding');
+                      setMenuDrawerOpen(false);
+                    }}
+                    className="w-full py-2 px-3 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                  >
+                    <Zap className="w-3.5 h-3.5 fill-current" />
+                    <span>+ Mint New E-Player Passport</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
