@@ -17,6 +17,7 @@ import {
 import { PlayerPassport, GameType, HighlightClip } from '../../types';
 import { RadarChart } from './RadarChart';
 import { soundManager } from '../../utils/audio';
+import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface PassportCardProps {
   passport: PlayerPassport;
@@ -101,14 +102,10 @@ export const PassportCard: React.FC<PassportCardProps> = ({
         {/* Player Profile Identity Row */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-14 sm:-mt-16 mb-6 relative z-20">
           <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-            {/* Avatar */}
+            {/* Avatar - Instagram default profile icon */}
             <div className="relative group self-start">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white dark:border-[#101622] shadow-md bg-slate-100 dark:bg-slate-800">
-                <img
-                  src={passport.avatarUrl}
-                  alt={passport.gamerTag}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white dark:border-[#101622] shadow-md bg-slate-200 dark:bg-slate-700/80 flex items-center justify-center">
+                <InstagramAvatar size="xl" className="w-full h-full" />
               </div>
               <div className="absolute -bottom-1 -right-1 px-2.5 py-0.5 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[11px] rounded-full shadow-md font-mono">
                 L{passport.level}

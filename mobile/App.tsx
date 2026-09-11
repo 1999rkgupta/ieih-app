@@ -490,10 +490,9 @@ export default function App() {
               </View>
 
               <View style={styles.profileRow}>
-                <Image
-                  source={{ uri: selectedPlayer.avatarUrl }}
-                  style={styles.avatarLg}
-                />
+                <View style={[styles.avatarLg, { backgroundColor: '#1E293B', alignItems: 'center', justifyContent: 'center', borderRadius: 32, borderColor: '#334155' }]}>
+                  <Text style={{ fontSize: 26, color: '#94A3B8' }}>👤</Text>
+                </View>
                 <View style={styles.profileInfo}>
                   <Text style={styles.gamerTagMain}>
                     {selectedPlayer.gamerTag} ✔

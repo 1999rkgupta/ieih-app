@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Copy, Check, Share2, ShieldCheck } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
+import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface SharePassportModalProps {
   passport: PlayerPassport;
@@ -51,11 +52,7 @@ export const SharePassportModal: React.FC<SharePassportModalProps> = ({ passport
         <div className="my-5 p-4 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 relative overflow-hidden group">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <img
-                src={passport.avatarUrl}
-                alt={passport.gamerTag}
-                className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-white/20"
-              />
+              <InstagramAvatar size="lg" className="border-2 border-slate-200 dark:border-white/20" />
               <div className="absolute -bottom-1 -right-1 bg-slate-900 text-white dark:bg-white dark:text-slate-950 p-1 rounded-full">
                 <ShieldCheck className="w-3 h-3" />
               </div>
