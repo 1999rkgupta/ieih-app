@@ -140,21 +140,20 @@ app.post('/api/jobs/:id/apply', (req, res) => {
   });
 });
 
-// EE AI Tactical Assistant Endpoint
+import { queryBackendKnowledgeBase } from './data/arenaXKnowledgeBase.js';
+
+// EE AI Tactical Assistant Endpoint (Grounded by ARENA-X Knowledge Base)
 app.post('/api/ai/chat', (req, res) => {
-  const { query, gamerTag } = req.body;
-  const text = query.toLowerCase();
-
-  let responseText = `Telemetry analysis for ${gamerTag}: You are tracking in the top echelon of Indian competitive athletes. Focus on scrim consistency and official tournament registrations.`;
-
-  if (text.includes('bgmi') || text.includes('igl') || text.includes('rotation')) {
-    responseText = `For Tier-1 BGMI lobbies (like BMPS/BGIS): prioritize early vehicle split (2-2 or 3-1 scout setup). In Zone 3-4 shifts, establish high ground perimeter control on hard cover rather than compound camping.`;
-  } else if (text.includes('valorant') || text.includes('duelist') || text.includes('agent')) {
-    responseText = `For aggressive entry fraggers in Valorant: Pair Jett or Raze with Fade or Sova recon utility. Focus your first-bullet accuracy drills to maintain >35% headshot rate.`;
+  const { query, gamerTag, game } = req.body;
+  if (!query) {
+    return res.status(400).json({ error: 'Query is required' });
   }
 
+  const result = queryBackendKnowledgeBase(query, game);
   res.json({
-    reply: responseText,
+    reply: result.replyText,
+    tacticalCard: result.tacticalCard,
+    gamerTag,
     timestamp: new Date().toISOString()
   });
 });

@@ -6,10 +6,15 @@ import {
   Zap, 
   Target, 
   ShieldCheck, 
-  RotateCcw
+  RotateCcw,
+  BookOpen,
+  CheckCircle2,
+  Layers,
+  Award
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
+import { queryKnowledgeBase, QUICK_REFERENCE_CHECKLISTS } from '../../data/arenaXKnowledgeBase';
 
 interface EEAIMessage {
   id: string;
@@ -21,14 +26,18 @@ interface EEAIMessage {
     category: string;
     keyPoints: string[];
     actionItem?: string;
+    checklist?: string[];
   };
 }
 
 const PRESET_TACTICAL_PROMPTS = [
-  "How can I optimize my Bind B-Site retake with Jett?",
-  "Recommend a weekly aim training schedule for Valorant Immortal rank",
-  "Analyze current BGMI meta rotation paths for Erangel Zone 4",
-  "What are Tier-1 esports organizations looking for in scrim trials?"
+  "How to rotate on Erangel Zone 4 in BGMI?",
+  "Explain gloo-wall peeking in Free Fire MAX",
+  "Attack-side defaults on Valorant Ascent",
+  "What do Tier-1 scouts look for in trials?",
+  "Show Battle Royale Rotation Checklist",
+  "What is the Team Fight checklist?",
+  "What are the 50 rules of esports coaching?"
 ];
 
 export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ currentUser }) => {
@@ -36,17 +45,17 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     {
       id: 'init_welcome',
       sender: 'assistant',
-      text: `Hello ${currentUser.gamerTag}. I am EE AI — the national tactical companion for the India Esports Innovation Hub. I am synchronized with your ${currentUser.primaryGame} performance dossier (Level ${currentUser.level} Contender, ${currentUser.primaryRole}). How can I optimize your competitive game today?`,
+      text: `Hello ${currentUser.gamerTag}. I am EE AI — powered by the official **ARENA-X Esports & Competitive Gaming Knowledge Base** (200+ Pages: BGMI, Free Fire MAX, VALORANT, Industry Careers, and Tournament Literacy).\n\nI am synchronized with your **${currentUser.primaryGame}** passport profile (Level ${currentUser.level} Contender, ${currentUser.primaryRole}). Ask me anything about rotations, compound defense, site retakes, gloo-wall timing, trial preparation, or tournament rulebooks.`,
       timestamp: 'Online',
       tacticalCard: {
-        title: `${currentUser.primaryGame} Role Directive`,
-        category: 'Player Synergy Audit',
+        title: `${currentUser.primaryGame} Grounded Playbook`,
+        category: 'ARENA-X Knowledge Base v1.0',
         keyPoints: [
-          `Current Primary Role: ${currentUser.primaryRole}`,
-          `Scrim Rating MMR: ${currentUser.gamePerformances[currentUser.primaryGame]?.scrimMmr || 2100}`,
-          `K/D Benchmark: ${currentUser.gamePerformances[currentUser.primaryGame]?.kdRatio.toFixed(2)} (Verified)`
+          `Athlete Handle: ${currentUser.gamerTag} (${currentUser.passportNumber})`,
+          `Verified Primary Role: ${currentUser.primaryRole}`,
+          `Grounded Topics: Rotations, Compounds, Defaults, Retakes, Scouting & VODs`
         ],
-        actionItem: 'Focus on communication utility and early site entry trade discipline in tonight\'s scrims.'
+        actionItem: 'Ask a specific tactical scenario below or pick from the recommended queries.'
       }
     }
   ]);
@@ -80,106 +89,89 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     if (!textToSend) setInputValue('');
     setIsTyping(true);
 
-    // AI Tactical Response Generation
+    // AI Tactical Response Generation Grounded in ARENA-X Database
     setTimeout(() => {
       soundManager.playSuccessBeep();
-      let replyText = `Analyzing tactical parameters for "${text}"...`;
-      let card: EEAIMessage['tacticalCard'] = undefined;
 
-      const lower = text.toLowerCase();
-      if (lower.includes('retake') || lower.includes('bind') || lower.includes('jett')) {
-        replyText = "For Bind B-Site retakes as Jett, the primary flaw in amateur rosters is dry-peeking Hookah. Use your flash initiator or fade eye before updrafting into container.";
-        card = {
-          title: 'Bind B-Site Retake Execution',
-          category: 'Tactical Playbook',
-          keyPoints: [
-            'Coordinate double-smoke on Elbow & Garden cross.',
-            'Hold dash for post-plant defuse delay or immediate tap-bait.',
-            'Maintain crossfire with your CT anchor.'
-          ],
-          actionItem: 'Practice rapid dash-cancel timings in custom lobbies.'
-        };
-      } else if (lower.includes('aim') || lower.includes('schedule') || lower.includes('routine')) {
-        replyText = "At your current tier, raw aim is secondary to crosshair placement and micro-adjustments. Here is a proven 45-minute daily drill protocol:";
-        card = {
-          title: 'Immortal/Radiant Daily Warmup Routine',
-          category: 'Mechanics Conditioning',
-          keyPoints: [
-            '15 Mins: Aimlabs Sixshot / Microflex (Precision focus)',
-            '15 Mins: The Range (50 bots Strafe + Armor, Sheriff only)',
-            '15 Mins: 2x Deathmatches practicing silent crosshair pre-aim'
-          ],
-          actionItem: 'Never enter competitive rated matches without completing the 30-minute benchmark.'
-        };
-      } else if (lower.includes('bgmi') || lower.includes('erangel') || lower.includes('rotation')) {
-        replyText = "For Erangel Zone 4 shifts, central compound holding (such as Pochinki hills or School apartments) often becomes a high-casualty chokepoint. Transition to edge-holding near water towers.";
-        card = {
-          title: 'BGMI Zone 4 Edge Rotation',
-          category: 'Zone Macro',
-          keyPoints: [
-            'Secure vehicular mobility (2 Buggies + 1 Dacia minimum).',
-            'Split 2-2 scouts 150m apart to avoid entire squad wipeouts.',
-            'Smoke line deployment: 6 smokes minimum for open field crossing.'
-          ],
-          actionItem: 'Assign dedicated smoke-thrower in squad comms.'
-        };
-      } else {
-        replyText = `Understood. Based on your verified passport metrics, I recommend focusing on round-start tempo control and squad utility synchronization. Tier-1 recruiters prioritize consistent trade efficiency over highlight reels.`;
-        card = {
-          title: 'Competitive Growth Directive',
-          category: 'Scout Readiness',
-          keyPoints: [
-            'Maintain 95%+ attendance in scheduled tournament scrims.',
-            'Log verified highlight clips from official tournament lobbies.',
-            'Participate in collegiate chapter trials to build team chemistry.'
-          ],
-          actionItem: 'Review upcoming tournament registrations in Tournament Hub.'
-        };
-      }
+      const knowledgeResult = queryKnowledgeBase(text, currentUser.primaryGame);
 
       const botReply: EEAIMessage = {
         id: `bot_${Date.now()}`,
         sender: 'assistant',
-        text: replyText,
+        text: knowledgeResult.replyText,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        tacticalCard: card
+        tacticalCard: knowledgeResult.tacticalCard
       };
 
       setMessages(prev => [...prev, botReply]);
       setIsTyping(false);
-    }, 1000);
+    }, 600);
+  };
+
+  // Helper to render markdown-style bold and paragraphs
+  const renderFormattedText = (text: string) => {
+    return text.split('\n\n').map((paragraph, pIdx) => {
+      return (
+        <p key={pIdx} className={pIdx > 0 ? 'mt-2.5' : ''}>
+          {paragraph.split('\n').map((line, lIdx) => {
+            const parts = line.split(/(\*\*.*?\*\*)/g);
+            return (
+              <React.Fragment key={lIdx}>
+                {lIdx > 0 && <br />}
+                {parts.map((part, partIdx) => {
+                  if (part.startsWith('**') && part.endsWith('**')) {
+                    return (
+                      <strong key={partIdx} className="font-bold text-slate-900 dark:text-white">
+                        {part.slice(2, -2)}
+                      </strong>
+                    );
+                  }
+                  return part;
+                })}
+              </React.Fragment>
+            );
+          })}
+        </p>
+      );
+    });
   };
 
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header Banner */}
       <div className="relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#101622] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
-        <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
-            <Bot className="w-3.5 h-3.5" />
-            <span>Tactical Companion Engine</span>
+        <div className="relative z-10 max-w-3xl space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
+              <Bot className="w-3.5 h-3.5" />
+              <span>ARENA-X Grounded Engine</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-xs font-semibold border border-amber-500/20">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>200+ Pages Esports Knowledge Base</span>
+            </div>
           </div>
           <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
             EE AI Tactical Coach & Advisor
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
-            Direct real-time AI strategic analysis for Indian competitive gamers. Scrim playbooks, squad chemistry metrics, weapon recoil patterns, and Tier-1 scout advice.
+            Direct real-time strategic analysis grounded in the official ARENA-X Knowledge Base. Covers BGMI Erangel/Miramar rotations, Free Fire MAX gloo-wall combat, VALORANT attack defaults/retakes, and Tier-1 scouting pathways.
           </p>
         </div>
       </div>
 
       {/* Main Glass Chat Terminal */}
-      <div className="rounded-3xl bg-white dark:bg-[#101622] shadow-xl flex flex-col h-[580px] overflow-hidden border border-slate-200 dark:border-white/10">
+      <div className="rounded-3xl bg-white dark:bg-[#101622] shadow-xl flex flex-col h-[600px] overflow-hidden border border-slate-200 dark:border-white/10">
         {/* Terminal Header */}
         <div className="p-4 bg-slate-50 dark:bg-[#131926] border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
             <div>
               <div className="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-2">
-                <span>EE AI Core System v3.8</span>
-                <span className="px-2 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Online</span>
+                <span>EE AI Core System v4.0 (ARENA-X Grounded)</span>
+                <span className="px-2 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Active Grounding</span>
               </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Synchronized with {currentUser.gamerTag}</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Synchronized with {currentUser.gamerTag} • {currentUser.primaryGame}</p>
             </div>
           </div>
 
@@ -206,7 +198,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
               <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                 {msg.sender === 'assistant' ? (
                   <span className="text-sky-600 dark:text-sky-400 font-semibold flex items-center gap-1">
-                    <Bot className="w-3 h-3" /> EE AI
+                    <Bot className="w-3 h-3" /> EE AI Coach
                   </span>
                 ) : (
                   <span className="text-slate-900 dark:text-white font-semibold">
@@ -224,30 +216,49 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                     : 'bg-slate-50 dark:bg-[#182032] border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-100 shadow-sm'
                 }`}
               >
-                <p>{msg.text}</p>
+                <div>{renderFormattedText(msg.text)}</div>
 
                 {/* Tactical Card if present */}
                 {msg.tacticalCard && (
-                  <div className="mt-3.5 p-3.5 rounded-2xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-semibold">
-                      <span className="text-sky-600 dark:text-sky-400 flex items-center gap-1">
+                  <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 space-y-2.5">
+                    <div className="flex items-center justify-between text-[11px] font-semibold border-b border-slate-100 dark:border-white/5 pb-2">
+                      <span className="text-sky-600 dark:text-sky-400 flex items-center gap-1.5 font-bold">
                         <Target className="w-3.5 h-3.5" /> {msg.tacticalCard.title}
                       </span>
-                      <span className="text-slate-400 uppercase text-[10px]">{msg.tacticalCard.category}</span>
+                      <span className="text-slate-400 uppercase text-[10px] font-mono">{msg.tacticalCard.category}</span>
                     </div>
 
-                    <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400">
+                    <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                       {msg.tacticalCard.keyPoints.map((pt, idx) => (
-                        <li key={idx} className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
-                          <span className="text-slate-900 dark:text-white font-medium">{pt}</span>
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0 mt-1.5"></span>
+                          <span className="text-slate-800 dark:text-slate-200 font-medium">{pt}</span>
                         </li>
                       ))}
                     </ul>
 
+                    {/* Checklist if provided */}
+                    {msg.tacticalCard.checklist && msg.tacticalCard.checklist.length > 0 && (
+                      <div className="pt-2 border-t border-slate-100 dark:border-white/5 space-y-1">
+                        <div className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                          Inspection Checklist:
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-slate-600 dark:text-slate-400">
+                          {msg.tacticalCard.checklist.map((item, cIdx) => (
+                            <div key={cIdx} className="flex items-center gap-1.5">
+                              <span className="text-sky-500 font-mono">›</span>
+                              <span>{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {msg.tacticalCard.actionItem && (
-                      <div className="pt-2 border-t border-slate-200 dark:border-white/10 text-xs font-semibold text-sky-600 dark:text-sky-400">
-                        Action Directive: {msg.tacticalCard.actionItem}
+                      <div className="pt-2 border-t border-slate-100 dark:border-white/5 text-xs font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-1.5">
+                        <Award className="w-3.5 h-3.5 shrink-0" />
+                        <span>Action Directive: {msg.tacticalCard.actionItem}</span>
                       </div>
                     )}
                   </div>
@@ -259,22 +270,23 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           {isTyping && (
             <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-sky-600 dark:text-sky-400 font-semibold shadow-sm">
               <Sparkles className="w-3.5 h-3.5 animate-spin" />
-              <span>Analyzing Tactical Intel...</span>
+              <span>Querying ARENA-X Knowledge Base...</span>
             </div>
           )}
 
           <div ref={chatEndRef} />
         </div>
 
-        {/* Preset Prompt Chips (Spotify pill style) */}
+        {/* Preset Prompt Chips (Categorized Knowledge Topics) */}
         <div className="px-4 py-2 bg-slate-50/80 dark:bg-[#131926]/80 border-t border-slate-200 dark:border-white/10 flex gap-2 overflow-x-auto">
           {PRESET_TACTICAL_PROMPTS.map((prompt, idx) => (
             <button
               key={idx}
               onClick={() => handleSendMessage(prompt)}
-              className="px-3.5 py-1.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full whitespace-nowrap transition-all shadow-sm"
+              className="px-3.5 py-1.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full whitespace-nowrap transition-all shadow-sm flex items-center gap-1.5"
             >
-              {prompt}
+              <Zap className="w-3 h-3 text-sky-500" />
+              <span>{prompt}</span>
             </button>
           ))}
         </div>
@@ -290,7 +302,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           >
             <input
               type="text"
-              placeholder="Ask EE AI anything (scrim tactics, agent lineups, Indian esports roadmap)..."
+              placeholder="Ask EE AI anything (Erangel rotations, gloo-wall peeks, Ascent defaults, scouting trials)..."
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
               className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
