@@ -61,41 +61,7 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
             The professional gaming identity and tournament network for Indian esports athletes. Mint your cryptographic profile, get scouted by Tier-1 franchises, and compete in verified arenas.
           </p>
 
-          {/* Hero CTAs */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <button
-              onClick={() => {
-                soundManager.playSuccessBeep();
-                onNavigate('onboarding');
-              }}
-              className="px-6 py-3 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-bold text-xs sm:text-sm rounded-full transition-all shadow-md flex items-center gap-2"
-            >
-              <Zap className="w-4 h-4 fill-current" />
-              <span>Mint Level 1 Passport</span>
-            </button>
 
-            <button
-              onClick={() => {
-                soundManager.playClickSound();
-                onNavigate('discovery');
-              }}
-              className="px-5 py-3 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-semibold text-xs sm:text-sm rounded-full transition-all flex items-center gap-2 shadow-sm"
-            >
-              <Search className="w-4 h-4 text-sky-500" />
-              <span>Scout Talent Radar</span>
-            </button>
-
-            <button
-              onClick={() => {
-                soundManager.playClickSound();
-                onNavigate('tournaments');
-              }}
-              className="px-5 py-3 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 font-semibold text-xs sm:text-sm rounded-full transition-all flex items-center gap-2 shadow-sm"
-            >
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <span>Explore Tournaments</span>
-            </button>
-          </div>
         </div>
 
         {/* Live Ecosystem Telemetry Counter */}
