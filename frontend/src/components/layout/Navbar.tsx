@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'passport', label: 'E-Passport', icon: User },
+    { id: 'passport', label: 'Profile', icon: User },
     { id: 'discovery', label: 'Talent Radar', icon: Search },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'campus', label: 'Campus', icon: GraduationCap },
