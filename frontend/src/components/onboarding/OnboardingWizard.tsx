@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Sparkles, 
   Gamepad2, 
-  Crosshair, 
   ShieldCheck, 
   Trophy, 
   ArrowRight, 
@@ -10,8 +9,8 @@ import {
   Check, 
   Zap, 
   User,
-  Cpu,
-  UploadCloud
+  Flame,
+  Star
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PlayerPassport, GameType, RoleType } from '../../types';
@@ -83,7 +82,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       particleCount: 120,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#00F0FF', '#8B5CF6', '#FFB800', '#FF4655']
+      colors: ['#0284c7', '#8b5cf6', '#10b981', '#f59e0b']
     });
 
     const newPassport: PlayerPassport = {
@@ -253,25 +252,25 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 sm:p-8 rounded-3xl bg-hud-surface border-2 border-cyber-cyan/40 shadow-2xl shadow-cyber-cyan/15 animate-fadeIn">
+    <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl bg-surface-card border border-surface-border shadow-xl backdrop-blur-xl animate-fadeIn">
       {/* Top Wizard Progress Indicator */}
       <div className="mb-8 space-y-3">
-        <div className="flex items-center justify-between text-xs font-orbitron">
-          <span className="text-cyber-cyan font-bold flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4" />
-            LEVEL 1 CHARACTER SETUP — STEP {step} OF {totalSteps}
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-semibold text-accent-cyan flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5" />
+            Character Setup • Step {step} of {totalSteps}
           </span>
-          <span className="text-hud-muted font-rajdhani font-bold text-sm">
-            {Math.round((step / totalSteps) * 100)}% COMPLETED (+1,200 XP)
+          <span className="text-text-muted text-xs">
+            {Math.round((step / totalSteps) * 100)}% completed (+1,200 XP)
           </span>
         </div>
 
-        {/* Progress Bar with 5 Nodes */}
-        <div className="w-full h-2 bg-hud-bg rounded-full overflow-hidden p-0.5 border border-hud-border">
+        {/* Progress Bar */}
+        <div className="w-full h-1.5 bg-surface-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-gold rounded-full transition-all duration-500 shadow-[0_0_10px_#00F0FF]"
+            className="h-full bg-text-primary rounded-full transition-all duration-500"
             style={{ width: `${(step / totalSteps) * 100}%` }}
-          ></div>
+          />
         </div>
       </div>
 
@@ -279,74 +278,74 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       {step === 1 && (
         <div className="space-y-6 animate-fadeIn">
           <div>
-            <h3 className="font-orbitron font-extrabold text-2xl text-hud-text glow-text-cyan">
-              MINT YOUR IN-GAME IDENTITY
+            <h3 className="font-bold text-2xl text-text-primary">
+              Create Your Player Identity
             </h3>
-            <p className="text-xs font-sans text-hud-muted mt-1">
-              Choose your competitive handle and cyber avatar for the Indian esports passport network.
+            <p className="text-sm text-text-muted mt-1">
+              Choose your competitive handle and verified avatar for the Indian esports passport registry.
             </p>
           </div>
 
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">COMPETITIVE GAMERTAG *</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">COMPETITIVE GAMERTAG *</label>
                 <input
                   type="text"
                   placeholder="e.g. PHANTOM_K1NG"
                   value={gamerTag}
                   onChange={e => setGamerTag(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani font-bold text-cyber-cyan focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">REAL FULL NAME *</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">FULL LEGAL NAME *</label>
                 <input
                   type="text"
                   placeholder="e.g. Aryan Malhotra"
                   value={realName}
                   onChange={e => setRealName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">AGE</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">AGE</label>
                 <input
                   type="number"
                   value={age}
-                  onChange={e => setAge(parseInt(e.target.value))}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  onChange={e => setAge(parseInt(e.target.value) || 18)}
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">HOME STATE</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">HOME STATE</label>
                 <input
                   type="text"
                   value={state}
                   onChange={e => setState(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">CITY</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">CITY</label>
                 <input
                   type="text"
                   value={city}
                   onChange={e => setCity(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all"
                 />
               </div>
             </div>
 
             {/* Avatar Picker */}
-            <div>
-              <label className="text-xs font-orbitron text-hud-muted block mb-2">SELECT CYBER AVATAR</label>
+            <div className="pt-2">
+              <label className="text-xs font-semibold text-text-secondary block mb-2.5">SELECT PROFILE AVATAR</label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                 {CYBER_AVATARS.map((avatar, idx) => (
                   <button
@@ -356,15 +355,15 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                       soundManager.playClickSound();
                       setSelectedAvatar(avatar);
                     }}
-                    className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all ${
+                    className={`relative rounded-2xl overflow-hidden aspect-square border-2 transition-all group ${
                       selectedAvatar === avatar
-                        ? 'border-cyber-cyan shadow-[0_0_15px_#00F0FF] scale-105'
-                        : 'border-hud-border hover:border-cyber-cyan/50 opacity-70'
+                        ? 'border-text-primary shadow-md scale-105'
+                        : 'border-surface-border hover:border-text-secondary opacity-75 hover:opacity-100'
                     }`}
                   >
                     <img src={avatar} alt="Avatar option" className="w-full h-full object-cover" />
                     {selectedAvatar === avatar && (
-                      <div className="absolute inset-0 bg-cyber-cyan/20 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                         <Check className="w-5 h-5 text-white drop-shadow" />
                       </div>
                     )}
@@ -380,11 +379,11 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       {step === 2 && (
         <div className="space-y-6 animate-fadeIn">
           <div>
-            <h3 className="font-orbitron font-extrabold text-2xl text-hud-text glow-text-cyan">
-              CHOOSE PRIMARY COMBAT DISCIPLINE
+            <h3 className="font-bold text-2xl text-text-primary">
+              Primary Esports Title
             </h3>
-            <p className="text-xs font-sans text-hud-muted mt-1">
-              Select your main competitive title and in-game credentials.
+            <p className="text-sm text-text-muted mt-1">
+              Select your competitive title and connect your in-game identity credentials.
             </p>
           </div>
 
@@ -398,50 +397,50 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                     soundManager.playGlitchChirp();
                     setPrimaryGame(game);
                   }}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-4 rounded-2xl border text-left transition-all ${
                     primaryGame === game
-                      ? 'bg-cyber-cyan/15 border-cyber-cyan shadow-[0_0_15px_rgba(0,240,255,0.3)]'
-                      : 'bg-hud-card border-hud-border hover:border-cyber-cyan/40'
+                      ? 'bg-text-primary text-surface-base border-text-primary shadow-md'
+                      : 'bg-surface-base border-surface-border text-text-primary hover:border-text-secondary/40'
                   }`}
                 >
-                  <Gamepad2 className={`w-5 h-5 mb-2 ${primaryGame === game ? 'text-cyber-cyan' : 'text-hud-muted'}`} />
-                  <div className="font-orbitron font-bold text-sm text-hud-text">{game}</div>
-                  <div className="text-[10px] font-rajdhani text-hud-muted mt-0.5">Competitive Tier</div>
+                  <Gamepad2 className={`w-5 h-5 mb-2 ${primaryGame === game ? 'text-surface-base' : 'text-text-muted'}`} />
+                  <div className="font-bold text-sm tracking-tight">{game}</div>
+                  <div className={`text-[11px] mt-0.5 ${primaryGame === game ? 'opacity-80' : 'text-text-muted'}`}>Competitive Tier</div>
                 </button>
               ))}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">IN-GAME NAME (IGN)</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">IN-GAME NAME (IGN)</label>
                 <input
                   type="text"
                   placeholder="e.g. Phantom#IND"
                   value={inGameName}
                   onChange={e => setInGameName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-mono text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">IN-GAME UID / RIOT ID</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">IN-GAME UID / RIOT ID</label>
                 <input
                   type="text"
                   placeholder="e.g. 519203910"
                   value={inGameId}
                   onChange={e => setInGameId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-mono text-hud-text focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-orbitron text-hud-muted block mb-1">CURRENT RANK</label>
+                <label className="text-xs font-semibold text-text-secondary block mb-1.5">CURRENT RANK</label>
                 <input
                   type="text"
                   placeholder="e.g. Radiant / Conqueror"
                   value={currentRank}
                   onChange={e => setCurrentRank(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-sm font-rajdhani font-bold text-cyber-cyan focus:outline-none focus:border-cyber-cyan"
+                  className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
                 />
               </div>
             </div>
@@ -453,17 +452,17 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       {step === 3 && (
         <div className="space-y-6 animate-fadeIn">
           <div>
-            <h3 className="font-orbitron font-extrabold text-2xl text-hud-text glow-text-cyan">
-              DEFINE TACTICAL ROLE & COMMS
+            <h3 className="font-bold text-2xl text-text-primary">
+              Tactical Role & Comms
             </h3>
-            <p className="text-xs font-sans text-hud-muted mt-1">
-              Inform coaches and scouts about your in-game positioning and preferred playstyle.
+            <p className="text-sm text-text-muted mt-1">
+              Help scouts and orgs understand your roster position, playstyle, and communication strengths.
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-orbitron text-hud-muted block mb-2">PRIMARY SPECIALTY</label>
+              <label className="text-xs font-semibold text-text-secondary block mb-2">PRIMARY SPECIALTY</label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {(['Duelist', 'IGL', 'Assaulter', 'Sniper', 'Initiator', 'Controller', 'Sentinel', 'Support'] as RoleType[]).map(role => (
                   <button
@@ -473,10 +472,10 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                       soundManager.playClickSound();
                       setPrimaryRole(role);
                     }}
-                    className={`p-3 rounded-xl border text-center transition-all text-xs font-rajdhani font-bold ${
+                    className={`p-3 rounded-xl border text-center transition-all text-xs font-semibold ${
                       primaryRole === role
-                        ? 'bg-cyber-purple/20 border-cyber-purple text-cyber-purple shadow-[0_0_12px_rgba(139,92,246,0.4)]'
-                        : 'bg-hud-card border-hud-border text-hud-text hover:border-cyber-purple/40'
+                        ? 'bg-text-primary text-surface-base border-text-primary shadow-sm'
+                        : 'bg-surface-base border-surface-border text-text-secondary hover:text-text-primary hover:border-text-secondary/40'
                     }`}
                   >
                     {role}
@@ -486,13 +485,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-orbitron text-hud-muted block mb-1">PLAYSTYLE & SCRIM SUMMARY</label>
+              <label className="text-xs font-semibold text-text-secondary block mb-1.5">PLAYSTYLE & SCRIM SUMMARY</label>
               <textarea
                 rows={3}
                 value={playstyleBio}
                 onChange={e => setPlaystyleBio(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-hud-card border border-hud-border rounded-xl text-xs font-sans text-hud-text focus:outline-none focus:border-cyber-cyan"
-                placeholder="Describe your weapon mastery, site anchor strengths, or zone rotation philosophy..."
+                className="w-full px-4 py-2.5 bg-surface-base border border-surface-border rounded-xl text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-text-primary/20 transition-all placeholder:text-text-muted"
+                placeholder="Describe your entry strengths, site anchor capabilities, or zone rotation philosophy..."
               />
             </div>
           </div>
@@ -503,34 +502,36 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       {step === 4 && (
         <div className="space-y-6 animate-fadeIn">
           <div>
-            <h3 className="font-orbitron font-extrabold text-2xl text-hud-text glow-text-cyan">
-              VERIFIED PASSPORT SECURITY SEAL
+            <h3 className="font-bold text-2xl text-text-primary">
+              Identity Verification Seal
             </h3>
-            <p className="text-xs font-sans text-hud-muted mt-1">
-              IEIH passports require identity confirmation to combat smurfing, fraud, and tournament bracket manipulation.
+            <p className="text-sm text-text-muted mt-1">
+              IEIH passports require verified identity to combat smurfing, fraud, and tournament bracket exploitation.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-hud-card border border-hud-border space-y-4">
+          <div className="p-5 rounded-2xl bg-surface-base border border-surface-border space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-cyber-cyan/10 border border-cyber-cyan flex items-center justify-center text-cyber-cyan shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center text-accent-cyan shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-orbitron font-bold text-sm text-hud-text">DIGITAL KYC ATTESTATION</h4>
-                <p className="text-xs font-rajdhani text-hud-muted">Instant cryptographic seal generated for Indian National Athletes & Contenders.</p>
+                <h4 className="font-bold text-sm text-text-primary">National KYC Digital Attestation</h4>
+                <p className="text-xs text-text-muted">Cryptographic verification badge for Indian competitive athletes.</p>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-hud-bg border border-hud-border/80 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-rajdhani font-bold text-hud-text">
+            <div className="p-4 rounded-xl bg-surface-card border border-surface-border flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                  <Check className="w-3.5 h-3.5" />
+                </div>
+                <span className="text-xs font-medium text-text-primary">
                   Aadhaar / Government ID Verified Seal Attached
                 </span>
               </div>
-              <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 font-orbitron text-[10px] font-bold rounded">
-                READY TO MINT
+              <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold rounded-full">
+                Ready to Mint
               </span>
             </div>
           </div>
@@ -540,42 +541,40 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       {/* STEP 5: Unlocked Passport Confirmation */}
       {step === 5 && (
         <div className="space-y-6 text-center animate-fadeIn py-4">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-cyber-cyan via-cyber-purple to-cyber-gold p-0.5 mx-auto shadow-[0_0_30px_#00F0FF] animate-pulse">
-            <div className="w-full h-full bg-hud-surface rounded-2xl flex items-center justify-center">
-              <Trophy className="w-10 h-10 text-cyber-gold" />
-            </div>
+          <div className="w-16 h-16 rounded-2xl bg-surface-muted border border-surface-border mx-auto flex items-center justify-center shadow-md">
+            <Trophy className="w-8 h-8 text-accent-gold" />
           </div>
 
-          <div className="space-y-2">
-            <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-hud-text glow-text-cyan">
-              CONGRATULATIONS, {gamerTag || 'ATHLETE'}!
+          <div className="space-y-1.5">
+            <h3 className="font-bold text-2xl text-text-primary">
+              Ready to Mint, {gamerTag || 'Athlete'}!
             </h3>
-            <p className="text-sm font-rajdhani text-hud-muted max-w-md mx-auto">
+            <p className="text-sm text-text-muted max-w-md mx-auto">
               Your Level 1 Verified E-Player Passport is ready to be minted on the Indian Esports Innovation Hub ledger.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-hud-card border border-cyber-cyan/40 max-w-md mx-auto text-left flex items-center gap-4">
-            <img src={selectedAvatar} alt="Avatar" className="w-14 h-14 rounded-xl object-cover border border-cyber-cyan" />
-            <div>
-              <div className="font-orbitron font-extrabold text-base text-hud-text">{gamerTag || 'PIONEER'}</div>
-              <div className="text-xs font-rajdhani text-hud-muted">{primaryGame} • {primaryRole} • Level 1 Contender</div>
-              <div className="text-xs font-mono text-cyber-cyan font-bold mt-0.5">IND-ESP-2026-NEW</div>
+          <div className="p-4 rounded-2xl bg-surface-base border border-surface-border max-w-sm mx-auto text-left flex items-center gap-3.5 shadow-sm">
+            <img src={selectedAvatar} alt="Avatar" className="w-12 h-12 rounded-xl object-cover border border-surface-border" />
+            <div className="min-w-0">
+              <div className="font-bold text-sm text-text-primary truncate">{gamerTag || 'PIONEER'}</div>
+              <div className="text-xs text-text-muted">{primaryGame} • {primaryRole}</div>
+              <div className="text-[11px] font-mono font-medium text-accent-cyan mt-0.5">IND-ESP-2026-NEW</div>
             </div>
           </div>
         </div>
       )}
 
       {/* Navigation Buttons */}
-      <div className="mt-8 pt-6 border-t border-hud-border flex items-center justify-between">
+      <div className="mt-8 pt-6 border-t border-surface-border flex items-center justify-between">
         {step > 1 ? (
           <button
             type="button"
             onClick={handleBack}
-            className="px-5 py-2.5 bg-hud-card hover:bg-hud-panel border border-hud-border text-hud-text font-rajdhani font-bold text-xs rounded-xl transition-all flex items-center gap-2"
+            className="px-5 py-2.5 rounded-full border border-surface-border text-text-secondary hover:text-text-primary hover:bg-surface-base text-xs font-semibold transition-all flex items-center gap-2"
           >
-            <ArrowLeft className="w-4 h-4" />
-            BACK
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back
           </button>
         ) : (
           <div></div>
@@ -585,19 +584,19 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           <button
             type="button"
             onClick={handleNext}
-            className="px-6 py-2.5 bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-rajdhani font-extrabold text-xs rounded-xl hover:shadow-[0_0_15px_rgba(0,240,255,0.5)] transition-all flex items-center gap-2"
+            className="px-6 py-2.5 rounded-full bg-text-primary text-surface-base text-xs font-semibold hover:opacity-90 transition-all flex items-center gap-2 shadow-sm"
           >
-            CONTINUE STEP {step + 1}
-            <ArrowRight className="w-4 h-4" />
+            Continue to Step {step + 1}
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         ) : (
           <button
             type="button"
             onClick={handleMintPassport}
-            className="px-8 py-3 bg-gradient-to-r from-cyber-cyan via-cyber-purple to-cyber-gold text-black font-orbitron font-black text-xs rounded-xl hover:shadow-[0_0_25px_#00F0FF] transition-all flex items-center gap-2"
+            className="px-6 py-2.5 rounded-full bg-accent-cyan text-white text-xs font-semibold hover:opacity-90 shadow-md transition-all flex items-center gap-2"
           >
-            <Zap className="w-4 h-4 fill-black" />
-            MINT & ACTIVATE PASSPORT (+1,200 XP)
+            <Zap className="w-4 h-4 fill-white" />
+            Mint & Activate Passport (+1,200 XP)
           </button>
         )}
       </div>

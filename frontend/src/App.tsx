@@ -77,9 +77,9 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-hud-bg text-hud-text flex flex-col font-sans selection:bg-cyber-cyan selection:text-black">
-      {/* Background Cyber Grid Lines */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-10 pointer-events-none z-0"></div>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090c13] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 selection:bg-sky-500 selection:text-white">
+      {/* Subtle Dot Mesh & Ambient Radial Glow */}
+      <div className="fixed inset-0 bg-grid-pattern opacity-40 dark:opacity-15 pointer-events-none z-0"></div>
       <div className="fixed inset-0 bg-radial-glow pointer-events-none z-0"></div>
 
       {/* Top Navbar */}
@@ -107,13 +107,13 @@ export function App() {
         {currentTab === 'passport' && (
           <div className="space-y-6 animate-fadeIn">
             {/* Top Toolbar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-hud-card border border-hud-border">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-[#131926]/90 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-xl">
               <div className="flex items-center gap-3">
-                <span className="text-xs font-orbitron text-hud-muted">VIEWING PASSPORT:</span>
-                <span className="font-orbitron font-extrabold text-sm text-cyber-cyan glow-text-cyan">
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Viewing Passport:</span>
+                <span className="font-bold text-sm text-sky-600 dark:text-sky-400">
                   {selectedPlayer.gamerTag}
                 </span>
-                <span className="text-xs font-mono text-hud-muted">({selectedPlayer.passportNumber})</span>
+                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">({selectedPlayer.passportNumber})</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -122,10 +122,10 @@ export function App() {
                     soundManager.playClickSound();
                     setSelectedPlayer(currentUser);
                   }}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-rajdhani font-bold border transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                     selectedPlayer.id === currentUser.id
-                      ? 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan'
-                      : 'bg-hud-bg text-hud-muted hover:text-hud-text border-hud-border'
+                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
+                      : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-white/10'
                   }`}
                 >
                   My Passport
@@ -135,9 +135,9 @@ export function App() {
                     soundManager.playClickSound();
                     handleNavigate('discovery');
                   }}
-                  className="px-3 py-1.5 rounded-xl text-xs font-rajdhani font-bold bg-hud-bg hover:bg-hud-panel text-hud-text border border-hud-border transition-all"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5"
                 >
-                  Browse Other Athletes →
+                  Browse Other Athletes &rarr;
                 </button>
               </div>
             </div>

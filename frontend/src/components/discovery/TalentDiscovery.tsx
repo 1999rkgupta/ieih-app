@@ -1,19 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, 
-  Filter, 
   ShieldCheck, 
   Sparkles, 
   Zap, 
   Swords, 
   ChevronRight, 
-  UserCheck, 
-  RotateCcw,
-  SlidersHorizontal,
-  Flame,
-  Award
+  RotateCcw
 } from 'lucide-react';
-import { PlayerPassport, GameType, RoleType } from '../../types';
+import { PlayerPassport, RoleType } from '../../types';
 import { soundManager } from '../../utils/audio';
 import { RecruitModal } from './RecruitModal';
 import { PlayerCompareModal } from './PlayerCompareModal';
@@ -44,24 +39,16 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
   // Match score calculator based on active scout filters
   const calculateMatchScore = (player: PlayerPassport): number => {
-    let score = 75; // base baseline score
+    let score = 75;
 
     const perf = player.gamePerformances[player.primaryGame];
 
-    // Game match bonus
     if (selectedGame !== 'ALL' && player.primaryGame === selectedGame) score += 12;
-    // Role match bonus
     if (selectedRole !== 'ALL' && player.primaryRole === selectedRole) score += 10;
-    // Tier match
     if (selectedTier !== 'ALL' && player.tier === selectedTier) score += 8;
-    // State match
     if (selectedState !== 'ALL' && player.state === selectedState) score += 5;
-    // Verified boost
     if (player.isVerified) score += 6;
-    // High K/D boost
-    if (perf && perf.kdRatio >= 1.4) score += 5;
-    // High reputation boost
-    if (player.reputationScore >= 98) score += 4;
+    if (perf && perf.kdRatio >= minKd) score += 5;
 
     return Math.min(99, Math.max(68, score));
   };
@@ -98,7 +85,6 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
       setCompareIds(compareIds.filter(id => id !== playerId));
     } else {
       if (compareIds.length >= 2) {
-        // replace second
         setCompareIds([compareIds[0], playerId]);
       } else {
         setCompareIds([...compareIds, playerId]);
@@ -118,37 +104,39 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
     setMinKd(1.0);
   };
 
+  const player1ToCompare = players.find(p => p.id === compareIds[0]);
+  const player2ToCompare = players.find(p => p.id === compareIds[1]);
+
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header Banner */}
-      <div className="relative p-6 sm:p-8 rounded-2xl bg-hud-surface border border-hud-border overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyber-cyan/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded-full text-xs font-orbitron font-bold text-cyber-cyan">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-2 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-semibold border border-indigo-500/20">
             <Sparkles className="w-3.5 h-3.5" />
-            IEIH SCOUT ALGORITHM • TALENT RADAR
+            <span>Scout Engine & Talent Radar</span>
           </div>
-          <h2 className="font-orbitron font-black text-2xl sm:text-4xl text-hud-text tracking-wide glow-text-cyan">
-            DISCOVER & RECRUIT INDIAN ESPORTS PRODIGIES
+          <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+            Discover & Recruit Esports Athletes
           </h2>
-          <p className="text-sm font-sans text-hud-muted">
-            Filter through thousands of verified E-Player Passports across BGMI, Valorant, CS2, and Free Fire. Direct scout contact, synergistic HUD match ratings, and verified tournament histories.
+          <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
+            Filter through verified E-Player Passports across BGMI, Valorant, CS2, and Free Fire with synergistic match ratings and verified performance stats.
           </p>
         </div>
       </div>
 
       {/* Filter Control Console */}
-      <div className="p-5 rounded-2xl bg-hud-card border border-hud-border space-y-4">
+      <div className="p-5 rounded-3xl bg-white dark:bg-[#101622] border border-slate-200 dark:border-white/10 shadow-sm space-y-4">
         {/* Search Bar & Reset */}
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-hud-muted" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search by Gamertag, Real Name, City, State..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-hud-bg border border-hud-border rounded-xl text-xs font-sans text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
             />
           </div>
 
@@ -158,20 +146,21 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
                 soundManager.playClickSound();
                 setVerifiedOnly(!verifiedOnly);
               }}
-              className={`px-3.5 py-2.5 rounded-xl text-xs font-rajdhani font-bold flex items-center gap-2 border transition-all ${
+              className={`px-4 py-2.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border transition-all ${
                 verifiedOnly
-                  ? 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan shadow-[0_0_12px_rgba(0,240,255,0.3)]'
-                  : 'bg-hud-bg text-hud-muted border-hud-border hover:text-hud-text'
+                  ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/40 shadow-sm'
+                  : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <ShieldCheck className="w-4 h-4 text-cyber-cyan" />
-              VERIFIED ATHLETES ONLY
+              <ShieldCheck className="w-4 h-4 text-sky-500" />
+              <span>Verified Only</span>
             </button>
 
             <button
               onClick={handleResetFilters}
-              className="p-2.5 bg-hud-bg hover:bg-hud-panel border border-hud-border rounded-xl text-hud-muted hover:text-hud-text transition-colors"
+              className="p-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               title="Reset Filters"
+              aria-label="Reset Filters"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
@@ -182,14 +171,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* Game */}
           <div>
-            <label className="text-[10px] font-orbitron text-hud-muted block mb-1">GAME</label>
+            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Discipline</label>
             <select
               value={selectedGame}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedGame(e.target.value);
               }}
-              className="w-full px-2.5 py-1.5 bg-hud-bg border border-hud-border rounded-lg text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
             >
               <option value="ALL">All Disciplines</option>
               <option value="VALORANT">VALORANT</option>
@@ -203,14 +192,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Role */}
           <div>
-            <label className="text-[10px] font-orbitron text-hud-muted block mb-1">TACTICAL ROLE</label>
+            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Role</label>
             <select
               value={selectedRole}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedRole(e.target.value);
               }}
-              className="w-full px-2.5 py-1.5 bg-hud-bg border border-hud-border rounded-lg text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
             >
               <option value="ALL">All Roles</option>
               <option value="Duelist">Duelist / Entry</option>
@@ -226,14 +215,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Tier */}
           <div>
-            <label className="text-[10px] font-orbitron text-hud-muted block mb-1">SKILL TIER</label>
+            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Skill Tier</label>
             <select
               value={selectedTier}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedTier(e.target.value);
               }}
-              className="w-full px-2.5 py-1.5 bg-hud-bg border border-hud-border rounded-lg text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
             >
               <option value="ALL">All Tiers</option>
               <option value="Legend">Legend (Global)</option>
@@ -246,14 +235,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* State */}
           <div>
-            <label className="text-[10px] font-orbitron text-hud-muted block mb-1">STATE / REGION</label>
+            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Region</label>
             <select
               value={selectedState}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedState(e.target.value);
               }}
-              className="w-full px-2.5 py-1.5 bg-hud-bg border border-hud-border rounded-lg text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
             >
               <option value="ALL">All India</option>
               <option value="Maharashtra">Maharashtra (Mumbai/Pune)</option>
@@ -268,14 +257,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Availability */}
           <div>
-            <label className="text-[10px] font-orbitron text-hud-muted block mb-1">STATUS</label>
+            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Status</label>
             <select
               value={selectedAvailability}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedAvailability(e.target.value);
               }}
-              className="w-full px-2.5 py-1.5 bg-hud-bg border border-hud-border rounded-lg text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
             >
               <option value="ALL">Any Status</option>
               <option value="LFG Pro Team">LFG Pro Team</option>
@@ -288,9 +277,9 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
         </div>
 
         {/* Min K/D Slider Bar */}
-        <div className="pt-2 border-t border-hud-border/60 flex items-center justify-between text-xs font-rajdhani font-bold">
+        <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
-            <span className="text-hud-muted font-orbitron text-[10px]">MINIMUM K/D FILTER:</span>
+            <span className="text-slate-500 dark:text-slate-400 font-semibold uppercase text-[11px]">Minimum K/D:</span>
             <input
               type="range"
               min="0.5"
@@ -298,13 +287,13 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
               step="0.1"
               value={minKd}
               onChange={e => setMinKd(parseFloat(e.target.value))}
-              className="w-36 accent-cyber-cyan bg-hud-bg"
+              className="w-36 accent-sky-500 cursor-pointer"
             />
-            <span className="text-cyber-cyan font-bold font-mono">{minKd.toFixed(1)}+</span>
+            <span className="text-sky-600 dark:text-sky-400 font-bold font-mono">{minKd.toFixed(1)}+</span>
           </div>
 
-          <div className="text-hud-muted font-orbitron text-[11px]">
-            SHOWING <strong className="text-cyber-cyan">{filteredPlayers.length}</strong> ATHLETES FOUND
+          <div className="text-slate-500 dark:text-slate-400 font-medium text-xs">
+            Showing <strong className="text-slate-900 dark:text-white font-bold">{filteredPlayers.length}</strong> athletes
           </div>
         </div>
       </div>
@@ -316,142 +305,113 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
           const perf = player.gamePerformances[player.primaryGame];
           const isComparing = compareIds.includes(player.id);
 
-          // HUD Segmented Meter Ticks (10 segments)
-          const filledTicks = Math.round((matchScore / 100) * 10);
-
           return (
             <div
               key={player.id}
-              className="group relative rounded-2xl bg-hud-surface border border-hud-border hover:border-cyber-cyan/70 transition-all duration-300 flex flex-col overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-cyber-cyan/10"
+              className="group relative rounded-3xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-500/40 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden p-5 space-y-4"
             >
-              {/* Card Top Banner Accent */}
-              <div className="h-1 bg-gradient-to-r from-cyber-cyan via-cyber-purple to-transparent"></div>
-
-              <div className="p-5 flex-1 flex flex-col space-y-4">
-                {/* Header Row: Avatar, Info, and HUD Match-Meter */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative shrink-0">
-                      <img
-                        src={player.avatarUrl}
-                        alt={player.gamerTag}
-                        className="w-14 h-14 rounded-xl object-cover border border-cyber-cyan/50 group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute -bottom-1 -right-1 px-1 bg-cyber-purple text-white font-orbitron text-[9px] font-bold rounded">
-                        L{player.level}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="font-orbitron font-extrabold text-base text-hud-text group-hover:text-cyber-cyan transition-colors">
-                          {player.gamerTag}
-                        </h3>
-                        {player.isVerified && (
-                          <ShieldCheck className="w-4 h-4 text-cyber-cyan shrink-0" />
-                        )}
-                      </div>
-                      <p className="text-xs font-rajdhani text-hud-muted">
-                        {player.realName} • {player.city}, {player.state}
-                      </p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] font-orbitron px-1.5 py-0.5 bg-hud-card border border-hud-border text-cyber-purple rounded font-bold">
-                          {player.tier}
-                        </span>
-                        <span className="text-xs font-rajdhani font-bold text-emerald-400">
-                          {player.availability}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* HUD Segmented Match Score Meter */}
-                <div className="p-3 rounded-xl bg-hud-card/80 border border-hud-border/90 space-y-1.5">
-                  <div className="flex justify-between items-center text-xs font-orbitron">
-                    <span className="text-hud-muted text-[10px] flex items-center gap-1">
-                      <Zap className="w-3 h-3 text-cyber-cyan" />
-                      SYNERGY MATCH
-                    </span>
-                    <span className="text-cyber-cyan font-black font-rajdhani text-sm">
-                      {matchScore}% MATCH
-                    </span>
-                  </div>
-
-                  {/* 10 Segmented glowing ticks */}
-                  <div className="grid grid-cols-10 gap-1 h-2">
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-full rounded-sm transition-all ${
-                          i < filledTicks
-                            ? matchScore > 90
-                              ? 'bg-cyber-cyan shadow-[0_0_6px_#00F0FF]'
-                              : 'bg-cyber-purple shadow-[0_0_6px_#8B5CF6]'
-                            : 'bg-hud-bg'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Stat Matrix Bar */}
-                <div className="grid grid-cols-3 gap-2 text-center text-xs font-rajdhani">
-                  <div className="p-2 rounded-lg bg-hud-bg border border-hud-border/70">
-                    <div className="text-[9px] font-orbitron text-hud-muted">DISCIPLINE</div>
-                    <div className="font-bold text-hud-text truncate mt-0.5">{player.primaryGame}</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-hud-bg border border-hud-border/70">
-                    <div className="text-[9px] font-orbitron text-hud-muted">ROLE</div>
-                    <div className="font-bold text-cyber-cyan truncate mt-0.5">{player.primaryRole}</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-hud-bg border border-hud-border/70">
-                    <div className="text-[9px] font-orbitron text-hud-muted">K/D RATIO</div>
-                    <div className="font-bold text-cyber-gold mt-0.5">{perf?.kdRatio.toFixed(2)}</div>
-                  </div>
-                </div>
-
-                {/* Bio snippet */}
-                {player.bio && (
-                  <p className="text-xs text-hud-muted line-clamp-2 font-sans pt-1">
-                    {player.bio}
-                  </p>
-                )}
-
-                {/* Actions Row */}
-                <div className="pt-3 border-t border-hud-border flex items-center justify-between gap-2 mt-auto">
-                  {/* Compare Checkbox */}
-                  <label className="flex items-center gap-1.5 text-xs font-rajdhani font-bold text-hud-muted cursor-pointer hover:text-hud-text select-none">
-                    <input
-                      type="checkbox"
-                      checked={isComparing}
-                      onChange={() => toggleCompare(player.id)}
-                      className="accent-cyber-cyan rounded"
+              {/* Header Row: Avatar, Info, and Synergy Score */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <img
+                      src={player.avatarUrl}
+                      alt={player.gamerTag}
+                      className="w-13 h-13 rounded-full object-cover border border-slate-200 dark:border-white/10 group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span>COMPARE</span>
-                  </label>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        soundManager.playClickSound();
-                        setScoutingPlayer(player);
-                      }}
-                      className="px-3 py-1.5 bg-hud-card hover:bg-cyber-cyan hover:text-black border border-hud-border hover:border-cyber-cyan text-xs font-rajdhani font-bold rounded-lg transition-all"
-                    >
-                      SCOUT
-                    </button>
-                    <button
-                      onClick={() => {
-                        soundManager.playSuccessBeep();
-                        onSelectPlayer(player);
-                      }}
-                      className="px-3.5 py-1.5 bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black text-xs font-rajdhani font-bold rounded-lg hover:shadow-[0_0_12px_rgba(0,240,255,0.4)] transition-all flex items-center gap-1"
-                    >
-                      <span>PASSPORT</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="absolute -bottom-1 -right-1 px-1.5 py-0.2 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-[9px] font-bold rounded-full">
+                      L{player.level}
+                    </div>
                   </div>
+
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
+                        {player.gamerTag}
+                      </h3>
+                      {player.isVerified && (
+                        <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {player.realName} • {player.city}, {player.state}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full">
+                        {player.tier}
+                      </span>
+                      <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                        {player.availability}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Match Score Badge */}
+                <div className="text-right">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-bold font-mono">
+                    <Zap className="w-3 h-3 fill-current" />
+                    {matchScore}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Stat Matrix Bar */}
+              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
+                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">Discipline</div>
+                  <div className="font-semibold text-slate-900 dark:text-white truncate mt-0.5">{player.primaryGame}</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
+                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">Role</div>
+                  <div className="font-semibold text-sky-600 dark:text-sky-400 truncate mt-0.5">{player.primaryRole}</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
+                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">K/D</div>
+                  <div className="font-semibold text-amber-600 dark:text-amber-400 mt-0.5">{perf?.kdRatio.toFixed(2)}</div>
+                </div>
+              </div>
+
+              {/* Bio snippet */}
+              {player.bio && (
+                <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                  {player.bio}
+                </p>
+              )}
+
+              {/* Actions Row */}
+              <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between gap-2 mt-auto">
+                {/* Compare Checkbox */}
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 cursor-pointer hover:text-slate-900 dark:hover:text-white select-none">
+                  <input
+                    type="checkbox"
+                    checked={isComparing}
+                    onChange={() => toggleCompare(player.id)}
+                    className="accent-sky-500 rounded"
+                  />
+                  <span>Compare</span>
+                </label>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      soundManager.playClickSound();
+                      setScoutingPlayer(player);
+                    }}
+                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 rounded-full transition-all"
+                  >
+                    Scout
+                  </button>
+                  <button
+                    onClick={() => {
+                      soundManager.playSuccessBeep();
+                      onSelectPlayer(player);
+                    }}
+                    className="px-4 py-1.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-xs font-semibold rounded-full transition-all flex items-center gap-1 shadow-sm"
+                  >
+                    <span>View</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -459,42 +419,48 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
         })}
       </div>
 
-      {/* Bottom Floating Compare Bar */}
+      {/* Floating Comparison Drawer when athletes selected */}
       {compareIds.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-hud-surface/95 border-2 border-cyber-cyan rounded-2xl p-4 shadow-2xl shadow-cyber-cyan/30 backdrop-blur-xl flex items-center gap-4 animate-bounce-short">
-          <div className="flex items-center gap-2">
-            <Swords className="w-5 h-5 text-cyber-cyan" />
-            <span className="text-xs font-orbitron font-bold text-hud-text">
-              {compareIds.length} ATHLETES SELECTED FOR DUEL COMPARISON
-            </span>
-          </div>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-4 animate-fadeIn">
+          <div className="bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl rounded-full p-2.5 pl-4 flex items-center justify-between gap-3 shadow-2xl border border-slate-200 dark:border-white/10">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Swords className="w-4 h-4 text-sky-500 shrink-0" />
+              <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                Comparing ({compareIds.length}/2):
+              </span>
+              <div className="flex items-center gap-1 text-xs text-sky-600 dark:text-sky-400 font-medium truncate">
+                {player1ToCompare && <span className="font-semibold">{player1ToCompare.gamerTag}</span>}
+                {player2ToCompare && <span>vs <strong className="font-semibold">{player2ToCompare.gamerTag}</strong></span>}
+              </div>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              disabled={compareIds.length < 2}
-              onClick={() => {
-                soundManager.playSuccessBeep();
-                setIsComparingOpen(true);
-              }}
-              className={`px-4 py-2 rounded-xl text-xs font-orbitron font-bold transition-all ${
-                compareIds.length === 2
-                  ? 'bg-cyber-cyan text-black hover:shadow-[0_0_15px_#00F0FF]'
-                  : 'bg-hud-card text-hud-dim border border-hud-border cursor-not-allowed'
-              }`}
-            >
-              LAUNCH COMPARISON RADAR
-            </button>
-            <button
-              onClick={() => setCompareIds([])}
-              className="p-2 text-hud-muted hover:text-hud-text text-xs font-rajdhani font-bold"
-            >
-              CLEAR
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setCompareIds([])}
+                className="px-3 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+              >
+                Clear
+              </button>
+              <button
+                disabled={compareIds.length < 2}
+                onClick={() => {
+                  soundManager.playSuccessBeep();
+                  setIsComparingOpen(true);
+                }}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  compareIds.length === 2
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm hover:opacity-90'
+                    : 'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                }`}
+              >
+                Launch Duel
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Scout Trial Modal */}
+      {/* Modals */}
       {scoutingPlayer && (
         <RecruitModal
           player={scoutingPlayer}
@@ -502,11 +468,10 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
         />
       )}
 
-      {/* Compare Modal */}
-      {isComparingOpen && compareIds.length === 2 && (
+      {isComparingOpen && player1ToCompare && player2ToCompare && (
         <PlayerCompareModal
-          player1={players.find(p => p.id === compareIds[0])!}
-          player2={players.find(p => p.id === compareIds[1])!}
+          player1={player1ToCompare}
+          player2={player2ToCompare}
           onClose={() => setIsComparingOpen(false)}
         />
       )}

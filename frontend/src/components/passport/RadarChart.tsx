@@ -17,14 +17,14 @@ export const RadarChart: React.FC<RadarChartProps> = ({
   compareLabel = 'Compare'
 }) => {
   const center = size / 2;
-  const radius = size * 0.38;
+  const radius = size * 0.36;
   const axes = [
-    { key: 'aim', label: 'AIM', value: stats.aim, compareVal: compareStats?.aim },
-    { key: 'gameSense', label: 'GAME SENSE', value: stats.gameSense, compareVal: compareStats?.gameSense },
-    { key: 'clutch', label: 'CLUTCH', value: stats.clutch, compareVal: compareStats?.clutch },
-    { key: 'utility', label: 'UTILITY', value: stats.utility, compareVal: compareStats?.utility },
-    { key: 'communication', label: 'COMMS', value: stats.communication, compareVal: compareStats?.communication },
-    { key: 'aggression', label: 'AGGRESSION', value: stats.aggression, compareVal: compareStats?.aggression },
+    { key: 'aim', label: 'Aim', value: stats.aim, compareVal: compareStats?.aim },
+    { key: 'gameSense', label: 'Game Sense', value: stats.gameSense, compareVal: compareStats?.gameSense },
+    { key: 'clutch', label: 'Clutch', value: stats.clutch, compareVal: compareStats?.clutch },
+    { key: 'utility', label: 'Utility', value: stats.utility, compareVal: compareStats?.utility },
+    { key: 'communication', label: 'Comms', value: stats.communication, compareVal: compareStats?.communication },
+    { key: 'aggression', label: 'Aggression', value: stats.aggression, compareVal: compareStats?.aggression },
   ];
 
   const totalAxes = axes.length;
@@ -70,8 +70,8 @@ export const RadarChart: React.FC<RadarChartProps> = ({
               key={`grid-${lvlIdx}`}
               points={gridPoints}
               fill="none"
-              stroke={lvlIdx === levels.length - 1 ? 'rgba(0, 240, 255, 0.35)' : 'rgba(36, 40, 72, 0.6)'}
-              strokeWidth={lvlIdx === levels.length - 1 ? '1.5' : '1'}
+              stroke="currentColor"
+              className={lvlIdx === levels.length - 1 ? 'text-slate-300 dark:text-white/25 stroke-[1.5]' : 'text-slate-200 dark:text-white/10 stroke-[1]'}
               strokeDasharray={lvlIdx === levels.length - 1 ? '' : '3 3'}
             />
           );
@@ -89,8 +89,8 @@ export const RadarChart: React.FC<RadarChartProps> = ({
               y1={center}
               x2={x}
               y2={y}
-              stroke="rgba(0, 240, 255, 0.25)"
-              strokeWidth="1"
+              stroke="currentColor"
+              className="text-slate-200 dark:text-white/10 stroke-[1]"
             />
           );
         })}
@@ -99,8 +99,8 @@ export const RadarChart: React.FC<RadarChartProps> = ({
         {comparePoints && (
           <polygon
             points={comparePoints}
-            fill="rgba(255, 70, 85, 0.2)"
-            stroke="#FF4655"
+            fill="rgba(239, 68, 68, 0.15)"
+            stroke="#ef4444"
             strokeWidth="2"
             className="transition-all duration-500"
           />
@@ -109,10 +109,10 @@ export const RadarChart: React.FC<RadarChartProps> = ({
         {/* Primary Polygon */}
         <polygon
           points={primaryPoints}
-          fill="rgba(0, 240, 255, 0.25)"
-          stroke="#00F0FF"
-          strokeWidth="2.5"
-          className="transition-all duration-500 drop-shadow-[0_0_8px_rgba(0,240,255,0.6)]"
+          fill="rgba(14, 165, 233, 0.2)"
+          stroke="#0ea5e9"
+          strokeWidth="2"
+          className="transition-all duration-500"
         />
 
         {/* Data Vertices */}
@@ -123,11 +123,9 @@ export const RadarChart: React.FC<RadarChartProps> = ({
               <circle
                 cx={x}
                 cy={y}
-                r="4"
-                fill="#00F0FF"
-                className="drop-shadow-[0_0_6px_#00F0FF]"
+                r="3.5"
+                className="fill-sky-500"
               />
-              <circle cx={x} cy={y} r="2" fill="#07070D" />
             </g>
           );
         })}
@@ -140,14 +138,13 @@ export const RadarChart: React.FC<RadarChartProps> = ({
           const y = center + labelRadius * Math.sin(angle);
 
           return (
-            <g key={`label-${i}`} className="text-[10px] font-orbitron font-semibold">
+            <g key={`label-${i}`} className="text-[11px] font-medium">
               <text
                 x={x}
                 y={y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill="#8E9BB0"
-                className="tracking-wider select-none hover:fill-cyber-cyan transition-colors"
+                className="fill-slate-600 dark:fill-slate-400 select-none text-[10px]"
               >
                 {axis.label}
               </text>
@@ -156,8 +153,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({
                 y={y + 11}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill="#00F0FF"
-                className="font-bold font-rajdhani text-[11px]"
+                className="font-bold text-[11px] fill-sky-600 dark:fill-sky-400"
               >
                 {axis.value}
               </text>
@@ -168,14 +164,14 @@ export const RadarChart: React.FC<RadarChartProps> = ({
 
       {/* Legend if comparing */}
       {compareStats && (
-        <div className="flex items-center gap-4 mt-2 text-xs font-rajdhani font-semibold">
+        <div className="flex items-center gap-4 mt-3 text-xs font-medium">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-cyber-cyan shadow-[0_0_8px_#00F0FF]"></span>
-            <span className="text-hud-text">{primaryLabel}</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+            <span className="text-slate-800 dark:text-slate-200">{primaryLabel}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-cyber-red shadow-[0_0_8px_#FF4655]"></span>
-            <span className="text-hud-text">{compareLabel}</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+            <span className="text-slate-800 dark:text-slate-200">{compareLabel}</span>
           </div>
         </div>
       )}

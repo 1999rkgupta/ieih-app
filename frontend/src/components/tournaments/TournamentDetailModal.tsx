@@ -34,7 +34,7 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
   onRegistered,
   onClose
 }) => {
-  const [activeTab, setActiveTab] = useState<'brackets' | 'rules' | 'prizes' | 'organizer'>('brackets');
+  const [activeTab, setActiveTab] = useState<'brackets' | 'prizes' | 'rules' | 'organizer'>('brackets');
   const [isRegistered, setIsRegistered] = useState(initialIsRegistered);
   const [squadName, setSquadName] = useState(`${currentUser.gamerTag} & Squad`);
   const [submitting, setSubmitting] = useState(false);
@@ -52,16 +52,16 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-5xl max-h-[92vh] bg-hud-surface border border-hud-border rounded-2xl flex flex-col shadow-2xl shadow-cyber-cyan/15 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-3xl flex flex-col shadow-2xl overflow-hidden">
         {/* Banner Cover Header */}
-        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-hud-card shrink-0">
+        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-[#0c111d] shrink-0">
           <img
             src={tournament.bannerImage}
             alt={tournament.title}
-            className="w-full h-full object-cover opacity-60 filter contrast-125"
+            className="w-full h-full object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-hud-surface via-hud-surface/60 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111726] via-white/40 dark:via-[#111726]/40 to-transparent"></div>
 
           {/* Close button */}
           <button
@@ -69,155 +69,172 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
               soundManager.playClickSound();
               onClose();
             }}
-            className="absolute top-4 right-4 z-20 p-2 rounded-lg bg-black/70 hover:bg-black text-hud-muted hover:text-hud-text border border-hud-border transition-colors"
+            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 hover:bg-black/80 text-white transition-colors"
+            aria-label="Close dialog"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
 
           {/* Top Info Overlays */}
           <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2 z-10">
-            <span className="px-3 py-1 bg-cyber-red/90 text-white font-orbitron text-xs font-black rounded shadow-[0_0_10px_#FF4655]">
+            <span className={`px-2.5 py-0.5 text-[11px] font-semibold rounded-full shadow-sm ${
+              tournament.status.includes('Live')
+                ? 'bg-rose-500 text-white'
+                : 'bg-white/90 dark:bg-[#101622]/90 text-sky-600 dark:text-sky-400 border border-slate-200 dark:border-white/10'
+            }`}>
               {tournament.status}
             </span>
-            <span className="px-3 py-1 bg-black/80 backdrop-blur border border-cyber-cyan/50 text-cyber-cyan font-orbitron text-xs font-bold rounded">
+            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101622]/90 backdrop-blur text-[11px] font-semibold text-slate-900 dark:text-white rounded-full border border-slate-200 dark:border-white/10">
               {tournament.game}
             </span>
-            <span className="px-3 py-1 bg-black/80 backdrop-blur border border-hud-border text-hud-text font-rajdhani text-xs font-bold rounded">
+            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101622]/90 backdrop-blur text-[11px] font-medium text-slate-600 dark:text-slate-400 rounded-full border border-slate-200 dark:border-white/10">
               {tournament.type}
             </span>
           </div>
 
           <div className="absolute bottom-4 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-10">
             <div>
-              <h2 className="font-orbitron font-extrabold text-xl sm:text-2xl text-hud-text tracking-wide glow-text-cyan">
+              <h2 className="font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">
                 {tournament.title}
               </h2>
-              <div className="flex flex-wrap items-center gap-3 text-xs font-rajdhani text-hud-muted mt-1">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
                 <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-cyber-cyan" />
+                  <Calendar className="w-3.5 h-3.5 text-sky-500" />
                   {tournament.startDate} - {tournament.endDate}
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-hud-text font-semibold">
-                  <MapPin className="w-3.5 h-3.5 text-cyber-purple" />
+                <span className="flex items-center gap-1 text-slate-900 dark:text-white font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-indigo-500" />
                   {tournament.location}
                 </span>
               </div>
             </div>
 
-            <div className="bg-black/85 backdrop-blur-md px-4 py-2 rounded-xl border border-cyber-gold/50 text-right shrink-0">
-              <div className="text-[10px] font-orbitron text-hud-muted">TOTAL PRIZE POOL</div>
-              <div className="text-xl sm:text-2xl font-orbitron font-black text-cyber-gold glow-text-gold">
+            <div className="bg-white/95 dark:bg-[#101622]/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-white/10 text-right shrink-0 shadow-sm">
+              <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Prize Pool</div>
+              <div className="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
                 {tournament.prizePoolFormatted}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Navigation Tabs Bar */}
-        <div className="flex border-b border-hud-border px-6 pt-3 gap-3 bg-hud-card/60 shrink-0 overflow-x-auto no-scrollbar">
+        {/* Navigation Tabs Bar (Spotify pill tabs) */}
+        <div className="flex border-b border-slate-200 dark:border-white/10 px-6 py-2.5 gap-2 bg-slate-50/80 dark:bg-white/5 shrink-0 overflow-x-auto">
           <button
             onClick={() => {
               soundManager.playClickSound();
               setActiveTab('brackets');
             }}
-            className={`pb-3 px-3 text-xs font-orbitron font-semibold tracking-wider border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'brackets' ? 'border-cyber-cyan text-cyber-cyan' : 'border-transparent text-hud-muted hover:text-hud-text'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'brackets'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10'
             }`}
           >
-            <Trophy className="w-3.5 h-3.5" /> BRACKETS & FORMAT
+            <Trophy className="w-3.5 h-3.5" /> Brackets & Format
           </button>
           <button
             onClick={() => {
               soundManager.playClickSound();
               setActiveTab('prizes');
             }}
-            className={`pb-3 px-3 text-xs font-orbitron font-semibold tracking-wider border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'prizes' ? 'border-cyber-gold text-cyber-gold' : 'border-transparent text-hud-muted hover:text-hud-text'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'prizes'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10'
             }`}
           >
-            <Award className="w-3.5 h-3.5" /> PRIZE DISTRIBUTION
+            <Award className="w-3.5 h-3.5" /> Prize Distribution
           </button>
           <button
             onClick={() => {
               soundManager.playClickSound();
               setActiveTab('rules');
             }}
-            className={`pb-3 px-3 text-xs font-orbitron font-semibold tracking-wider border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'rules' ? 'border-cyber-purple text-cyber-purple' : 'border-transparent text-hud-muted hover:text-hud-text'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'rules'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10'
             }`}
           >
-            <FileText className="w-3.5 h-3.5" /> RULEBOOK & SCHEDULE
+            <FileText className="w-3.5 h-3.5" /> Rules & Timeline
           </button>
           <button
             onClick={() => {
               soundManager.playClickSound();
               setActiveTab('organizer');
             }}
-            className={`pb-3 px-3 text-xs font-orbitron font-semibold tracking-wider border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === 'organizer' ? 'border-cyber-blue text-cyber-blue' : 'border-transparent text-hud-muted hover:text-hud-text'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === 'organizer'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10'
             }`}
           >
-            <ShieldCheck className="w-3.5 h-3.5" /> ORGANIZER TRUST AUDIT ({tournament.organizer.trustScore}/100)
+            <ShieldCheck className="w-3.5 h-3.5" /> Organizer Audit ({tournament.organizer.trustScore}/100)
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1">
-          {/* Tab 1: Brackets & Live Tree */}
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-white dark:bg-[#111726]">
+          {/* Tab 1: Brackets */}
           {activeTab === 'brackets' && (
             <div className="space-y-6">
-              <div className="p-4 rounded-xl bg-hud-card border border-hud-border">
-                <h4 className="font-orbitron font-bold text-xs text-cyber-cyan mb-1">TOURNAMENT FORMAT</h4>
-                <p className="text-xs text-hud-text font-rajdhani font-semibold">{tournament.format}</p>
-                <p className="text-xs text-hud-muted font-sans mt-1">{tournament.description}</p>
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <h4 className="font-semibold text-xs text-sky-600 dark:text-sky-400 uppercase tracking-wider mb-1">Tournament Format</h4>
+                <p className="text-xs text-slate-900 dark:text-white font-medium">{tournament.format}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{tournament.description}</p>
               </div>
 
               {tournament.brackets && tournament.brackets.length > 0 ? (
                 <div className="space-y-4">
-                  <div className="text-xs font-orbitron font-bold text-hud-text flex items-center justify-between">
-                    <span>PLAYOFF FIXTURES & BRACKET TREE</span>
-                    <span className="text-[11px] font-rajdhani text-cyber-cyan font-bold">128-TICK AWS MUMBAI SERVER</span>
+                  <div className="text-xs font-semibold text-slate-900 dark:text-white flex items-center justify-between">
+                    <span>Playoff Fixtures & Bracket Tree</span>
+                    <span className="text-[11px] text-sky-500 font-medium">128-Tick Dedicated Server</span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {tournament.brackets.map(match => (
                       <div
                         key={match.id}
-                        className="p-4 rounded-xl bg-hud-card border border-hud-border/80 relative overflow-hidden"
+                        className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10"
                       >
-                        <div className="flex items-center justify-between pb-2 mb-3 border-b border-hud-border text-[11px] font-orbitron">
-                          <span className="text-hud-muted">{match.roundName}</span>
+                        <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200 dark:border-white/10 text-[11px]">
+                          <span className="text-slate-500 dark:text-slate-400 font-medium">{match.roundName}</span>
                           {match.isLive ? (
-                            <span className="px-2 py-0.5 bg-cyber-red text-white text-[10px] rounded font-bold animate-pulse">
-                              LIVE NOW
+                            <span className="px-2 py-0.5 bg-rose-500 text-white text-[10px] rounded-full font-bold">
+                              Live Now
                             </span>
                           ) : (
-                            <span className="text-hud-dim font-mono">{match.scheduledTime}</span>
+                            <span className="text-slate-400 font-mono">{match.scheduledTime}</span>
                           )}
                         </div>
 
-                        <div className="space-y-2 font-rajdhani font-bold">
+                        <div className="space-y-2 text-xs font-semibold">
                           {/* Team 1 */}
-                          <div className={`flex items-center justify-between p-2.5 rounded-lg border ${
-                            match.team1.isWinner ? 'bg-cyber-cyan/10 border-cyber-cyan/60 text-cyber-cyan' : 'bg-hud-bg/70 border-hud-border text-hud-text'
+                          <div className={`flex items-center justify-between p-2.5 rounded-xl border ${
+                            match.team1.isWinner
+                              ? 'bg-sky-500/10 border-sky-500/40 text-sky-600 dark:text-sky-400'
+                              : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white'
                           }`}>
                             <div className="flex items-center gap-2">
-                              <img src={match.team1.logo} alt={match.team1.name} className="w-5 h-5 rounded object-cover" />
-                              <span className="text-sm">[{match.team1.tag}] {match.team1.name}</span>
+                              <img src={match.team1.logo} alt={match.team1.name} className="w-5 h-5 rounded-full object-cover" />
+                              <span className="text-xs">[{match.team1.tag}] {match.team1.name}</span>
                             </div>
-                            <span className="font-orbitron font-black text-sm">{match.team1.score ?? '-'}</span>
+                            <span className="font-bold text-sm">{match.team1.score ?? '-'}</span>
                           </div>
 
                           {/* Team 2 */}
-                          <div className={`flex items-center justify-between p-2.5 rounded-lg border ${
-                            match.team2.isWinner ? 'bg-cyber-cyan/10 border-cyber-cyan/60 text-cyber-cyan' : 'bg-hud-bg/70 border-hud-border text-hud-text'
+                          <div className={`flex items-center justify-between p-2.5 rounded-xl border ${
+                            match.team2.isWinner
+                              ? 'bg-sky-500/10 border-sky-500/40 text-sky-600 dark:text-sky-400'
+                              : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white'
                           }`}>
                             <div className="flex items-center gap-2">
-                              <img src={match.team2.logo} alt={match.team2.name} className="w-5 h-5 rounded object-cover" />
-                              <span className="text-sm">[{match.team2.tag}] {match.team2.name}</span>
+                              <img src={match.team2.logo} alt={match.team2.name} className="w-5 h-5 rounded-full object-cover" />
+                              <span className="text-xs">[{match.team2.tag}] {match.team2.name}</span>
                             </div>
-                            <span className="font-orbitron font-black text-sm">{match.team2.score ?? '-'}</span>
+                            <span className="font-bold text-sm">{match.team2.score ?? '-'}</span>
                           </div>
                         </div>
                       </div>
@@ -225,10 +242,10 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center bg-hud-card rounded-xl border border-hud-border">
-                  <Clock className="w-8 h-8 text-cyber-cyan mx-auto mb-2 animate-spin-slow" />
-                  <h4 className="font-orbitron font-bold text-sm text-hud-text">BRACKET GENERATION IN PROGRESS</h4>
-                  <p className="text-xs text-hud-muted font-rajdhani mt-1">Brackets will be drawn live on stream once team check-ins conclude.</p>
+                <div className="p-8 text-center bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl">
+                  <Clock className="w-8 h-8 text-sky-500 mx-auto mb-2" />
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">Bracket Generation In Progress</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Brackets will be drawn live on stream once team check-ins conclude.</p>
                 </div>
               )}
             </div>
@@ -237,14 +254,14 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
           {/* Tab 2: Prizes */}
           {activeTab === 'prizes' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-cyber-gold/5 border border-cyber-gold/30 flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between">
                 <div>
-                  <h4 className="font-orbitron font-bold text-sm text-cyber-gold">IEIH ESCROW DISBURSAL GUARANTEE</h4>
-                  <p className="text-xs text-hud-muted font-rajdhani mt-0.5">All tournament prizing is held in bank escrow and disbursed within 14 days of finals completion.</p>
+                  <h4 className="font-bold text-sm text-amber-600 dark:text-amber-400">IEIH Escrow Prizepool Guarantee</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">All prizing is secured in bank escrow and disbursed within 14 days of tournament finals.</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] font-orbitron text-hud-muted">TOTAL POOL</div>
-                  <div className="text-xl font-orbitron font-black text-cyber-gold">{tournament.prizePoolFormatted}</div>
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Total Pool</div>
+                  <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{tournament.prizePoolFormatted}</div>
                 </div>
               </div>
 
@@ -252,17 +269,17 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
                 {tournament.prizeDistribution.map((prize, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-hud-card border border-hud-border flex items-center justify-between text-sm font-rajdhani font-bold hover:border-cyber-gold/50 transition-colors"
+                    className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-semibold"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-hud-bg border border-hud-border flex items-center justify-center font-orbitron text-xs text-cyber-gold">
+                      <div className="w-7 h-7 rounded-full bg-slate-200/70 dark:bg-white/10 flex items-center justify-center text-xs font-bold text-amber-600 dark:text-amber-400">
                         #{idx + 1}
                       </div>
-                      <span className="text-hud-text font-orbitron text-xs">{prize.place}</span>
+                      <span className="text-slate-900 dark:text-white text-xs">{prize.place}</span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="text-hud-muted text-xs">{prize.percentage}</span>
-                      <span className="text-emerald-400 font-orbitron font-bold">{prize.amount}</span>
+                      <span className="text-slate-500 dark:text-slate-400 text-xs font-normal">{prize.percentage}</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">{prize.amount}</span>
                     </div>
                   </div>
                 ))}
@@ -274,11 +291,11 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
           {activeTab === 'rules' && (
             <div className="space-y-6">
               <div className="space-y-3">
-                <h4 className="font-orbitron font-bold text-xs text-cyber-purple tracking-wider">OFFICIAL TOURNAMENT RULES</h4>
+                <h4 className="font-semibold text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Official Rules</h4>
                 <div className="space-y-2">
                   {tournament.rulesSummary.map((rule, idx) => (
-                    <div key={idx} className="p-3 rounded-lg bg-hud-card border border-hud-border flex items-start gap-2.5 text-xs text-hud-text font-sans">
-                      <CheckCircle2 className="w-4 h-4 text-cyber-cyan shrink-0 mt-0.5" />
+                    <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-start gap-2.5 text-xs text-slate-900 dark:text-white">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                       <span>{rule}</span>
                     </div>
                   ))}
@@ -286,14 +303,14 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
               </div>
 
               <div className="space-y-3">
-                <h4 className="font-orbitron font-bold text-xs text-cyber-cyan tracking-wider">OFFICIAL STAGE TIMELINE</h4>
+                <h4 className="font-semibold text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Timeline</h4>
                 <div className="space-y-2">
                   {tournament.schedule.map((item, idx) => (
-                    <div key={idx} className="p-3 rounded-lg bg-hud-card border border-hud-border flex items-center justify-between text-xs font-rajdhani font-bold">
-                      <span className="text-hud-text font-orbitron text-xs">{item.stage}</span>
-                      <div className="flex items-center gap-3 text-hud-muted">
+                    <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between text-xs font-medium">
+                      <span className="text-slate-900 dark:text-white font-semibold text-xs">{item.stage}</span>
+                      <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400">
                         <span>{item.date}</span>
-                        <span className="text-cyber-cyan font-mono">{item.time}</span>
+                        <span className="text-sky-500 font-mono font-medium">{item.time}</span>
                       </div>
                     </div>
                   ))}
@@ -305,45 +322,45 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
           {/* Tab 4: Organizer Trust Audit */}
           {activeTab === 'organizer' && (
             <div className="space-y-5">
-              <div className="p-5 rounded-xl bg-hud-card border-2 border-cyber-cyan/40 relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <img src={tournament.organizer.logo} alt={tournament.organizer.name} className="w-16 h-16 rounded-xl object-cover border-2 border-cyber-cyan" />
+                  <img src={tournament.organizer.logo} alt={tournament.organizer.name} className="w-14 h-14 rounded-full object-cover border-2 border-slate-200 dark:border-white/10" />
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="font-orbitron font-bold text-lg text-hud-text">{tournament.organizer.name}</h4>
-                      <ShieldCheck className="w-5 h-5 text-cyber-cyan" />
+                      <h4 className="font-bold text-base text-slate-900 dark:text-white">{tournament.organizer.name}</h4>
+                      <ShieldCheck className="w-4 h-4 text-sky-500" />
                     </div>
-                    <span className="px-2 py-0.5 bg-cyber-cyan/20 text-cyber-cyan rounded font-rajdhani font-bold text-xs">
+                    <span className="px-2 py-0.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full font-semibold text-[11px]">
                       {tournament.organizer.tier}
                     </span>
-                    <p className="text-xs text-hud-muted font-rajdhani mt-1">Verified Entity with registered Indian GST & Escrow Bond</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Verified Entity with registered Indian GST & Escrow Bond</p>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-hud-bg border border-hud-border text-center shrink-0">
-                  <div className="text-[10px] font-orbitron text-hud-muted">TRUST SCORE</div>
-                  <div className="text-3xl font-orbitron font-black text-cyber-cyan glow-text-cyan mt-0.5">
-                    {tournament.organizer.trustScore}<span className="text-sm text-hud-muted font-normal">/100</span>
+                <div className="p-4 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-center shrink-0">
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Trust Score</div>
+                  <div className="text-2xl font-extrabold text-sky-600 dark:text-sky-400 mt-0.5">
+                    {tournament.organizer.trustScore}<span className="text-xs text-slate-500 dark:text-slate-400 font-normal">/100</span>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3 bg-hud-card border border-hud-border rounded-xl text-center">
-                  <div className="text-[10px] font-orbitron text-hud-muted">PAYOUT PUNCTUALITY</div>
-                  <div className="text-lg font-orbitron font-bold text-emerald-400 mt-1">99.4%</div>
+                <div className="p-3.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-center">
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Payout Punctuality</div>
+                  <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">99.4%</div>
                 </div>
-                <div className="p-3 bg-hud-card border border-hud-border rounded-xl text-center">
-                  <div className="text-[10px] font-orbitron text-hud-muted">DISPUTE SPEED</div>
-                  <div className="text-lg font-orbitron font-bold text-cyber-cyan mt-1">&lt; 45 Mins</div>
+                <div className="p-3.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-center">
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Dispute Speed</div>
+                  <div className="text-lg font-bold text-sky-600 dark:text-sky-400 mt-1">&lt; 45 mins</div>
                 </div>
-                <div className="p-3 bg-hud-card border border-hud-border rounded-xl text-center">
-                  <div className="text-[10px] font-orbitron text-hud-muted">TOURNAMENTS COMPLETED</div>
-                  <div className="text-lg font-orbitron font-bold text-cyber-purple mt-1">140+ Events</div>
+                <div className="p-3.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-center">
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Events Completed</div>
+                  <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-1">140+</div>
                 </div>
-                <div className="p-3 bg-hud-card border border-hud-border rounded-xl text-center">
-                  <div className="text-[10px] font-orbitron text-hud-muted">TOTAL PRIZING PAID</div>
-                  <div className="text-lg font-orbitron font-bold text-cyber-gold mt-1">₹14.8+ Cr</div>
+                <div className="p-3.5 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-center">
+                  <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Total Prizing Paid</div>
+                  <div className="text-lg font-bold text-amber-600 dark:text-amber-400 mt-1">₹14.8+ Cr</div>
                 </div>
               </div>
             </div>
@@ -351,23 +368,23 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
         </div>
 
         {/* Registration Footer Bar */}
-        <div className="p-5 border-t border-hud-border bg-hud-card/90 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+        <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50/90 dark:bg-[#101622]/90 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
           <div className="flex items-center gap-3">
-            <Users className="w-5 h-5 text-cyber-cyan" />
+            <Users className="w-5 h-5 text-sky-500" />
             <div>
-              <div className="text-xs font-orbitron font-bold text-hud-text">
-                SLOT STATUS: <span className="text-cyber-cyan">{tournament.registeredSlots} / {tournament.totalSlots} SLOTS FILLED</span>
+              <div className="text-xs font-semibold text-slate-900 dark:text-white">
+                Capacity: <span className="text-sky-600 dark:text-sky-400 font-bold">{tournament.registeredSlots} / {tournament.totalSlots} Slots Filled</span>
               </div>
-              <p className="text-xs font-rajdhani text-hud-muted">
-                Entry Fee: <strong className="text-emerald-400 font-bold">{tournament.entryFee}</strong>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Entry Fee: <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">{tournament.entryFee}</strong>
               </p>
             </div>
           </div>
 
           {isRegistered ? (
-            <div className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500/20 border border-emerald-400 rounded-xl text-emerald-400 font-orbitron text-xs font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+            <div className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-semibold border border-emerald-500/30">
               <CheckCircle2 className="w-4 h-4" />
-              SQUAD REGISTERED & VERIFIED
+              <span>Squad Registered & Verified</span>
             </div>
           ) : (
             <form onSubmit={handleRegister} className="flex items-center gap-2 w-full sm:w-auto">
@@ -377,15 +394,15 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
                 value={squadName}
                 onChange={e => setSquadName(e.target.value)}
                 placeholder="Enter Squad Tag / Name"
-                className="px-3 py-2 bg-hud-bg border border-hud-border rounded-xl text-xs font-rajdhani font-bold text-hud-text focus:outline-none focus:border-cyber-cyan"
+                className="px-3.5 py-2 bg-white dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-2 bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-orbitron text-xs font-bold rounded-xl hover:shadow-[0_0_20px_rgba(0,240,255,0.6)] transition-all flex items-center gap-2 whitespace-nowrap"
+                className="px-5 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap"
               >
-                <Sparkles className="w-4 h-4 fill-black" />
-                {submitting ? 'LOCKING ROSTER...' : '1-CLICK REGISTER SQUAD'}
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                <span>{submitting ? 'Registering...' : '1-Click Register'}</span>
               </button>
             </form>
           )}

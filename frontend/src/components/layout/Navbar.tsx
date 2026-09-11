@@ -4,7 +4,6 @@ import {
   Volume2, 
   VolumeX, 
   Zap, 
-  Sparkles, 
   Menu, 
   X, 
   Radio, 
@@ -14,11 +13,15 @@ import {
   GraduationCap, 
   Briefcase, 
   Bot,
-  ChevronDown
+  ChevronDown,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
 import { MOCK_TICKER_ITEMS } from '../../data/mockData';
+import { useTheme } from '../../context/ThemeContext';
+import { IEIHLogo } from '../common/IEIHLogo';
 
 interface NavbarProps {
   currentTab: string;
@@ -35,12 +38,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   allPlayers,
   onSwitchUser
 }) => {
+  const { theme, toggleTheme } = useTheme();
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [tickerIndex, setTickerIndex] = useState(0);
 
-  // Live ticker animation
+  // Live ticker rotation
   useEffect(() => {
     const timer = setInterval(() => {
       setTickerIndex(prev => (prev + 1) % MOCK_TICKER_ITEMS.length);
@@ -54,66 +58,53 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navItems = [
-    { id: 'home', label: 'HUB COMMAND', icon: Radio },
-    { id: 'passport', label: 'E-PASSPORT', icon: User },
-    { id: 'discovery', label: 'TALENT RADAR', icon: Search },
-    { id: 'tournaments', label: 'TOURNAMENTS', icon: Trophy },
-    { id: 'campus', label: 'CAMPUS', icon: GraduationCap },
-    { id: 'careers', label: 'CAREERS', icon: Briefcase },
-    { id: 'ai', label: 'EE AI', icon: Bot, isSpecial: true },
+    { id: 'home', label: 'Command', icon: Radio },
+    { id: 'passport', label: 'E-Passport', icon: User },
+    { id: 'discovery', label: 'Talent Radar', icon: Search },
+    { id: 'tournaments', label: 'Tournaments', icon: Trophy },
+    { id: 'campus', label: 'Campus', icon: GraduationCap },
+    { id: 'careers', label: 'Careers', icon: Briefcase },
+    { id: 'ai', label: 'EE AI', icon: Bot },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-hud-bg/95 backdrop-blur-xl border-b border-hud-border/80">
-      {/* Top Live Esports Ticker */}
-      <div className="bg-hud-card/90 border-b border-hud-border/60 py-1.5 px-4 sm:px-8 flex items-center justify-between text-xs font-rajdhani overflow-hidden">
+    <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#090c13]/85 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/10 transition-colors duration-200">
+      {/* Top Ticker Bar */}
+      <div className="border-b border-slate-200/60 dark:border-white/5 py-1.5 px-4 sm:px-8 flex items-center justify-between text-xs bg-slate-50/80 dark:bg-[#070a12]/80 backdrop-blur-md">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <span className="px-2 py-0.5 bg-cyber-red/90 text-white font-orbitron font-bold text-[9px] rounded flex items-center gap-1 shrink-0 animate-pulse">
-            <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+          <span className="px-2.5 py-0.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-semibold text-[10px] rounded-full flex items-center gap-1.5 shrink-0 border border-rose-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
             LIVE BROADCAST
           </span>
-          <p className="text-hud-muted truncate font-medium text-xs transition-all duration-700">
+          <p className="text-slate-600 dark:text-slate-300 truncate font-normal text-xs transition-all duration-700">
             {MOCK_TICKER_ITEMS[tickerIndex]}
           </p>
         </div>
 
-        <div className="hidden md:flex items-center gap-4 text-[11px] font-orbitron text-hud-dim shrink-0 pl-4">
-          <span className="flex items-center gap-1 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span> 18MS MUMBAI REALM
+        <div className="hidden md:flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 shrink-0 pl-4 font-mono">
+          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 18ms Mumbai
           </span>
-          <span>•</span>
-          <span className="text-cyber-cyan">IEIH PROTOCOL V2.6</span>
+          <span className="text-slate-300 dark:text-white/20">•</span>
+          <span className="text-slate-500 dark:text-slate-400">Protocol v2.6</span>
         </div>
       </div>
 
-      {/* Primary Navigation Bar */}
+      {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
+        {/* Logo */}
         <div
           onClick={() => {
             soundManager.playClickSound();
             onNavigate('home');
           }}
-          className="flex items-center gap-2.5 cursor-pointer group shrink-0"
+          className="cursor-pointer group shrink-0"
         >
-          {/* Cyber Polygon Shield Emblem */}
-          <div className="relative w-9 h-9 rounded-xl bg-hud-card border border-cyber-cyan/60 flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.4)] group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-5 h-5 text-cyber-cyan" />
-            <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyber-purple"></div>
-          </div>
-          <div>
-            <div className="font-orbitron font-black text-lg tracking-wider text-hud-text flex items-center gap-1">
-              <span>IEIH</span>
-              <span className="text-cyber-cyan text-xs font-mono font-bold px-1.5 py-0.2 bg-cyber-cyan/15 rounded">PRO</span>
-            </div>
-            <p className="text-[9px] font-orbitron text-hud-muted tracking-widest uppercase -mt-0.5">
-              INDIA ESPORTS HUB
-            </p>
-          </div>
+          <IEIHLogo size="md" animate />
         </div>
 
-        {/* Desktop Nav Items */}
-        <nav className="hidden lg:flex items-center gap-1">
+        {/* Desktop Nav Items (Spotify-style pill items) */}
+        <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 p-1 rounded-full border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -124,64 +115,77 @@ export const Navbar: React.FC<NavbarProps> = ({
                   soundManager.playClickSound();
                   onNavigate(item.id);
                 }}
-                className={`px-3.5 py-2 rounded-xl text-xs font-orbitron font-bold tracking-wider transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 flex items-center gap-1.5 select-none ${
                   isActive
-                    ? item.isSpecial
-                      ? 'bg-cyber-purple/25 text-cyber-purple border border-cyber-purple shadow-[0_0_12px_rgba(139,92,246,0.4)]'
-                      : 'bg-cyber-cyan/15 text-cyber-cyan border border-cyber-cyan shadow-[0_0_12px_rgba(0,240,255,0.3)]'
-                    : 'text-hud-muted hover:text-hud-text hover:bg-hud-card border border-transparent'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? (item.isSpecial ? 'text-cyber-purple' : 'text-cyber-cyan') : 'text-hud-muted'}`} />
+                <Icon className="w-3.5 h-3.5" />
                 <span>{item.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Right HUD Controls */}
-        <div className="flex items-center gap-2.5">
+        {/* Right Controls */}
+        <div className="flex items-center gap-2">
+          {/* Theme Switcher Toggle */}
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              toggleTheme();
+            }}
+            className="p-2 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 shadow-sm transition-all duration-200"
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? (
+              <Moon className="w-4 h-4 text-slate-700" />
+            ) : (
+              <Sun className="w-4 h-4 text-amber-400" />
+            )}
+          </button>
+
           {/* Sound Toggle */}
           <button
             onClick={handleToggleMute}
-            className={`p-2 rounded-xl border transition-all ${
-              isMuted
-                ? 'bg-hud-card border-hud-border text-hud-dim'
-                : 'bg-hud-card border-cyber-cyan/40 text-cyber-cyan shadow-[0_0_10px_rgba(0,240,255,0.2)]'
-            }`}
-            title={isMuted ? 'Unmute HUD Audio' : 'Mute HUD Audio'}
+            className="p-2 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all duration-200"
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-sky-500" />}
           </button>
 
-          {/* User Passport Quick Selector Dropdown */}
+          {/* User Profile Dropdown */}
           <div className="relative">
             <button
               onClick={() => {
                 soundManager.playClickSound();
                 setUserDropdownOpen(!userDropdownOpen);
               }}
-              className="flex items-center gap-2.5 p-1.5 pr-3 bg-hud-card hover:bg-hud-panel border border-hud-border hover:border-cyber-cyan rounded-xl transition-all"
+              className="flex items-center gap-2 p-1 pr-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full transition-all shadow-sm"
             >
               <img
                 src={currentUser.avatarUrl}
                 alt={currentUser.gamerTag}
-                className="w-7 h-7 rounded-lg object-cover border border-cyber-cyan/50"
+                className="w-7 h-7 rounded-full object-cover border border-slate-200 dark:border-white/20"
               />
               <div className="hidden sm:block text-left">
-                <div className="font-orbitron font-bold text-xs text-hud-text flex items-center gap-1">
+                <div className="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-1 leading-none">
                   <span>{currentUser.gamerTag}</span>
-                  <span className="text-[9px] px-1 bg-cyber-purple/30 text-cyber-purple rounded font-mono">L{currentUser.level}</span>
+                  <span className="text-[9px] px-1.5 py-0.2 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full font-mono font-medium">
+                    L{currentUser.level}
+                  </span>
                 </div>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-hud-muted" />
+              <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             </button>
 
             {/* Dropdown Menu */}
             {userDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-hud-surface border border-hud-border rounded-xl shadow-2xl shadow-cyber-cyan/20 p-2 z-50 animate-fadeIn">
-                <div className="p-2 border-b border-hud-border text-xs font-orbitron text-hud-muted">
-                  SWITCH ACTIVE PASSPORT PROFILE
+              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-50 animate-fadeIn">
+                <div className="px-3 py-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/80 dark:border-white/10">
+                  Switch Active Passport
                 </div>
                 <div className="py-1 max-h-56 overflow-y-auto space-y-1">
                   {allPlayers.map(p => (
@@ -192,30 +196,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSwitchUser(p);
                         setUserDropdownOpen(false);
                       }}
-                      className={`w-full p-2 rounded-lg text-left flex items-center gap-2.5 text-xs font-rajdhani transition-all ${
+                      className={`w-full p-2 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
                         p.id === currentUser.id
-                          ? 'bg-cyber-cyan/15 text-cyber-cyan font-bold border border-cyber-cyan/40'
-                          : 'hover:bg-hud-card text-hud-text'
+                          ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
+                          : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
                       }`}
                     >
-                      <img src={p.avatarUrl} alt={p.gamerTag} className="w-6 h-6 rounded-md object-cover" />
+                      <img src={p.avatarUrl} alt={p.gamerTag} className="w-7 h-7 rounded-full object-cover" />
                       <div className="truncate">
-                        <div className="font-orbitron font-bold text-xs truncate">{p.gamerTag}</div>
-                        <div className="text-[10px] text-hud-muted">{p.primaryGame} • {p.primaryRole}</div>
+                        <div className="font-semibold text-xs truncate text-slate-900 dark:text-white">{p.gamerTag}</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400">{p.primaryGame} • {p.primaryRole}</div>
                       </div>
                     </button>
                   ))}
                 </div>
-                <div className="pt-2 border-t border-hud-border">
+                <div className="pt-2 border-t border-slate-200/80 dark:border-white/10">
                   <button
                     onClick={() => {
                       soundManager.playSuccessBeep();
                       setUserDropdownOpen(false);
                       onNavigate('onboarding');
                     }}
-                    className="w-full py-1.5 bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-orbitron font-bold text-xs rounded-lg text-center shadow-[0_0_10px_rgba(0,240,255,0.3)]"
+                    className="w-full py-2 bg-slate-900 text-white dark:bg-sky-600 dark:hover:bg-sky-500 hover:bg-slate-800 font-semibold text-xs rounded-xl text-center shadow-sm transition-colors"
                   >
-                    + CREATE NEW PASSPORT
+                    + Create New Passport
                   </button>
                 </div>
               </div>
@@ -228,25 +232,26 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playSuccessBeep();
               onNavigate('onboarding');
             }}
-            className="hidden sm:flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-cyber-cyan to-cyber-blue text-black font-orbitron font-extrabold text-xs rounded-xl hover:shadow-[0_0_15px_rgba(0,240,255,0.6)] transition-all"
+            className="hidden sm:flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-full transition-all shadow-sm"
           >
-            <Zap className="w-3.5 h-3.5 fill-black" />
-            MINT PASSPORT
+            <Zap className="w-3.5 h-3.5 fill-current" />
+            <span>Mint Passport</span>
           </button>
 
           {/* Mobile menu hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 lg:hidden text-hud-muted hover:text-hud-text bg-hud-card border border-hud-border rounded-xl"
+            className="p-2 lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden p-4 bg-hud-surface border-b border-hud-border space-y-2 animate-fadeIn">
+        <div className="lg:hidden p-3 bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 space-y-1 animate-fadeIn">
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
@@ -258,8 +263,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onNavigate(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full p-3 rounded-xl text-xs font-orbitron font-bold flex items-center gap-2.5 ${
-                  isActive ? 'bg-cyber-cyan/20 text-cyber-cyan border border-cyber-cyan' : 'text-hud-muted hover:bg-hud-card'
+                className={`w-full p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all ${
+                  isActive 
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold' 
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
                 }`}
               >
                 <Icon className="w-4 h-4" />

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="shield-grad" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+
+    <linearGradient id="saffron-grad" x1="28" y1="8" x2="54" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff781f" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <linearGradient id="azure-grad" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <linearGradient id="emerald-grad" x1="12" y1="36" x2="36" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <linearGradient id="sheen" x1="12" y1="8" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0284c7" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Outer Shield Crest -->
+  <path
+    d="M32 3 L55 14.5 C55 35 44.5 49.5 32 60 C19.5 49.5 9 35 9 14.5 L32 3 Z"
+    fill="url(#shield-grad)"
+    filter="url(#glow)"
+  />
+
+  <!-- Dark Core Recess -->
+  <path
+    d="M32 6.5 L51.5 16.5 C51.5 33.5 42.5 46.5 32 55.5 C21.5 46.5 12.5 33.5 12.5 16.5 L32 6.5 Z"
+    fill="#080b13"
+  />
+
+  <!-- Sheen Edge -->
+  <path
+    d="M32 3 L55 14.5 C55 35 44.5 49.5 32 60 C19.5 49.5 9 35 9 14.5 L32 3 Z"
+    stroke="url(#sheen)"
+    stroke-width="1.5"
+    fill="none"
+  />
+
+  <!-- Left "I" Pillar with Emerald Base -->
+  <path
+    d="M17.5 18.5 L24.5 14.5 L24.5 45.5 L17.5 40 Z"
+    fill="url(#emerald-grad)"
+  />
+  <path
+    d="M21 17 L24.5 14.5 L24.5 45.5 L21 42.5 Z"
+    fill="#ffffff"
+    fill-opacity="0.22"
+  />
+
+  <!-- Right "E" Speed Wings -->
+  <!-- Saffron Top Energy -->
+  <path
+    d="M27.5 14.5 L46 20.5 L41 26 L27.5 21 Z"
+    fill="url(#saffron-grad)"
+  />
+
+  <!-- Chakra Azure Mid Strike -->
+  <path
+    d="M27.5 24.5 L43 27.5 L39 32.5 L27.5 30 Z"
+    fill="url(#azure-grad)"
+  />
+
+  <!-- Cobalt Blue Lower Wing -->
+  <path
+    d="M27.5 33.5 L46 32.5 L40 40 L27.5 45.5 Z"
+    fill="url(#shield-grad)"
+  />
+
+  <!-- Center Biometric Diamond Core -->
+  <polygon
+    points="32,23 37,29 32,35 27,29"
+    fill="#ffffff"
+  />
+  <polygon
+    points="32,25.5 35,29 32,32.5 29,29"
+    fill="#0284c7"
+  />
+</svg>
