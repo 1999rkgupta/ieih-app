@@ -41,8 +41,19 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
           </div>
 
           {/* Main Display Heading */}
-          <h1 className="font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 dark:text-white tracking-tight leading-tight">
-            Discover <span className="text-sky-500">•</span> Develop <span className="text-indigo-500">•</span> Verify <span className="text-amber-500">•</span> Connect
+          <h1 className="font-extrabold text-3xl sm:text-5xl lg:text-[52px] text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+            <span>
+              Discover{' '}
+              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-sky-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
+              Develop{' '}
+              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-indigo-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>
+            </span>
+            <br />
+            <span>
+              Verify{' '}
+              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
+              Connect
+            </span>
           </h1>
 
           {/* Subheading */}
