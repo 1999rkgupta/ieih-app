@@ -41,17 +41,17 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
           </div>
 
           {/* Main Display Heading */}
-          <h1 className="font-extrabold text-3xl sm:text-5xl lg:text-[52px] text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+          <h1 className="font-extrabold text-[28px] sm:text-[40px] text-slate-900 dark:text-white tracking-tight leading-snug">
             <span>
               Discover{' '}
-              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-sky-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
+              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
               Develop{' '}
-              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-indigo-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>
+              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>
             </span>
             <br />
             <span>
               Verify{' '}
-              <span className="inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500 align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
+              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
               Connect
             </span>
           </h1>
