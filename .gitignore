@@ -63,3 +63,6 @@ android/local.properties
 web-build/
 *.tmp
 *.temp
+*.zip
+ieih-webapp/
+
