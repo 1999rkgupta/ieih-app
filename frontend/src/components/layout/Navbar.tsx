@@ -6,7 +6,7 @@ import {
   Zap, 
   Menu, 
   X, 
-  Radio, 
+  Home, 
   Trophy, 
   Search, 
   User, 
@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navItems = [
-    { id: 'home', label: 'Command', icon: Radio },
+    { id: 'home', label: 'Home', icon: Home },
     { id: 'passport', label: 'E-Passport', icon: User },
     { id: 'discovery', label: 'Talent Radar', icon: Search },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
