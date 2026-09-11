@@ -22,6 +22,7 @@ import { soundManager } from '../../utils/audio';
 import { MOCK_TICKER_ITEMS } from '../../data/mockData';
 import { useTheme } from '../../context/ThemeContext';
 import { IEIHLogo } from '../common/IEIHLogo';
+import { InstagramAvatar } from '../common/InstagramAvatar';
 
 interface NavbarProps {
   currentTab: string;
@@ -59,7 +60,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'passport', label: 'Profile', icon: User },
     { id: 'discovery', label: 'Talent Radar', icon: Search },
     { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'campus', label: 'Campus', icon: GraduationCap },
@@ -92,18 +92,125 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <div
-          onClick={() => {
-            soundManager.playClickSound();
-            onNavigate('home');
-          }}
-          className="cursor-pointer group shrink-0"
-        >
-          <IEIHLogo size="md" animate />
+        {/* Top-Left: Logo & LinkedIn-Style Profile Badge */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div
+            onClick={() => {
+              soundManager.playClickSound();
+              onNavigate('home');
+            }}
+            className="cursor-pointer group shrink-0"
+          >
+            <IEIHLogo size="md" animate />
+          </div>
+
+          <div className="h-6 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+
+          {/* LinkedIn-Style Top-Left Profile Element */}
+          <div className="relative flex items-center">
+            <button
+              onClick={() => {
+                soundManager.playClickSound();
+                onNavigate('passport');
+              }}
+              className={`flex items-center gap-2 py-1 pl-1 pr-2.5 rounded-full border transition-all duration-200 select-none ${
+                currentTab === 'passport'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
+                  : 'bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 shadow-sm'
+              }`}
+              title="View Profile"
+            >
+              <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20">
+                <InstagramAvatar size="sm" className="w-full h-full" />
+              </div>
+              <div className="text-left leading-tight hidden xs:block">
+                <span className="text-xs font-bold tracking-tight block truncate max-w-[100px]">
+                  {currentUser.gamerTag}
+                </span>
+                <span className={`text-[9px] font-semibold block ${
+                  currentTab === 'passport'
+                    ? 'text-sky-300 dark:text-sky-600'
+                    : 'text-sky-600 dark:text-sky-400'
+                }`}>
+                  Profile
+                </span>
+              </div>
+            </button>
+
+            {/* Quick Switch Dropdown Trigger */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                soundManager.playClickSound();
+                setUserDropdownOpen(!userDropdownOpen);
+              }}
+              className="p-1 ml-0.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 transition-colors"
+              title="Switch Athlete"
+              aria-label="Switch athlete"
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu (Anchored to Top-Left Profile) */}
+            {userDropdownOpen && (
+              <div className="absolute left-0 top-full mt-2 w-64 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-50 animate-fadeIn">
+                <div className="px-3 py-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between">
+                  <span>Switch Athlete</span>
+                  <span className="text-[10px] text-sky-500 font-mono font-medium">{allPlayers.length} Active</span>
+                </div>
+                <div className="py-1 max-h-56 overflow-y-auto space-y-1">
+                  {allPlayers.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        soundManager.playSuccessBeep();
+                        onSwitchUser(p);
+                        setUserDropdownOpen(false);
+                      }}
+                      className={`w-full p-2 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
+                        p.id === currentUser.id
+                          ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
+                          : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-white/10">
+                        <InstagramAvatar size="sm" className="w-full h-full" />
+                      </div>
+                      <div className="truncate">
+                        <div className="font-semibold text-xs truncate text-slate-900 dark:text-white">{p.gamerTag}</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400">{p.primaryGame} • {p.primaryRole}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-slate-200/80 dark:border-white/10 flex flex-col gap-1">
+                  <button
+                    onClick={() => {
+                      soundManager.playClickSound();
+                      setUserDropdownOpen(false);
+                      onNavigate('passport');
+                    }}
+                    className="w-full py-1.5 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 font-medium text-xs rounded-xl text-center transition-colors"
+                  >
+                    View Full Profile &rarr;
+                  </button>
+                  <button
+                    onClick={() => {
+                      soundManager.playSuccessBeep();
+                      setUserDropdownOpen(false);
+                      onNavigate('onboarding');
+                    }}
+                    className="w-full py-2 bg-slate-900 text-white dark:bg-sky-600 dark:hover:bg-sky-500 hover:bg-slate-800 font-semibold text-xs rounded-xl text-center shadow-sm transition-colors"
+                  >
+                    + Create New Passport
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Desktop Nav Items (Spotify-style pill items) */}
+        {/* Center Desktop Nav Items (Spotify-style pill items) */}
         <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-white/5 p-1 rounded-full border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md">
           {navItems.map(item => {
             const Icon = item.icon;
@@ -156,76 +263,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-sky-500" />}
           </button>
 
-          {/* User Profile Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => {
-                soundManager.playClickSound();
-                setUserDropdownOpen(!userDropdownOpen);
-              }}
-              className="flex items-center gap-2 p-1 pr-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full transition-all shadow-sm"
-            >
-              <img
-                src={currentUser.avatarUrl}
-                alt={currentUser.gamerTag}
-                className="w-7 h-7 rounded-full object-cover border border-slate-200 dark:border-white/20"
-              />
-              <div className="hidden sm:block text-left">
-                <div className="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-1 leading-none">
-                  <span>{currentUser.gamerTag}</span>
-                  <span className="text-[9px] px-1.5 py-0.2 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full font-mono font-medium">
-                    L{currentUser.level}
-                  </span>
-                </div>
-              </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {userDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-50 animate-fadeIn">
-                <div className="px-3 py-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/80 dark:border-white/10">
-                  Switch Active Passport
-                </div>
-                <div className="py-1 max-h-56 overflow-y-auto space-y-1">
-                  {allPlayers.map(p => (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        soundManager.playSuccessBeep();
-                        onSwitchUser(p);
-                        setUserDropdownOpen(false);
-                      }}
-                      className={`w-full p-2 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
-                        p.id === currentUser.id
-                          ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
-                          : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
-                      }`}
-                    >
-                      <img src={p.avatarUrl} alt={p.gamerTag} className="w-7 h-7 rounded-full object-cover" />
-                      <div className="truncate">
-                        <div className="font-semibold text-xs truncate text-slate-900 dark:text-white">{p.gamerTag}</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400">{p.primaryGame} • {p.primaryRole}</div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                <div className="pt-2 border-t border-slate-200/80 dark:border-white/10">
-                  <button
-                    onClick={() => {
-                      soundManager.playSuccessBeep();
-                      setUserDropdownOpen(false);
-                      onNavigate('onboarding');
-                    }}
-                    className="w-full py-2 bg-slate-900 text-white dark:bg-sky-600 dark:hover:bg-sky-500 hover:bg-slate-800 font-semibold text-xs rounded-xl text-center shadow-sm transition-colors"
-                  >
-                    + Create New Passport
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Mint CTA Button */}
           <button
             onClick={() => {
@@ -252,6 +289,25 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden p-3 bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl border-b border-slate-200 dark:border-white/10 space-y-1 animate-fadeIn">
+          {/* Mobile Profile Card Link */}
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              onNavigate('passport');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 transition-all mb-1.5 border ${
+              currentTab === 'passport'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold border-transparent'
+                : 'bg-slate-100/70 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200'
+            }`}
+          >
+            <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20">
+              <InstagramAvatar size="sm" className="w-full h-full" />
+            </div>
+            <span>Profile ({currentUser.gamerTag})</span>
+          </button>
+
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
