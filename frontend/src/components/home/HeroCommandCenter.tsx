@@ -41,7 +41,7 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
           </div>
 
           {/* Main Display Heading */}
-          <h1 className="font-extrabold text-2xl sm:text-4xl lg:text-[48px] text-slate-900 dark:text-white tracking-tight leading-tight">
+          <h1 className="font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 dark:text-white tracking-tight leading-tight">
             Discover <span className="text-sky-500">•</span> Develop <span className="text-indigo-500">•</span> Verify <span className="text-amber-500">•</span> Connect
           </h1>
 
