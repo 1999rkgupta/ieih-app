@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Home, 
   Trophy, 
@@ -16,11 +16,62 @@ interface BottomNavBarProps {
   onOpenPost?: () => void;
 }
 
+const AUTO_HIDE_DELAY = 2500; // ms of inactivity before hiding
+
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   currentTab,
   onNavigate,
   onOpenPost
 }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isHoveringRef = useRef(false);
+
+  const resetHideTimer = useCallback(() => {
+    // Show immediately
+    setIsVisible(true);
+
+    // Don't start timer if hovering the nav itself
+    if (isHoveringRef.current) return;
+
+    // Clear existing timer
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+
+    // Start new hide countdown
+    hideTimerRef.current = setTimeout(() => {
+      if (!isHoveringRef.current) {
+        setIsVisible(false);
+      }
+    }, AUTO_HIDE_DELAY);
+  }, []);
+
+  useEffect(() => {
+    const events = ['mousemove', 'touchstart', 'scroll', 'keydown'];
+
+    events.forEach(evt => window.addEventListener(evt, resetHideTimer, { passive: true }));
+
+    // Start initial timer
+    resetHideTimer();
+
+    return () => {
+      events.forEach(evt => window.removeEventListener(evt, resetHideTimer));
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, [resetHideTimer]);
+
+  const handleNavMouseEnter = () => {
+    isHoveringRef.current = true;
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    setIsVisible(true);
+  };
+
+  const handleNavMouseLeave = () => {
+    isHoveringRef.current = false;
+    resetHideTimer();
+  };
+
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'discovery', label: 'Radar', icon: Radar },
@@ -32,7 +83,15 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 select-none pointer-events-none pb-2 sm:pb-3 px-3 sm:px-4">
+    <div
+      onMouseEnter={handleNavMouseEnter}
+      onMouseLeave={handleNavMouseLeave}
+      className={`fixed bottom-0 inset-x-0 z-40 select-none pointer-events-none pb-2 sm:pb-3 px-3 sm:px-4 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+        isVisible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
+    >
       <div className="max-w-md sm:max-w-xl mx-auto flex flex-col items-center">
         {/* iPhone Floating Glass Dock */}
         <nav 
