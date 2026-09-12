@@ -4,30 +4,51 @@ import {
   Send, 
   Sparkles, 
   Zap, 
-  Target, 
-  ShieldCheck, 
   RotateCcw,
   BookOpen,
-  CheckCircle2,
   Award,
   Paperclip,
   FileText,
-  Image,
   Eye,
-  X
+  X,
+  ArrowUpRight,
+  Trophy,
+  GraduationCap,
+  Briefcase,
+  Compass,
+  Edit3,
+  MessageSquarePlus,
+  Database,
+  Search
 } from 'lucide-react';
-import { PlayerPassport } from '../../types';
+import { 
+  PlayerPassport, 
+  Tournament, 
+  CollegiateClub, 
+  JobOpportunity 
+} from '../../types';
 import { soundManager } from '../../utils/audio';
 import { queryKnowledgeBase } from '../../data/arenaXKnowledgeBase';
-import { askEEAICoach } from '../../services/gemini';
+import { 
+  askEEAICoach, 
+  PlatformAction, 
+  PlatformContext, 
+  TacticalCardData,
+  MessageAttachment 
+} from '../../services/gemini';
 
-export interface MessageAttachment {
-  id: string;
-  name: string;
-  type: 'image' | 'document';
-  url: string;
-  sizeFormatted: string;
-  fileExtension: string;
+export interface EEAICompanionProps {
+  currentUser: PlayerPassport;
+  allPlayers?: PlayerPassport[];
+  tournaments?: Tournament[];
+  campusClubs?: CollegiateClub[];
+  jobs?: JobOpportunity[];
+  onNavigate?: (tab: string) => void;
+  onSelectPlayer?: (player: PlayerPassport) => void;
+  onOpenEditor?: () => void;
+  onOpenRecruit?: (player?: PlayerPassport) => void;
+  onOpenPostModal?: () => void;
+  onOpenSearch?: () => void;
 }
 
 interface EEAIMessage {
@@ -37,42 +58,56 @@ interface EEAIMessage {
   timestamp: string;
   attachments?: MessageAttachment[];
   modelUsed?: string;
-  tacticalCard?: {
-    title: string;
-    category: string;
-    keyPoints: string[];
-    actionItem?: string;
-    checklist?: string[];
-  };
+  tacticalCard?: TacticalCardData;
+  actions?: PlatformAction[];
 }
 
 const PRESET_TACTICAL_PROMPTS = [
+  "What tournaments are open right now on IEIH?",
+  "Which campus is #1 in collegiate rankings?",
+  "Are there any coaching or analyst jobs available?",
+  "Audit my passport stats and tournament readiness",
   "How to rotate on Erangel Zone 4 in BGMI?",
-  "Explain gloo-wall peeking in Free Fire MAX",
-  "Attack-side defaults on Valorant Ascent",
-  "What do Tier-1 scouts look for in trials?",
-  "Show Battle Royale Rotation Checklist",
-  "What is the Team Fight checklist?",
+  "Compare my K/D with top radar athletes",
   "What are the 50 rules of esports coaching?"
 ];
 
-export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ currentUser }) => {
+export const EEAICompanion: React.FC<EEAICompanionProps> = ({ 
+  currentUser,
+  allPlayers = [],
+  tournaments = [],
+  campusClubs = [],
+  jobs = [],
+  onNavigate,
+  onSelectPlayer,
+  onOpenEditor,
+  onOpenRecruit,
+  onOpenPostModal,
+  onOpenSearch
+}) => {
   const [messages, setMessages] = useState<EEAIMessage[]>([
     {
       id: 'init_welcome',
       sender: 'assistant',
-      text: `Hello ${currentUser.gamerTag}. I am EE AI — your personal Competitive Esports Coach & Tactical Intelligence Companion.\n\nI am synchronized with your **${currentUser.primaryGame}** passport profile (Level ${currentUser.level} Contender, ${currentUser.primaryRole}). You can ask me tactical questions, strategy breakdowns, game mechanics, or **attach match photos/screenshots and tournament documents** for direct AI analysis.`,
+      text: `Hello ${currentUser.gamerTag}. I am EE AI — your personal Competitive Esports Coach, Tactical Intelligence Companion, and AI Operating System for the India Esports Hub.\n\nI am synchronized with **your full athlete profile**, as well as the **entire IEIH platform database** (${tournaments.length} active tournaments, ${campusClubs.length} university chapters, ${jobs.length} esports career postings, and ${allPlayers.length} verified athletes).\n\nAsk me about tournament registrations, campus standings, scouting candidates, career contracts, or attach match screenshots/rulebooks for direct multimodal tactical telemetry.`,
       timestamp: 'Online',
+      modelUsed: 'Google Gemini 3.6 Flash (Platform Synchronized)',
       tacticalCard: {
-        title: `${currentUser.primaryGame} Competitive Playbook`,
-        category: 'Pro Coaching Engine v4.2',
+        title: `${currentUser.primaryGame} Master Dossier`,
+        category: 'Platform Synchronization v4.5',
         keyPoints: [
           `Athlete Handle: ${currentUser.gamerTag} (${currentUser.passportNumber})`,
-          `Verified Primary Role: ${currentUser.primaryRole}`,
-          `Multimodal Support: Attach match screenshots, VOD frames & rulebook documents`
+          `Verified Role: ${currentUser.primaryRole} | Level ${currentUser.level} Contender`,
+          `Active Context: ${tournaments.length} Tournaments, ${campusClubs.length} Colleges & ${jobs.length} Jobs Grounded`
         ],
-        actionItem: 'Ask a tactical question or attach a photo/document for in-depth strategic analysis.'
-      }
+        actionItem: 'Ask a tactical question, explore tournament eligibility, or audit your passport.'
+      },
+      actions: [
+        { id: 'act_tourn', label: 'View Live Tournaments', actionType: 'NAVIGATE', targetId: 'tournaments' },
+        { id: 'act_campus', label: 'Collegiate Standings', actionType: 'NAVIGATE', targetId: 'campus' },
+        { id: 'act_jobs', label: 'Explore Esports Careers', actionType: 'NAVIGATE', targetId: 'careers' },
+        { id: 'act_edit', label: 'Edit My Passport', actionType: 'EDIT_PASSPORT' }
+      ]
     }
   ]);
 
@@ -131,6 +166,70 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     setPendingAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleExecuteAction = (action: PlatformAction) => {
+    soundManager.playClickSound();
+    switch (action.actionType) {
+      case 'NAVIGATE':
+        onNavigate?.(action.targetId || 'home');
+        break;
+      case 'VIEW_TOURNAMENT':
+        onNavigate?.('tournaments');
+        break;
+      case 'VIEW_CAMPUS':
+        onNavigate?.('campus');
+        break;
+      case 'VIEW_JOB':
+        onNavigate?.('careers');
+        break;
+      case 'SCOUT_PLAYER':
+        if (action.targetId) {
+          const p = allPlayers.find(player => 
+            player.id === action.targetId || 
+            player.gamerTag.toLowerCase() === action.targetId?.toLowerCase()
+          );
+          if (p) {
+            onSelectPlayer?.(p);
+            onOpenRecruit?.(p);
+            return;
+          }
+        }
+        onNavigate?.('discovery');
+        break;
+      case 'EDIT_PASSPORT':
+        onOpenEditor?.();
+        break;
+      case 'CREATE_POST':
+        onOpenPostModal?.();
+        break;
+      case 'SEARCH':
+        onOpenSearch?.();
+        break;
+      default:
+        if (action.targetId) onNavigate?.(action.targetId);
+    }
+  };
+
+  const renderActionIcon = (actionType: PlatformAction['actionType']) => {
+    switch (actionType) {
+      case 'VIEW_TOURNAMENT':
+        return <Trophy className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'VIEW_CAMPUS':
+        return <GraduationCap className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'VIEW_JOB':
+        return <Briefcase className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'SCOUT_PLAYER':
+        return <Compass className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'EDIT_PASSPORT':
+        return <Edit3 className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'CREATE_POST':
+        return <MessageSquarePlus className="w-3.5 h-3.5 text-[#91baaf]" />;
+      case 'SEARCH':
+        return <Search className="w-3.5 h-3.5 text-[#91baaf]" />;
+      default:
+        return <ArrowUpRight className="w-3.5 h-3.5 text-[#91baaf]" />;
+    }
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
     const text = textToSend || inputValue;
     const attachmentsToSend = [...pendingAttachments];
@@ -153,11 +252,19 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     setPendingAttachments([]);
     setIsTyping(true);
 
+    const platformContext: PlatformContext = {
+      currentUser,
+      allPlayers,
+      tournaments,
+      campusClubs,
+      jobs
+    };
+
     try {
       const historyForLlm = currentHistory.map(m => ({ sender: m.sender, text: m.text }));
       const coachResult = await askEEAICoach(
         text,
-        currentUser,
+        platformContext,
         attachmentsToSend,
         historyForLlm
       );
@@ -170,6 +277,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
         text: coachResult.replyText,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         tacticalCard: coachResult.tacticalCard,
+        actions: coachResult.actions,
         modelUsed: coachResult.modelUsed
       };
 
@@ -222,42 +330,80 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
 
   return (
     <div className="space-y-8 animate-fadeIn">
-      {/* Header Banner */}
+      {/* Header Banner with Platform Intelligence Feed */}
       <div className="relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#101c18] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
-        <div className="relative z-10 max-w-3xl space-y-2">
+        <div className="relative z-10 space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
-              <Bot className="w-3.5 h-3.5" />
-              <span>Competitive Intelligence Engine</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#91baaf]/15 text-[#244b40] dark:text-[#91baaf] rounded-full text-xs font-semibold border border-[#91baaf]/30">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Google Gemini AI Live Engine</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-xs font-semibold border border-amber-500/20">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Pro Playbooks & Meta Strategies</span>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-semibold border border-emerald-500/20">
+              <Database className="w-3.5 h-3.5" />
+              <span>Entire Platform Grounded</span>
             </div>
           </div>
-          <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
-            EE AI Tactical Coach & Advisor
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
-            Direct real-time strategic analysis. Upload gameplay screenshots, scoreboard photos, or tournament documents for diagnostic feedback.
-          </p>
+
+          <div className="max-w-3xl space-y-2">
+            <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+              EE AI Tactical Coach & Platform Intelligence
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
+              Direct live collaboration between Google Gemini and the entire IEIH ecosystem. Ask about upcoming tournaments, collegiate rankings, scouting candidates, career contracts, or upload match screenshots for tactical telemetry.
+            </p>
+          </div>
+
+          {/* Real-Time Platform Synchronization Telemetry Pills */}
+          <div className="pt-2 flex flex-wrap gap-2.5">
+            <div 
+              onClick={() => onNavigate?.('tournaments')}
+              className="cursor-pointer px-3 py-1.5 rounded-2xl bg-slate-100 dark:bg-[#15231f] hover:bg-slate-200/70 dark:hover:bg-[#1a2d28] border border-slate-200/80 dark:border-white/10 flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all shadow-sm"
+            >
+              <Trophy className="w-3.5 h-3.5 text-[#91baaf]" />
+              <span><strong>{tournaments.length}</strong> Live Tournaments</span>
+            </div>
+
+            <div 
+              onClick={() => onNavigate?.('campus')}
+              className="cursor-pointer px-3 py-1.5 rounded-2xl bg-slate-100 dark:bg-[#15231f] hover:bg-slate-200/70 dark:hover:bg-[#1a2d28] border border-slate-200/80 dark:border-white/10 flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all shadow-sm"
+            >
+              <GraduationCap className="w-3.5 h-3.5 text-[#91baaf]" />
+              <span><strong>{campusClubs.length}</strong> Campus Chapters</span>
+            </div>
+
+            <div 
+              onClick={() => onNavigate?.('careers')}
+              className="cursor-pointer px-3 py-1.5 rounded-2xl bg-slate-100 dark:bg-[#15231f] hover:bg-slate-200/70 dark:hover:bg-[#1a2d28] border border-slate-200/80 dark:border-white/10 flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all shadow-sm"
+            >
+              <Briefcase className="w-3.5 h-3.5 text-[#91baaf]" />
+              <span><strong>{jobs.length}</strong> Career Openings</span>
+            </div>
+
+            <div 
+              onClick={() => onNavigate?.('discovery')}
+              className="cursor-pointer px-3 py-1.5 rounded-2xl bg-slate-100 dark:bg-[#15231f] hover:bg-slate-200/70 dark:hover:bg-[#1a2d28] border border-slate-200/80 dark:border-white/10 flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all shadow-sm"
+            >
+              <Compass className="w-3.5 h-3.5 text-[#91baaf]" />
+              <span><strong>{allPlayers.length}</strong> Athletes Grounded</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Glass Chat Terminal */}
-      <div className="rounded-3xl bg-white dark:bg-[#101c18] shadow-xl flex flex-col h-[600px] overflow-hidden border border-slate-200 dark:border-white/10">
+      <div className="rounded-3xl bg-white dark:bg-[#101c18] shadow-xl flex flex-col h-[640px] overflow-hidden border border-slate-200 dark:border-white/10">
         {/* Terminal Header */}
         <div className="p-4 bg-slate-50 dark:bg-[#121d1a] border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#91baaf] animate-pulse"></div>
             <div>
               <div className="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-2">
-                <span>EE AI Core System v4.2</span>
+                <span>EE AI Operating System v4.5</span>
                 <span className="px-2 py-0.5 bg-[#91baaf]/20 text-[#244b40] dark:text-[#91baaf] text-[10px] font-semibold rounded-full border border-[#91baaf]/30 flex items-center gap-1">
                   <Sparkles className="w-2.5 h-2.5" />
-                  Google Gemini Live LLM Active
+                  Gemini 3.6 Flash Active
                 </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Multimodal Vision</span>
+                <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Platform Interlinked</span>
               </div>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Synchronized with {currentUser.gamerTag} • {currentUser.primaryGame}</p>
             </div>
@@ -336,50 +482,52 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                         key={att.id}
                         className="p-3 rounded-2xl bg-white dark:bg-[#121d1a] border border-slate-200 dark:border-white/10 flex items-center gap-3 max-w-xs shadow-sm"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#91baaf]/15 text-[#244b40] dark:text-[#91baaf] flex items-center justify-center shrink-0">
                           <FileText className="w-5 h-5" />
                         </div>
-                        <div className="min-w-0 flex-1">
+                        <div className="overflow-hidden">
                           <div className="font-semibold text-xs text-slate-900 dark:text-white truncate">{att.name}</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">{att.fileExtension} • {att.sizeFormatted}</div>
+                          <div className="text-[10px] text-slate-400 font-mono">{att.fileExtension.toUpperCase()} • {att.sizeFormatted}</div>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
 
-                <div>{renderFormattedText(msg.text)}</div>
+                {/* Render Message Text */}
+                <div className="space-y-2">
+                  {renderFormattedText(msg.text)}
+                </div>
 
-                {/* Tactical Card if present */}
+                {/* Render Tactical Card HUD if present */}
                 {msg.tacticalCard && (
-                  <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#121d1a] border border-slate-200 dark:border-white/10 space-y-2.5">
-                    <div className="flex items-center justify-between text-[11px] font-semibold border-b border-slate-100 dark:border-white/5 pb-2">
-                      <span className="text-sky-600 dark:text-sky-400 flex items-center gap-1.5 font-bold">
-                        <Target className="w-3.5 h-3.5" /> {msg.tacticalCard.title}
+                  <div className="mt-3.5 p-3.5 rounded-2xl bg-white dark:bg-[#101c18] border border-[#91baaf]/30 dark:border-[#91baaf]/20 shadow-sm space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="font-bold text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#91baaf]" />
+                        <span>{msg.tacticalCard.title}</span>
+                      </div>
+                      <span className="px-2 py-0.5 bg-[#91baaf]/15 text-[#244b40] dark:text-[#91baaf] text-[10px] font-semibold rounded-full font-mono">
+                        {msg.tacticalCard.category}
                       </span>
-                      <span className="text-slate-400 uppercase text-[10px] font-mono">{msg.tacticalCard.category}</span>
                     </div>
 
-                    <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
-                      {msg.tacticalCard.keyPoints.map((pt, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0 mt-1.5"></span>
-                          <span className="text-slate-800 dark:text-slate-200 font-medium">{pt}</span>
-                        </li>
+                    <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
+                      {msg.tacticalCard.keyPoints.map((pt, ptIdx) => (
+                        <div key={ptIdx} className="flex items-start gap-1.5">
+                          <span className="text-[#91baaf] font-bold shrink-0">•</span>
+                          <span>{pt}</span>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
 
-                    {/* Checklist if provided */}
                     {msg.tacticalCard.checklist && msg.tacticalCard.checklist.length > 0 && (
                       <div className="pt-2 border-t border-slate-100 dark:border-white/5 space-y-1">
-                        <div className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                          Inspection Checklist:
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-slate-600 dark:text-slate-400">
+                        <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500">Execution Checklist:</div>
+                        <div className="space-y-0.5 text-xs text-slate-600 dark:text-slate-300">
                           {msg.tacticalCard.checklist.map((item, cIdx) => (
                             <div key={cIdx} className="flex items-center gap-1.5">
-                              <span className="text-sky-500 font-mono">›</span>
+                              <span className="text-[#91baaf] font-mono">›</span>
                               <span>{item}</span>
                             </div>
                           ))}
@@ -388,11 +536,29 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                     )}
 
                     {msg.tacticalCard.actionItem && (
-                      <div className="pt-2 border-t border-slate-100 dark:border-white/5 text-xs font-semibold text-sky-600 dark:text-sky-400 flex items-center gap-1.5">
+                      <div className="pt-2 border-t border-slate-100 dark:border-white/5 text-xs font-semibold text-[#244b40] dark:text-[#91baaf] flex items-center gap-1.5">
                         <Award className="w-3.5 h-3.5 shrink-0" />
-                        <span>Action Directive: {msg.tacticalCard.actionItem}</span>
+                        <span>Takeaway Directive: {msg.tacticalCard.actionItem}</span>
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* Render Interactive Platform Action Buttons */}
+                {msg.actions && msg.actions.length > 0 && (
+                  <div className="mt-3.5 pt-3 border-t border-slate-200/70 dark:border-white/10 flex flex-wrap gap-2 animate-fadeIn">
+                    {msg.actions.map(action => (
+                      <button
+                        key={action.id}
+                        type="button"
+                        onClick={() => handleExecuteAction(action)}
+                        className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#121d1a] hover:bg-[#91baaf]/20 dark:hover:bg-[#91baaf]/20 text-slate-800 dark:text-slate-100 hover:text-[#244b40] dark:hover:text-[#91baaf] border border-slate-200 dark:border-white/10 hover:border-[#91baaf]/40 text-xs font-semibold flex items-center gap-2 transition-all shadow-sm transform hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+                      >
+                        {renderActionIcon(action.actionType)}
+                        <span>{action.label}</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-60" />
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
@@ -400,9 +566,9 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           ))}
 
           {isTyping && (
-            <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-sky-600 dark:text-sky-400 font-semibold shadow-sm">
+            <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-[#244b40] dark:text-[#91baaf] font-semibold shadow-sm">
               <Sparkles className="w-3.5 h-3.5 animate-spin" />
-              <span>Analyzing Tactical Telemetry & Match Data...</span>
+              <span>Analyzing Platform Telemetry & Competitive Database...</span>
             </div>
           )}
 
@@ -414,10 +580,11 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           {PRESET_TACTICAL_PROMPTS.map((prompt, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={() => handleSendMessage(prompt)}
-              className="px-3.5 py-1.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full whitespace-nowrap transition-all shadow-sm flex items-center gap-1.5"
+              className="px-3.5 py-1.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full whitespace-nowrap transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
             >
-              <Zap className="w-3 h-3 text-sky-500" />
+              <Zap className="w-3 h-3 text-[#91baaf]" />
               <span>{prompt}</span>
             </button>
           ))}
@@ -432,7 +599,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                 {att.type === 'image' ? (
                   <img src={att.url} alt="thumbnail" className="w-5 h-5 rounded object-cover" />
                 ) : (
-                  <FileText className="w-4 h-4 text-sky-500 shrink-0" />
+                  <FileText className="w-4 h-4 text-[#91baaf] shrink-0" />
                 )}
                 <span className="text-slate-800 dark:text-slate-200 font-medium max-w-[120px] truncate">{att.name}</span>
                 <span className="text-[10px] text-slate-400">({att.sizeFormatted})</span>
@@ -458,41 +625,38 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
             }}
             className="flex items-center gap-2"
           >
-            {/* Hidden multi-file input */}
             <input
               type="file"
               ref={fileInputRef}
-              multiple
-              accept="image/*,.pdf,.doc,.docx,.txt,.json"
-              className="hidden"
               onChange={e => handleFilesSelected(e.target.files)}
+              accept="image/*,.pdf,.doc,.docx,.txt"
+              multiple
+              className="hidden"
             />
 
-            {/* Paperclip Button for Photos & Documents */}
             <button
               type="button"
-              onClick={() => {
-                soundManager.playClickSound();
-                fileInputRef.current?.click();
-              }}
-              className="p-2.5 rounded-full text-slate-500 hover:text-sky-500 hover:bg-sky-50 dark:hover:bg-white/10 transition-colors shrink-0"
-              title="Attach Photo or Document (Scoreboard, Rulebook, VOD frame)"
-              aria-label="Attach Photo or Document"
+              onClick={() => fileInputRef.current?.click()}
+              className="p-2.5 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors shrink-0"
+              title="Attach Match Screenshot or Rulebook"
+              aria-label="Attach File"
             >
               <Paperclip className="w-4 h-4" />
             </button>
 
             <input
               type="text"
-              placeholder="Ask EE AI or attach photos/documents for diagnostic review..."
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
+              placeholder={`Ask EE AI about ${currentUser.primaryGame}, tournaments, campus rankings, or jobs...`}
+              className="flex-1 px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-transparent focus:border-[#91baaf] text-slate-900 dark:text-white text-xs sm:text-sm placeholder:text-slate-400 outline-none transition-all"
             />
+
             <button
               type="submit"
               disabled={!inputValue.trim() && pendingAttachments.length === 0}
-              className="p-2.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 rounded-full transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm shrink-0"
+              className="p-2.5 rounded-2xl bg-[#91baaf] hover:bg-[#7ba99d] disabled:opacity-40 disabled:hover:bg-[#91baaf] text-slate-950 transition-all shrink-0 cursor-pointer"
+              title="Send to EE AI"
               aria-label="Send message"
             >
               <Send className="w-4 h-4" />
@@ -501,25 +665,23 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
         </div>
       </div>
 
-      {/* Enlarged Photo Zoom Modal */}
+      {/* Enlarged Photo Modal View */}
       {viewingPhotoUrl && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn cursor-pointer"
           onClick={() => setViewingPhotoUrl(null)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
         >
-          <div 
-            className="relative max-w-3xl max-h-[85vh] overflow-hidden rounded-3xl border border-white/20 shadow-2xl bg-black"
-            onClick={e => e.stopPropagation()}
-          >
-            <img src={viewingPhotoUrl} alt="Enlarged preview" className="w-full h-full object-contain max-h-[80vh]" />
-            <button 
-              type="button"
-              onClick={() => setViewingPhotoUrl(null)}
-              className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white hover:bg-black/90 transition-colors"
-              aria-label="Close image"
-            >
-              <X className="w-5 h-5" />
-            </button>
+          <div className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-white/10" onClick={e => e.stopPropagation()}>
+            <img src={viewingPhotoUrl} alt="Enlarged Telemetry" className="w-full h-auto max-h-[80vh] object-contain" />
+            <div className="p-4 bg-slate-950 flex items-center justify-between">
+              <span className="text-xs text-slate-300 font-medium">Uploaded Telemetry Screenshot</span>
+              <button
+                onClick={() => setViewingPhotoUrl(null)}
+                className="px-4 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold"
+              >
+                Close View
+              </button>
+            </div>
           </div>
         </div>
       )}

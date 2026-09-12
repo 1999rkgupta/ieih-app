@@ -228,6 +228,19 @@ export function App() {
         {currentTab === 'ai' && (
           <EEAICompanion
             currentUser={currentUser}
+            allPlayers={allPlayers}
+            tournaments={MOCK_TOURNAMENTS}
+            campusClubs={MOCK_COLLEGIATE_CLUBS}
+            jobs={MOCK_JOBS}
+            onNavigate={handleNavigate}
+            onSelectPlayer={handleSelectPlayer}
+            onOpenEditor={() => setIsEditorOpen(true)}
+            onOpenRecruit={(player) => {
+              if (player) setSelectedPlayer(player);
+              setIsRecruitOpen(true);
+            }}
+            onOpenPostModal={() => setIsPostModalOpen(true)}
+            onOpenSearch={() => setIsSearchOpen(true)}
           />
         )}
 
