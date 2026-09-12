@@ -37,14 +37,14 @@ export const IEIHLogo: React.FC<IEIHLogoProps> = ({
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full drop-shadow-[0_2px_8px_rgba(2,132,199,0.25)] dark:drop-shadow-[0_4px_16px_rgba(56,189,248,0.35)]"
+          className="w-full h-full drop-shadow-[0_2px_8px_rgba(145,186,175,0.3)] dark:drop-shadow-[0_4px_16px_rgba(145,186,175,0.4)]"
         >
           <defs>
             {/* Outer Shield Gradient */}
             <linearGradient id="ieih-shield-grad" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="50%" stopColor="#2563eb" />
-              <stop offset="100%" stopColor="#4f46e5" />
+              <stop offset="0%" stopColor="#91baaf" />
+              <stop offset="50%" stopColor="#71a396" />
+              <stop offset="100%" stopColor="#466b62" />
             </linearGradient>
 
             {/* Saffron Top Chevron Gradient */}
@@ -55,9 +55,9 @@ export const IEIHLogo: React.FC<IEIHLogoProps> = ({
 
             {/* Azure / Cyan Core Gradient */}
             <linearGradient id="ieih-azure-grad" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#38bdf8" />
-              <stop offset="50%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#1d4ed8" />
+              <stop offset="0%" stopColor="#b4d5cc" />
+              <stop offset="50%" stopColor="#91baaf" />
+              <stop offset="100%" stopColor="#58867b" />
             </linearGradient>
 
             {/* Emerald Base Anchor Gradient */}
@@ -135,7 +135,7 @@ export const IEIHLogo: React.FC<IEIHLogoProps> = ({
           />
           <polygon
             points="32,25.5 35,29 32,32.5 29,29"
-            fill="#0284c7"
+            fill="#91baaf"
           />
         </svg>
       </div>

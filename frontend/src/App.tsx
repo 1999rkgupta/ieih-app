@@ -111,9 +111,9 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#090c13] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-[#f5f8f7] dark:bg-[#090e0d] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 selection:bg-[#91baaf] selection:text-slate-950">
       {/* Subtle Dot Mesh & Ambient Radial Glow */}
-      <div className="fixed inset-0 bg-grid-pattern opacity-40 dark:opacity-15 pointer-events-none z-0"></div>
+      <div className="fixed inset-0 bg-grid-pattern opacity-40 dark:opacity-20 pointer-events-none z-0"></div>
       <div className="fixed inset-0 bg-radial-glow pointer-events-none z-0"></div>
 
       {/* Top Navbar */}

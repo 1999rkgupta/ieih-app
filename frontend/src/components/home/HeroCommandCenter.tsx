@@ -28,10 +28,10 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
   return (
     <div className="space-y-12 animate-fadeIn">
       {/* Sleek Minimal Glass Hero Section */}
-      <div className="relative rounded-3xl bg-white/80 dark:bg-[#101622]/80 backdrop-blur-2xl border border-slate-200 dark:border-white/10 p-6 sm:p-12 overflow-hidden shadow-lg">
+      <div className="relative rounded-3xl bg-white/85 dark:bg-[#0e1614]/85 backdrop-blur-2xl border border-slate-200/80 dark:border-[#91baaf]/20 p-6 sm:p-12 overflow-hidden shadow-lg shadow-[#91baaf]/5 dark:shadow-[#91baaf]/10">
         {/* Subtle Ambient Radial Glows */}
-        <div className="absolute -top-24 -left-24 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -top-24 -left-24 w-80 h-80 bg-[#91baaf]/20 dark:bg-[#91baaf]/25 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#58867b]/25 dark:bg-[#58867b]/30 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="relative z-10 max-w-5xl space-y-6">
           {/* Tagline Badge */}
