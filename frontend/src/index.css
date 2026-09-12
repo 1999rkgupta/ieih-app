@@ -4,66 +4,67 @@
 
 @layer base {
   :root {
-    --hud-bg: #f5f8f7;
-    --hud-surface: rgba(255, 255, 255, 0.88);
-    --hud-card: #ffffff;
-    --hud-panel: #edf4f1;
-    --hud-border: #dbe7e3;
-    --hud-border-glow: rgba(145, 186, 175, 0.35);
-    --hud-text: #0e1715;
-    --hud-muted: #435b54;
-    --hud-dim: #627e77;
+    --hud-bg: #dcedea;
+    --hud-surface: rgba(235, 247, 244, 0.92);
+    --hud-card: #f4faf8;
+    --hud-panel: #e1f1ec;
+    --hud-border: #b8ded3;
+    --hud-border-glow: rgba(145, 186, 175, 0.45);
+    --hud-text: #0f2721;
+    --hud-muted: #385b51;
+    --hud-dim: #597d74;
 
     --cyber-cyan: #91baaf;
-    --cyber-blue: #71a396;
-    --cyber-purple: #58867b;
-    --cyber-violet: #466b62;
+    --cyber-blue: #70a295;
+    --cyber-purple: #538478;
+    --cyber-violet: #396057;
     --cyber-pink: #e11d48;
     --cyber-red: #dc2626;
     --cyber-gold: #d97706;
-    --cyber-emerald: #71a396;
+    --cyber-emerald: #70a295;
 
-    --shadow-glass-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-glass-md: 0 4px 20px -2px rgba(145, 186, 175, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04);
-    --shadow-glass-lg: 0 12px 35px -4px rgba(145, 186, 175, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
-    --grid-dot-color: rgba(145, 186, 175, 0.12);
+    --shadow-glass-sm: 0 1px 3px rgba(145, 186, 175, 0.12), 0 1px 2px rgba(145, 186, 175, 0.08);
+    --shadow-glass-md: 0 4px 20px -2px rgba(145, 186, 175, 0.22), 0 2px 6px rgba(145, 186, 175, 0.1);
+    --shadow-glass-lg: 0 12px 35px -4px rgba(145, 186, 175, 0.3), 0 4px 12px rgba(145, 186, 175, 0.15);
+    --grid-dot-color: rgba(145, 186, 175, 0.25);
   }
 
   .dark {
-    --hud-bg: #090e0d;
-    --hud-surface: rgba(14, 23, 21, 0.85);
-    --hud-card: #101c19;
-    --hud-panel: #162622;
-    --hud-border: rgba(145, 186, 175, 0.16);
-    --hud-border-glow: rgba(145, 186, 175, 0.45);
-    --hud-text: #f4f8f7;
-    --hud-muted: #9bb7af;
-    --hud-dim: #6f8d85;
+    --hud-bg: #cde6de;
+    --hud-surface: rgba(224, 242, 236, 0.92);
+    --hud-card: #e5f4ef;
+    --hud-panel: #d3ede5;
+    --hud-border: #a4d2c5;
+    --hud-border-glow: rgba(145, 186, 175, 0.55);
+    --hud-text: #0b221d;
+    --hud-muted: #2f5249;
+    --hud-dim: #4d7168;
 
     --cyber-cyan: #91baaf;
-    --cyber-blue: #a8cdc3;
-    --cyber-purple: #71a396;
-    --cyber-violet: #58867b;
+    --cyber-blue: #70a295;
+    --cyber-purple: #538478;
+    --cyber-violet: #396057;
     --cyber-pink: #fb7185;
     --cyber-red: #f87171;
     --cyber-gold: #fbbf24;
     --cyber-emerald: #91baaf;
 
-    --shadow-glass-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-glass-md: 0 8px 24px -2px rgba(0, 0, 0, 0.45);
-    --shadow-glass-lg: 0 20px 50px -4px rgba(0, 0, 0, 0.65);
-    --grid-dot-color: rgba(145, 186, 175, 0.08);
+    --shadow-glass-sm: 0 2px 8px rgba(145, 186, 175, 0.2);
+    --shadow-glass-md: 0 8px 24px -2px rgba(145, 186, 175, 0.28);
+    --shadow-glass-lg: 0 20px 50px -4px rgba(145, 186, 175, 0.35);
+    --grid-dot-color: rgba(145, 186, 175, 0.2);
   }
 
   html {
-    background-color: #f8fafc;
-    color: #0f172a;
+    background: linear-gradient(180deg, #d8ece6 0%, #ebf6f3 35%, #dff2ec 100%);
+    color: #0f2721;
+    min-height: 100vh;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   html.dark {
-    background-color: #090c13;
-    color: #f8fafc;
+    background: linear-gradient(180deg, #cde6de 0%, #e0f2ec 35%, #d4ede6 100%);
+    color: #0b221d;
   }
 
   body {

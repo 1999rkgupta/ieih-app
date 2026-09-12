@@ -12,11 +12,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem('ieih_theme');
+    const saved = localStorage.getItem('ieih_theme_v2');
     if (saved === 'dark' || saved === 'light') {
       return saved;
     }
-    return 'light'; // Default to minimal light theme as requested
+    return 'light'; // Default to lighter #91baaf theme as requested
   });
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.classList.remove('dark');
       root.classList.add('light');
     }
-    localStorage.setItem('ieih_theme', theme);
+    localStorage.setItem('ieih_theme_v2', theme);
   }, [theme]);
 
   const toggleTheme = () => {

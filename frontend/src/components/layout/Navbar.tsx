@@ -153,25 +153,25 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-[#090c13]/85 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/10 transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full bg-[#d7ece6]/92 backdrop-blur-2xl border-b border-[#91baaf]/40 transition-colors duration-200 shadow-xs">
       {/* Top Ticker Bar */}
-      <div className="border-b border-slate-200/60 dark:border-white/5 py-1.5 px-4 sm:px-8 flex items-center justify-between text-xs bg-slate-50/80 dark:bg-[#070a12]/80 backdrop-blur-md">
+      <div className="border-b border-[#91baaf]/25 py-1.5 px-4 sm:px-8 flex items-center justify-between text-xs bg-[#c9e8df]/90 backdrop-blur-md">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <span className="px-2.5 py-0.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-semibold text-[10px] rounded-full flex items-center gap-1.5 shrink-0 border border-rose-500/20">
+          <span className="px-2.5 py-0.5 bg-rose-500/15 text-rose-700 font-semibold text-[10px] rounded-full flex items-center gap-1.5 shrink-0 border border-rose-500/30">
             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
             LIVE BROADCAST
           </span>
-          <p className="text-slate-600 dark:text-slate-300 truncate font-normal text-xs transition-all duration-700">
+          <p className="text-[#153e34] truncate font-normal text-xs transition-all duration-700">
             {MOCK_TICKER_ITEMS[tickerIndex]}
           </p>
         </div>
 
-        <div className="hidden md:flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 shrink-0 pl-4 font-mono">
-          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 18ms Mumbai
+        <div className="hidden md:flex items-center gap-3 text-[11px] text-[#30594f] shrink-0 pl-4 font-mono">
+          <span className="flex items-center gap-1.5 text-emerald-800 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> 18ms Mumbai
           </span>
-          <span className="text-slate-300 dark:text-white/20">•</span>
-          <span className="text-slate-500 dark:text-slate-400">Protocol v2.6</span>
+          <span className="text-[#91baaf]">•</span>
+          <span className="text-[#30594f]">Protocol v2.6</span>
         </div>
       </div>
 
@@ -189,7 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <IEIHLogo size="md" animate />
           </div>
 
-          <div className="h-6 w-px bg-slate-200 dark:bg-white/10 hidden sm:block"></div>
+          <div className="h-6 w-px bg-[#91baaf]/30 hidden sm:block"></div>
 
           {/* LinkedIn-Style Top-Left Profile Element */}
           <div className="relative flex items-center">
@@ -200,16 +200,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className={`flex items-center gap-2 py-1 pl-1.5 pr-2.5 rounded-full border transition-all duration-200 select-none ${
                 currentTab === 'passport'
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
-                  : 'bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 shadow-sm'
+                  ? 'bg-[#153e34] text-white border-transparent shadow-sm'
+                  : 'bg-white/90 hover:bg-white border-[#91baaf]/40 text-[#0d2620] shadow-sm'
               }`}
               title="View Profile"
             >
-              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20 bg-slate-900 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-[#91baaf]/40 bg-[#153e34] flex items-center justify-center">
                 {currentUser.avatarUrl ? (
                   <img src={currentUser.avatarUrl} alt={currentUser.gamerTag} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-[10px] font-bold font-mono text-sky-400">
+                  <span className="text-[10px] font-bold font-mono text-[#91baaf]">
                     {currentUser.gamerTag.slice(0, 2).toUpperCase()}
                   </span>
                 )}
@@ -220,8 +220,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
                 <span className={`text-[9px] font-semibold block ${
                   currentTab === 'passport'
-                    ? 'text-sky-300 dark:text-sky-600'
-                    : 'text-sky-600 dark:text-sky-400'
+                    ? 'text-[#91baaf]'
+                    : 'text-[#236052]'
                 }`}>
                   Profile
                 </span>
@@ -235,7 +235,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 setUserDropdownOpen(!userDropdownOpen);
               }}
-              className="p-1 ml-0.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 transition-colors"
+              className="p-1 ml-0.5 rounded-full hover:bg-[#91baaf]/25 text-[#285348] transition-colors"
               title="Switch Athlete"
               aria-label="Switch athlete"
             >
@@ -244,10 +244,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Dropdown Menu (Anchored to Top-Left Profile) */}
             {userDropdownOpen && (
-              <div className="absolute left-0 top-full mt-2 w-64 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl p-2 z-50 animate-fadeIn">
-                <div className="px-3 py-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between">
+              <div className="absolute left-0 top-full mt-2 w-64 bg-[#f2faf7] border border-[#91baaf]/40 rounded-2xl shadow-xl p-2 z-50 animate-fadeIn">
+                <div className="px-3 py-2 text-[11px] font-semibold text-[#30594f] uppercase tracking-wider border-b border-[#91baaf]/30 flex items-center justify-between">
                   <span>Switch Athlete</span>
-                  <span className="text-[10px] text-sky-500 font-mono font-medium">{allPlayers.length} Active</span>
+                  <span className="text-[10px] text-[#236052] font-mono font-medium">{allPlayers.length} Active</span>
                 </div>
                 <div className="py-1 max-h-56 overflow-y-auto space-y-1">
                   {allPlayers.map(p => (
@@ -317,16 +317,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/10 transition-all text-xs group cursor-pointer shadow-xs"
+            className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#153e34] border border-[#91baaf]/40 transition-all text-xs group cursor-pointer shadow-xs"
             title="Search across all players, tournaments, colleges, jobs & commands (⌘K)"
           >
             <div className="flex items-center gap-2">
-              <Search className="w-3.5 h-3.5 text-sky-500 group-hover:scale-110 transition-transform" />
-              <span className="font-medium text-slate-600 dark:text-slate-300">
+              <Search className="w-3.5 h-3.5 text-[#286b5c] group-hover:scale-110 transition-transform" />
+              <span className="font-medium text-[#1c483d]">
                 Search entire app...
               </span>
             </div>
-            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-semibold bg-white dark:bg-white/10 text-slate-500 dark:text-slate-300 rounded border border-slate-200/80 dark:border-white/10 shadow-2xs">
+            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono font-semibold bg-[#dcefe9] text-[#153e34] rounded border border-[#91baaf]/40 shadow-2xs">
               ⌘K
             </kbd>
           </button>
@@ -340,11 +340,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="p-2 md:hidden rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all"
+            className="p-2 md:hidden rounded-full border border-[#91baaf]/40 bg-white/90 hover:bg-white text-[#153e34] shadow-sm transition-all"
             title="Search app (⌘K)"
             aria-label="Open search"
           >
-            <Search className="w-4 h-4 text-sky-500" />
+            <Search className="w-4 h-4 text-[#286b5c]" />
           </button>
 
           {/* Notifications Dropdown Container */}
@@ -356,15 +356,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className={`relative p-2 rounded-full border transition-all duration-200 shadow-sm ${
                 notificationsOpen
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent'
-                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+                  ? 'bg-[#153e34] text-white border-transparent'
+                  : 'border-[#91baaf]/40 bg-white/90 hover:bg-white text-[#153e34]'
               }`}
               title="Notifications"
               aria-label="View notifications"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-[#090c13] shadow-sm animate-pulse">
+                <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm animate-pulse">
                   {unreadCount}
                 </span>
               )}
@@ -372,15 +372,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Notification Dropdown Panel */}
             {notificationsOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+              <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-[#f2faf7] border border-[#91baaf]/40 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
                 {/* Header */}
-                <div className="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+                <div className="p-3.5 border-b border-[#91baaf]/30 flex items-center justify-between bg-[#e5f5f0]">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+                    <span className="font-bold text-xs text-[#0d2620] uppercase tracking-wider">
                       Notifications
                     </span>
                     {unreadCount > 0 && (
-                      <span className="px-1.5 py-0.2 text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded-full">
+                      <span className="px-1.5 py-0.2 text-[10px] font-bold bg-rose-500/10 text-rose-700 border border-rose-500/20 rounded-full">
                         {unreadCount} new
                       </span>
                     )}
@@ -389,7 +389,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllRead}
-                      className="text-[11px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 flex items-center gap-1 transition-colors"
+                      className="text-[11px] font-semibold text-[#286b5c] hover:text-[#153e34] flex items-center gap-1 transition-colors"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
                       <span>Mark all read</span>
@@ -398,7 +398,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 {/* Notification Items List */}
-                <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5 p-1.5">
+                <div className="max-h-80 overflow-y-auto divide-y divide-[#91baaf]/20 p-1.5">
                   {notifications.map(n => (
                     <div
                       key={n.id}
@@ -410,25 +410,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className={`p-3 rounded-xl cursor-pointer transition-all flex items-start gap-3 ${
                         n.unread
-                          ? 'bg-sky-50/50 dark:bg-sky-500/5 hover:bg-sky-50 dark:hover:bg-sky-500/10'
-                          : 'hover:bg-slate-50 dark:hover:bg-white/5 opacity-80'
+                          ? 'bg-[#91baaf]/20 hover:bg-[#91baaf]/30'
+                          : 'hover:bg-white/60 opacity-85'
                       }`}
                     >
-                      <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-sky-500" style={{ visibility: n.unread ? 'visible' : 'hidden' }}></div>
+                      <div className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-[#286b5c]" style={{ visibility: n.unread ? 'visible' : 'hidden' }}></div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
                           <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${n.tagColor}`}>
                             {n.tag}
                           </span>
-                          <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                          <span className="text-[10px] text-[#3d655a] font-mono flex items-center gap-1">
                             <Clock className="w-2.5 h-2.5" />
                             {n.time}
                           </span>
                         </div>
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        <h4 className="text-xs font-bold text-[#0d2620] truncate">
                           {n.title}
                         </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-snug">
+                        <p className="text-[11px] text-[#285045] line-clamp-2 mt-0.5 leading-snug">
                           {n.desc}
                         </p>
                       </div>
@@ -437,8 +437,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 {/* Footer */}
-                <div className="p-2 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-center">
-                  <span className="text-[10px] text-slate-400 font-mono">
+                <div className="p-2 border-t border-[#91baaf]/30 bg-[#e5f5f0] text-center">
+                  <span className="text-[10px] text-[#3d655a] font-mono">
                     All notifications verified by IEIH Trust Protocol
                   </span>
                 </div>
@@ -452,24 +452,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playClickSound();
               toggleTheme();
             }}
-            className="p-2 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 shadow-sm transition-all duration-200"
+            className="p-2 rounded-full border border-[#91baaf]/40 bg-white/90 hover:bg-white text-[#153e34] shadow-sm transition-all duration-200"
             title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
             aria-label="Toggle theme"
           >
             {theme === 'light' ? (
-              <Moon className="w-4 h-4 text-slate-700" />
+              <Moon className="w-4 h-4 text-[#153e34]" />
             ) : (
-              <Sun className="w-4 h-4 text-amber-400" />
+              <Sun className="w-4 h-4 text-amber-500" />
             )}
           </button>
 
           {/* Sound Toggle */}
           <button
             onClick={handleToggleMute}
-            className="p-2 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-sm transition-all duration-200"
+            className="p-2 rounded-full border border-[#91baaf]/40 bg-white/90 hover:bg-white text-[#153e34] shadow-sm transition-all duration-200"
             title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
           >
-            {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-sky-500" />}
+            {isMuted ? <VolumeX className="w-4 h-4 text-[#3d655a]" /> : <Volume2 className="w-4 h-4 text-[#286b5c]" />}
           </button>
 
           {/* 3-Line Menu Button with All 7 Keys */}
@@ -481,8 +481,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className={`p-2 rounded-full border transition-all duration-200 shadow-sm flex items-center justify-center ${
                 menuDrawerOpen
-                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent'
-                  : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200'
+                  ? 'bg-[#153e34] text-white border-transparent'
+                  : 'border-[#91baaf]/40 bg-white/90 hover:bg-white text-[#153e34]'
               }`}
               title="Menu (All 7 Keys)"
               aria-label="Toggle navigation menu"
@@ -496,18 +496,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* 3-Line Menu Drawer Dropdown Panel */}
             {menuDrawerOpen && (
-              <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+              <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-[#f2faf7] border border-[#91baaf]/40 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
                 {/* Header */}
-                <div className="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-slate-50/70 dark:bg-white/[0.02]">
+                <div className="p-3.5 border-b border-[#91baaf]/30 flex items-center justify-between bg-[#e5f5f0]">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+                    <span className="font-bold text-xs text-[#0d2620] uppercase tracking-wider">
                       Navigation Menu
                     </span>
-                    <span className="px-2 py-0.5 text-[10px] font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 rounded-full">
+                    <span className="px-2 py-0.5 text-[10px] font-bold bg-[#91baaf]/30 text-[#153e34] border border-[#91baaf]/50 rounded-full">
                       7 Keys
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400">IEIH v2.6</span>
+                  <span className="text-[10px] font-mono text-[#3d655a]">IEIH v2.6</span>
                 </div>
 
                 {/* The 7 Keys List */}
@@ -526,34 +526,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                         className={`w-full p-2.5 rounded-xl text-left flex items-center justify-between gap-3 transition-all duration-150 ${
                           isActive
-                            ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold border border-sky-500/20 shadow-xs'
-                            : 'hover:bg-slate-100/80 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-transparent'
+                            ? 'bg-[#91baaf]/30 text-[#103a30] font-bold border border-[#91baaf]/50 shadow-xs'
+                            : 'hover:bg-white/70 text-[#285045] border border-transparent'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                             isActive
-                              ? 'bg-sky-600 text-white dark:bg-sky-400 dark:text-slate-950 shadow-sm'
-                              : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300'
+                              ? 'bg-[#153e34] text-white shadow-sm'
+                              : 'bg-[#91baaf]/20 text-[#153e34]'
                           }`}>
                             <Icon className="w-4 h-4" />
                           </div>
 
                           <div className="truncate">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                              <span className="font-bold text-xs text-[#0d2620] truncate">
                                 {item.label}
                               </span>
-                              <span className="text-[9px] font-mono text-slate-400">#{idx + 1}</span>
+                              <span className="text-[9px] font-mono text-[#3d655a]">#{idx + 1}</span>
                             </div>
-                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                            <p className="text-[10px] text-[#3d655a] truncate mt-0.5">
                               {item.subtitle}
                             </p>
                           </div>
                         </div>
 
                         <ArrowRight className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-                          isActive ? 'text-sky-600 dark:text-sky-400 translate-x-0.5' : 'text-slate-400 opacity-40'
+                          isActive ? 'text-[#153e34] translate-x-0.5' : 'text-[#3d655a] opacity-50'
                         }`} />
                       </button>
                     );
@@ -561,14 +561,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 {/* Footer Action: Mint Passport CTA */}
-                <div className="p-2.5 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]">
+                <div className="p-2.5 border-t border-[#91baaf]/30 bg-[#e5f5f0]">
                   <button
                     onClick={() => {
                       soundManager.playSuccessBeep();
                       onNavigate('onboarding');
                       setMenuDrawerOpen(false);
                     }}
-                    className="w-full py-2 px-3 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                    className="w-full py-2 px-3 bg-[#153e34] text-white hover:bg-[#0f2e26] font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all"
                   >
                     <Zap className="w-3.5 h-3.5 fill-current" />
                     <span>+ Mint New E-Player Passport</span>
