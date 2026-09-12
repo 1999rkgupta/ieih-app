@@ -40,14 +40,14 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
             <span>INDIA ESPORTS INNOVATION HUB • DIGITAL ARENA</span>
           </div>
 
-          {/* Main Display Heading (Single Line) */}
-          <h1 className="font-extrabold text-[20px] min-[460px]:text-[26px] sm:text-[32px] md:text-[40px] text-[#0d2620] dark:text-white tracking-tight leading-snug whitespace-nowrap">
+          {/* Main Display Heading */}
+          <h1 className="font-extrabold text-[20px] min-[460px]:text-[26px] sm:text-[32px] md:text-[40px] text-[#0d2620] dark:text-white tracking-tight leading-snug break-words sm:whitespace-nowrap">
             Discover{' '}
-            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            <span className="inline-block w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
             Develop{' '}
-            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            <span className="inline-block w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
             Verify{' '}
-            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            <span className="inline-block w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-[#91baaf] align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
             Connect
           </h1>
 
