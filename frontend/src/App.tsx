@@ -39,7 +39,9 @@ export function App() {
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerPassport>(currentUser);
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
 
-  // Modals
+  // Modals & Slider Drawers
+  const [isAISliderOpen, setIsAISliderOpen] = useState(false);
+  const [aiInitialPrompt, setAiInitialPrompt] = useState<string | undefined>(undefined);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -75,6 +77,11 @@ export function App() {
 
   // Handle Tab navigation
   const handleNavigate = (tab: string) => {
+    if (tab === 'ai') {
+      soundManager.playClickSound();
+      setIsAISliderOpen(true);
+      return;
+    }
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -157,7 +164,7 @@ export function App() {
                     soundManager.playClickSound();
                     setSelectedPlayer(currentUser);
                   }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                     selectedPlayer.id === currentUser.id
                       ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
                       : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-white/10'
@@ -170,7 +177,7 @@ export function App() {
                     soundManager.playClickSound();
                     handleNavigate('discovery');
                   }}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   Browse Other Athletes &rarr;
                 </button>
@@ -224,27 +231,7 @@ export function App() {
           />
         )}
 
-        {/* Tab 7: EE AI Companion */}
-        {currentTab === 'ai' && (
-          <EEAICompanion
-            currentUser={currentUser}
-            allPlayers={allPlayers}
-            tournaments={MOCK_TOURNAMENTS}
-            campusClubs={MOCK_COLLEGIATE_CLUBS}
-            jobs={MOCK_JOBS}
-            onNavigate={handleNavigate}
-            onSelectPlayer={handleSelectPlayer}
-            onOpenEditor={() => setIsEditorOpen(true)}
-            onOpenRecruit={(player) => {
-              if (player) setSelectedPlayer(player);
-              setIsRecruitOpen(true);
-            }}
-            onOpenPostModal={() => setIsPostModalOpen(true)}
-            onOpenSearch={() => setIsSearchOpen(true)}
-          />
-        )}
-
-        {/* Tab 8: Onboarding Wizard */}
+        {/* Tab 7: Onboarding Wizard */}
         {currentTab === 'onboarding' && (
           <OnboardingWizard
             onComplete={handleOnboardingComplete}
@@ -299,17 +286,18 @@ export function App() {
         isDarkMode={theme === 'dark'}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
-        onSelectTournament={(tourney) => {
+        onSelectTournament={() => {
           handleNavigate('tournaments');
         }}
-        onSelectCollege={(college) => {
+        onSelectCollege={() => {
           handleNavigate('campus');
         }}
-        onSelectJob={(job) => {
+        onSelectJob={() => {
           handleNavigate('careers');
         }}
         onAskAI={(prompt) => {
-          handleNavigate('ai');
+          setAiInitialPrompt(prompt);
+          setIsAISliderOpen(true);
         }}
       />
 
@@ -327,10 +315,47 @@ export function App() {
         }}
       />
 
+      {/* EE AI Tactical Companion Right Slide-Over Drawer */}
+      <EEAICompanion
+        isOpen={isAISliderOpen}
+        onClose={() => {
+          setIsAISliderOpen(false);
+          setAiInitialPrompt(undefined);
+        }}
+        initialPrompt={aiInitialPrompt}
+        currentUser={currentUser}
+        allPlayers={allPlayers}
+        tournaments={MOCK_TOURNAMENTS}
+        campusClubs={MOCK_COLLEGIATE_CLUBS}
+        jobs={MOCK_JOBS}
+        onNavigate={(tab) => {
+          setIsAISliderOpen(false);
+          handleNavigate(tab);
+        }}
+        onSelectPlayer={handleSelectPlayer}
+        onOpenEditor={() => {
+          setIsAISliderOpen(false);
+          setIsEditorOpen(true);
+        }}
+        onOpenRecruit={(player) => {
+          setIsAISliderOpen(false);
+          if (player) setSelectedPlayer(player);
+          setIsRecruitOpen(true);
+        }}
+        onOpenPostModal={() => {
+          setIsAISliderOpen(false);
+          setIsPostModalOpen(true);
+        }}
+        onOpenSearch={() => {
+          setIsAISliderOpen(false);
+          setIsSearchOpen(true);
+        }}
+      />
+
       {/* Footer */}
       <Footer />
 
-      {/* Instagram-Style Fixed Bottom Menu Bar */}
+      {/* Fixed Bottom Menu Bar */}
       <BottomNavBar
         currentTab={currentTab}
         onNavigate={handleNavigate}
