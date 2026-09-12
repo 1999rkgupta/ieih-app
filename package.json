@@ -7,6 +7,7 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run dev",
     "dev:mobile": "npm --prefix mobile run start",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
     "build:apk": "npm --prefix mobile run build:android",
