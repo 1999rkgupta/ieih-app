@@ -112,31 +112,31 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-semibold border border-indigo-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#91baaf]/25 dark:bg-[#91baaf]/15 text-[#133c32] dark:text-[#91baaf] rounded-full text-xs font-semibold border border-[#91baaf]/30 dark:border-[#91baaf]/20">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Scout Engine & Talent Radar</span>
           </div>
-          <h2 className="font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+          <h2 className="font-extrabold text-2xl sm:text-4xl text-[#0d2620] dark:text-white tracking-tight">
             Discover & Recruit Esports Athletes
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 font-normal">
+          <p className="text-sm text-[#284f45] dark:text-[#a0c7bd] font-normal">
             Filter through verified E-Player Passports across BGMI, Valorant, CS2, and Free Fire with synergistic match ratings and verified performance stats.
           </p>
         </div>
       </div>
 
       {/* Filter Control Console */}
-      <div className="p-5 rounded-3xl bg-white dark:bg-[#101622] border border-slate-200 dark:border-white/10 shadow-sm space-y-4">
+      <div className="p-5 rounded-3xl bg-white/90 dark:bg-[#121d1a]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-sm space-y-4">
         {/* Search Bar & Reset */}
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#466b62] dark:text-[#6a998d]" />
             <input
               type="text"
               placeholder="Search by Gamertag, Real Name, City, State..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-full text-xs text-[#0d2620] dark:text-white placeholder:text-[#466b62] dark:placeholder:text-[#6a998d] focus:outline-none focus:border-[#91baaf] transition-all"
             />
           </div>
 
@@ -146,19 +146,19 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
                 soundManager.playClickSound();
                 setVerifiedOnly(!verifiedOnly);
               }}
-              className={`px-4 py-2.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+              className={`px-4 py-2.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 verifiedOnly
-                  ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/40 shadow-sm'
-                  : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#91baaf]/25 text-[#133c32] dark:text-[#91baaf] border-[#91baaf]/50 shadow-sm'
+                  : 'bg-white/90 dark:bg-white/5 text-[#385e54] dark:text-[#a0c7bd] border-[#91baaf]/30 dark:border-[#91baaf]/20 hover:text-[#0d2620] dark:hover:text-white'
               }`}
             >
-              <ShieldCheck className="w-4 h-4 text-sky-500" />
+              <ShieldCheck className="w-4 h-4 text-[#286b5c] dark:text-[#91baaf]" />
               <span>Verified Only</span>
             </button>
 
             <button
               onClick={handleResetFilters}
-              className="p-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="p-2.5 bg-white/90 dark:bg-white/5 hover:bg-[#dceee7]/60 dark:hover:bg-white/10 border border-[#91baaf]/30 dark:border-[#91baaf]/20 rounded-full text-[#385e54] dark:text-[#a0c7bd] hover:text-[#0d2620] dark:hover:text-white transition-colors cursor-pointer"
               title="Reset Filters"
               aria-label="Reset Filters"
             >
@@ -171,14 +171,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* Game */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Discipline</label>
+            <label className="text-[11px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider block mb-1">Discipline</label>
             <select
               value={selectedGame}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedGame(e.target.value);
               }}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-xl text-xs font-semibold text-[#0d2620] dark:text-white focus:outline-none focus:border-[#91baaf]"
             >
               <option value="ALL">All Disciplines</option>
               <option value="VALORANT">VALORANT</option>
@@ -192,14 +192,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Role */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Role</label>
+            <label className="text-[11px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider block mb-1">Role</label>
             <select
               value={selectedRole}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedRole(e.target.value);
               }}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-xl text-xs font-semibold text-[#0d2620] dark:text-white focus:outline-none focus:border-[#91baaf]"
             >
               <option value="ALL">All Roles</option>
               <option value="Duelist">Duelist / Entry</option>
@@ -215,14 +215,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Tier */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Skill Tier</label>
+            <label className="text-[11px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider block mb-1">Skill Tier</label>
             <select
               value={selectedTier}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedTier(e.target.value);
               }}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-xl text-xs font-semibold text-[#0d2620] dark:text-white focus:outline-none focus:border-[#91baaf]"
             >
               <option value="ALL">All Tiers</option>
               <option value="Legend">Legend (Global)</option>
@@ -235,14 +235,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* State */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Region</label>
+            <label className="text-[11px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider block mb-1">Region</label>
             <select
               value={selectedState}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedState(e.target.value);
               }}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-xl text-xs font-semibold text-[#0d2620] dark:text-white focus:outline-none focus:border-[#91baaf]"
             >
               <option value="ALL">All India</option>
               <option value="Maharashtra">Maharashtra (Mumbai/Pune)</option>
@@ -257,14 +257,14 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
           {/* Availability */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Status</label>
+            <label className="text-[11px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider block mb-1">Status</label>
             <select
               value={selectedAvailability}
               onChange={e => {
                 soundManager.playGlitchChirp();
                 setSelectedAvailability(e.target.value);
               }}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+              className="w-full px-3 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-xl text-xs font-semibold text-[#0d2620] dark:text-white focus:outline-none focus:border-[#91baaf]"
             >
               <option value="ALL">Any Status</option>
               <option value="LFG Pro Team">LFG Pro Team</option>
@@ -308,20 +308,20 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
           return (
             <div
               key={player.id}
-              className="group relative rounded-3xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-500/40 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden p-5 space-y-4"
+              className="group relative rounded-3xl bg-white/90 dark:bg-[#121d1a]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 hover:border-[#71a396] dark:hover:border-[#91baaf] shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden p-5 space-y-4"
             >
               {/* Header Row: Info and Synergy Score */}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors">
+                    <h3 className="font-bold text-base text-[#0d2620] dark:text-white group-hover:text-[#236052] dark:group-hover:text-[#91baaf] transition-colors">
                       {player.gamerTag}
                     </h3>
-                    <span className="px-1.5 py-0.5 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-mono text-[10px] font-bold rounded-md">
+                    <span className="px-1.5 py-0.5 bg-[#18483d] text-white dark:bg-[#91baaf] dark:text-[#090e0c] font-mono text-[10px] font-bold rounded-md">
                       L{player.level}
                     </span>
                     {player.isVerified && (
-                      <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
+                      <ShieldCheck className="w-4 h-4 text-[#286b5c] dark:text-[#91baaf] shrink-0" />
                     )}
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -348,16 +348,16 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
 
               {/* Stat Matrix Bar */}
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">Discipline</div>
-                  <div className="font-semibold text-slate-900 dark:text-white truncate mt-0.5">{player.primaryGame}</div>
+                <div className="p-2.5 rounded-xl bg-[#dceee7]/70 dark:bg-[#162521] border border-[#91baaf]/30 dark:border-[#91baaf]/20">
+                  <div className="text-[10px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">Discipline</div>
+                  <div className="font-semibold text-[#0d2620] dark:text-white truncate mt-0.5">{player.primaryGame}</div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">Role</div>
-                  <div className="font-semibold text-sky-600 dark:text-sky-400 truncate mt-0.5">{player.primaryRole}</div>
+                <div className="p-2.5 rounded-xl bg-[#dceee7]/70 dark:bg-[#162521] border border-[#91baaf]/30 dark:border-[#91baaf]/20">
+                  <div className="text-[10px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">Role</div>
+                  <div className="font-semibold text-[#18483d] dark:text-[#afd2c6] truncate mt-0.5">{player.primaryRole}</div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#1c2438] border border-slate-200/60 dark:border-white/5">
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase">K/D</div>
+                <div className="p-2.5 rounded-xl bg-[#dceee7]/70 dark:bg-[#162521] border border-[#91baaf]/30 dark:border-[#91baaf]/20">
+                  <div className="text-[10px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">K/D</div>
                   <div className="font-semibold text-amber-600 dark:text-amber-400 mt-0.5">{perf?.kdRatio.toFixed(2)}</div>
                 </div>
               </div>
@@ -412,7 +412,7 @@ export const TalentDiscovery: React.FC<TalentDiscoveryProps> = ({
       {/* Floating Comparison Drawer when athletes selected */}
       {compareIds.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-4 animate-fadeIn">
-          <div className="bg-white/95 dark:bg-[#111726]/95 backdrop-blur-2xl rounded-full p-2.5 pl-4 flex items-center justify-between gap-3 shadow-2xl border border-slate-200 dark:border-white/10">
+          <div className="bg-white/95 dark:bg-[#101c18]/95 backdrop-blur-2xl rounded-full p-2.5 pl-4 flex items-center justify-between gap-3 shadow-2xl border border-[#91baaf]/40 dark:border-[#91baaf]/25">
             <div className="flex items-center gap-2 overflow-hidden">
               <Swords className="w-4 h-4 text-sky-500 shrink-0" />
               <span className="text-xs font-semibold text-slate-900 dark:text-white">

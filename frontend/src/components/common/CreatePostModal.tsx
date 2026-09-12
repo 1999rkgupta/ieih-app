@@ -73,19 +73,19 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#111726] rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-white/10 space-y-5 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#101c18] rounded-3xl p-6 shadow-2xl border border-[#91baaf]/40 dark:border-[#91baaf]/25 space-y-5 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-600 dark:text-sky-400">
+            <div className="w-8 h-8 rounded-full bg-[#91baaf]/20 flex items-center justify-center text-[#18483d] dark:text-[#91baaf]">
               <PlusSquare className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900 dark:text-white">
+              <h3 className="font-bold text-base text-[#0d2620] dark:text-white">
                 Create Hub Post
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#385e54] dark:text-[#a0c7bd]">
                 Share clutches, schedule scrims & broadcast updates
               </p>
             </div>
@@ -117,7 +117,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* User Badge */}
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200/80 dark:border-white/5">
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#15231f] border border-slate-200/80 dark:border-white/5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-slate-300 dark:border-white/20 bg-slate-900 flex items-center justify-center">
                   {currentUser.avatarUrl ? (
@@ -214,7 +214,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                   }
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
                 />
               </div>
 
@@ -226,7 +226,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                   <select
                     value={game}
                     onChange={(e) => setGame(e.target.value as GameType)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                   >
                     <option value="VALORANT">VALORANT</option>
                     <option value="BGMI">BGMI</option>
@@ -246,7 +246,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                       type="text"
                       value={scrimTime}
                       onChange={(e) => setScrimTime(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                     />
                   </div>
                 ) : (
@@ -257,7 +257,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                     <input
                       type="text"
                       defaultValue="PC / Mobile"
-                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                     />
                   </div>
                 )}
@@ -274,7 +274,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                       placeholder="https://youtube.com/watch?v=..."
                       value={videoUrl}
                       onChange={(e) => setVideoUrl(e.target.value)}
-                      className="w-full pl-8 pr-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                      className="w-full pl-8 pr-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                     />
                     <LinkIcon className="w-3.5 h-3.5 absolute left-2.5 top-3 text-slate-400" />
                   </div>
@@ -290,7 +290,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                   placeholder="Share details about the play, scrim rules, or celebration..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 resize-none"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 resize-none"
                 />
               </div>
             </div>

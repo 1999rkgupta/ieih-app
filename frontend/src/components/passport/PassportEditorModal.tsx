@@ -91,9 +91,9 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-white dark:bg-[#111726] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] border border-slate-200 dark:border-white/10">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-[#101c18] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] border border-slate-200 dark:border-white/10">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-white/10 bg-white/90 dark:bg-[#101622]/90">
+        <div className="flex items-center justify-between p-5 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20 bg-[#eaf5f2] dark:bg-[#121d1a]">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-600 dark:text-sky-400">
               <Sparkles className="w-4 h-4" />
@@ -157,11 +157,11 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1 bg-white dark:bg-[#111726]">
+        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5 flex-1 bg-white dark:bg-[#101c18]">
           {activeSubTab === 'profile' && (
             <div className="space-y-4">
               {/* Profile Picture Section */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 space-y-3">
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 space-y-3">
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block uppercase tracking-wider">
                   Profile Picture
                 </label>
@@ -243,7 +243,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     required
                     value={formData.gamerTag}
                     onChange={e => setFormData({ ...formData, gamerTag: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
                   />
                 </div>
                 <div>
@@ -253,7 +253,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     required
                     value={formData.realName}
                     onChange={e => setFormData({ ...formData, realName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
                   />
                 </div>
               </div>
@@ -265,7 +265,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="text"
                     value={formData.state}
                     onChange={e => setFormData({ ...formData, state: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
                 <div>
@@ -274,7 +274,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="text"
                     value={formData.city}
                     onChange={e => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
                 <div>
@@ -282,7 +282,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                   <select
                     value={formData.availability}
                     onChange={e => setFormData({ ...formData, availability: e.target.value as AvailabilityStatus })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-medium"
                   >
                     <option value="LFG Pro Team">LFG Pro Team</option>
                     <option value="LFG Scrims">LFG Scrims</option>
@@ -299,7 +299,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                   rows={3}
                   value={formData.bio}
                   onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                   placeholder="Share your tournament highlights, role specialties, and scrim experience..."
                 />
               </div>
@@ -310,7 +310,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                   <select
                     value={formData.primaryGame}
                     onChange={e => setFormData({ ...formData, primaryGame: e.target.value as GameType })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
                   >
                     <option value="VALORANT">VALORANT</option>
                     <option value="BGMI">BGMI</option>
@@ -325,7 +325,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                   <select
                     value={formData.primaryRole}
                     onChange={e => setFormData({ ...formData, primaryRole: e.target.value as RoleType })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 font-semibold"
                   >
                     <option value="Duelist">Duelist / Entry Fragger</option>
                     <option value="IGL">IGL (In-Game Leader)</option>
@@ -354,7 +354,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="text"
                     value={formData.gamePerformances[formData.primaryGame]?.inGameName || ''}
                     onChange={e => handleGamePerformanceChange('inGameName', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-mono"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-mono"
                   />
                 </div>
                 <div>
@@ -363,7 +363,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="text"
                     value={formData.gamePerformances[formData.primaryGame]?.currentRank || ''}
                     onChange={e => handleGamePerformanceChange('currentRank', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white"
                   />
                 </div>
                 <div>
@@ -372,7 +372,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="text"
                     value={formData.gamePerformances[formData.primaryGame]?.peakRank || ''}
                     onChange={e => handleGamePerformanceChange('peakRank', e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -385,7 +385,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     step="0.01"
                     value={formData.gamePerformances[formData.primaryGame]?.kdRatio || 1.0}
                     onChange={e => handleGamePerformanceChange('kdRatio', parseFloat(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
                   />
                 </div>
                 <div>
@@ -394,7 +394,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="number"
                     value={formData.gamePerformances[formData.primaryGame]?.winRate || 50}
                     onChange={e => handleGamePerformanceChange('winRate', parseInt(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
                   />
                 </div>
                 <div>
@@ -403,7 +403,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="number"
                     value={formData.gamePerformances[formData.primaryGame]?.headshotPct || 25}
                     onChange={e => handleGamePerformanceChange('headshotPct', parseInt(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
                   />
                 </div>
                 <div>
@@ -412,7 +412,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     type="number"
                     value={formData.gamePerformances[formData.primaryGame]?.scrimMmr || 2000}
                     onChange={e => handleGamePerformanceChange('scrimMmr', parseInt(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-bold"
                   />
                 </div>
               </div>
@@ -453,7 +453,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     ...formData,
                     gear: { ...formData.gear, deviceOrPlatform: e.target.value }
                   })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
                 />
               </div>
 
@@ -466,7 +466,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     ...formData,
                     gear: { ...formData.gear, peripherals: e.target.value }
                   })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
                 />
               </div>
 
@@ -479,7 +479,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     ...formData,
                     gear: { ...formData.gear, audio: e.target.value }
                   })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-medium"
                 />
               </div>
 
@@ -492,7 +492,7 @@ export const PassportEditorModal: React.FC<PassportEditorModalProps> = ({
                     ...formData,
                     gear: { ...formData.gear, sensDpi: e.target.value }
                   })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-mono font-semibold text-sky-600 dark:text-sky-400"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white font-mono font-semibold text-sky-600 dark:text-sky-400"
                 />
               </div>
             </div>

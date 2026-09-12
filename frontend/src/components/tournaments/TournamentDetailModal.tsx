@@ -53,15 +53,15 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/10 rounded-3xl flex flex-col shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-[#101c18] border border-[#91baaf]/40 dark:border-[#91baaf]/25 rounded-3xl flex flex-col shadow-2xl overflow-hidden">
         {/* Banner Cover Header */}
-        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-[#0c111d] shrink-0">
+        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-[#eaf5f2] dark:bg-[#090e0c] shrink-0">
           <img
             src={tournament.bannerImage}
             alt={tournament.title}
             className="w-full h-full object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111726] via-white/40 dark:via-[#111726]/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#101c18] via-white/40 dark:via-[#101c18]/40 to-transparent"></div>
 
           {/* Close button */}
           <button
@@ -80,38 +80,38 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
             <span className={`px-2.5 py-0.5 text-[11px] font-semibold rounded-full shadow-sm ${
               tournament.status.includes('Live')
                 ? 'bg-rose-500 text-white'
-                : 'bg-white/90 dark:bg-[#101622]/90 text-sky-600 dark:text-sky-400 border border-slate-200 dark:border-white/10'
+                : 'bg-white/90 dark:bg-[#101c18]/90 text-[#18483d] dark:text-[#91baaf] border border-[#91baaf]/30 dark:border-[#91baaf]/20'
             }`}>
               {tournament.status}
             </span>
-            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101622]/90 backdrop-blur text-[11px] font-semibold text-slate-900 dark:text-white rounded-full border border-slate-200 dark:border-white/10">
+            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101c18]/90 backdrop-blur text-[11px] font-semibold text-[#0d2620] dark:text-white rounded-full border border-[#91baaf]/30 dark:border-[#91baaf]/20">
               {tournament.game}
             </span>
-            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101622]/90 backdrop-blur text-[11px] font-medium text-slate-600 dark:text-slate-400 rounded-full border border-slate-200 dark:border-white/10">
+            <span className="px-2.5 py-0.5 bg-white/90 dark:bg-[#101c18]/90 backdrop-blur text-[11px] font-medium text-[#385e54] dark:text-[#a0c7bd] rounded-full border border-[#91baaf]/30 dark:border-[#91baaf]/20">
               {tournament.type}
             </span>
           </div>
 
           <div className="absolute bottom-4 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-10">
             <div>
-              <h2 className="font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">
+              <h2 className="font-bold text-xl sm:text-2xl text-[#0d2620] dark:text-white">
                 {tournament.title}
               </h2>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-[#385e54] dark:text-[#a0c7bd] mt-1 font-medium">
                 <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-sky-500" />
+                  <Calendar className="w-3.5 h-3.5 text-[#286b5c] dark:text-[#91baaf]" />
                   {tournament.startDate} - {tournament.endDate}
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-slate-900 dark:text-white font-medium">
-                  <MapPin className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="flex items-center gap-1 text-[#0d2620] dark:text-white font-medium">
+                  <MapPin className="w-3.5 h-3.5 text-[#286b5c] dark:text-[#91baaf]" />
                   {tournament.location}
                 </span>
               </div>
             </div>
 
-            <div className="bg-white/95 dark:bg-[#101622]/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-white/10 text-right shrink-0 shadow-sm">
-              <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase">Prize Pool</div>
+            <div className="bg-white/95 dark:bg-[#101c18]/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#91baaf]/30 dark:border-[#91baaf]/20 text-right shrink-0 shadow-sm">
+              <div className="text-[10px] font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase">Prize Pool</div>
               <div className="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
                 {tournament.prizePoolFormatted}
               </div>
@@ -176,7 +176,7 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-white dark:bg-[#111726]">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 bg-white dark:bg-[#101c18]">
           {/* Tab 1: Brackets */}
           {activeTab === 'brackets' && (
             <div className="space-y-6">
@@ -368,21 +368,21 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
         </div>
 
         {/* Registration Footer Bar */}
-        <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50/90 dark:bg-[#101622]/90 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+        <div className="p-4 sm:p-5 border-t border-[#91baaf]/30 dark:border-[#91baaf]/20 bg-[#eaf5f2]/90 dark:bg-[#101c18]/90 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
           <div className="flex items-center gap-3">
-            <Users className="w-5 h-5 text-sky-500" />
+            <Users className="w-5 h-5 text-[#286b5c] dark:text-[#91baaf]" />
             <div>
-              <div className="text-xs font-semibold text-slate-900 dark:text-white">
-                Capacity: <span className="text-sky-600 dark:text-sky-400 font-bold">{tournament.registeredSlots} / {tournament.totalSlots} Slots Filled</span>
+              <div className="text-xs font-semibold text-[#0d2620] dark:text-white">
+                Capacity: <span className="text-[#18483d] dark:text-[#91baaf] font-bold">{tournament.registeredSlots} / {tournament.totalSlots} Slots Filled</span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Entry Fee: <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">{tournament.entryFee}</strong>
+              <p className="text-xs text-[#385e54] dark:text-[#a0c7bd] font-medium">
+                Entry Fee: <strong className="text-emerald-700 dark:text-emerald-400 font-semibold">{tournament.entryFee}</strong>
               </p>
             </div>
           </div>
 
           {isRegistered ? (
-            <div className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-semibold border border-emerald-500/30">
+            <div className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-semibold border border-emerald-500/30">
               <CheckCircle2 className="w-4 h-4" />
               <span>Squad Registered & Verified</span>
             </div>
@@ -394,12 +394,12 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
                 value={squadName}
                 onChange={e => setSquadName(e.target.value)}
                 placeholder="Enter Squad Tag / Name"
-                className="px-3.5 py-2 bg-white dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                className="px-3.5 py-2 bg-white dark:bg-[#15231f] border border-[#91baaf]/40 dark:border-[#91baaf]/30 rounded-full text-xs text-[#0d2620] dark:text-white placeholder:text-[#466b62] dark:placeholder:text-[#6a998d] focus:outline-none focus:border-[#91baaf]"
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-5 py-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap"
+                className="px-5 py-2 bg-gradient-to-r from-[#18483d] to-[#0f322a] hover:from-[#133c32] hover:to-[#0b241e] dark:from-[#91baaf] dark:to-[#71a396] text-white dark:text-[#090e0c] text-xs font-semibold rounded-full transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 fill-current" />
                 <span>{submitting ? 'Registering...' : '1-Click Register'}</span>

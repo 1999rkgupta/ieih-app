@@ -256,7 +256,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header Banner */}
-      <div className="relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#101622] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
+      <div className="relative p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#101c18] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
         <div className="relative z-10 max-w-3xl space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
@@ -278,9 +278,9 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
       </div>
 
       {/* Main Glass Chat Terminal */}
-      <div className="rounded-3xl bg-white dark:bg-[#101622] shadow-xl flex flex-col h-[600px] overflow-hidden border border-slate-200 dark:border-white/10">
+      <div className="rounded-3xl bg-white dark:bg-[#101c18] shadow-xl flex flex-col h-[600px] overflow-hidden border border-slate-200 dark:border-white/10">
         {/* Terminal Header */}
-        <div className="p-4 bg-slate-50 dark:bg-[#131926] border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 dark:bg-[#121d1a] border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
             <div>
@@ -330,7 +330,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                 className={`p-4 rounded-3xl max-w-xl text-xs sm:text-sm leading-relaxed ${
                   msg.sender === 'user'
                     ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-medium shadow-sm'
-                    : 'bg-slate-50 dark:bg-[#182032] border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-100 shadow-sm'
+                    : 'bg-slate-50 dark:bg-[#15231f] border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-100 shadow-sm'
                 }`}
               >
                 {/* Render Attached Photos / Documents */}
@@ -354,7 +354,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                     ) : (
                       <div 
                         key={att.id}
-                        className="p-3 rounded-2xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 flex items-center gap-3 max-w-xs shadow-sm"
+                        className="p-3 rounded-2xl bg-white dark:bg-[#121d1a] border border-slate-200 dark:border-white/10 flex items-center gap-3 max-w-xs shadow-sm"
                       >
                         <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
                           <FileText className="w-5 h-5" />
@@ -372,7 +372,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
 
                 {/* Tactical Card if present */}
                 {msg.tacticalCard && (
-                  <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#131926] border border-slate-200 dark:border-white/10 space-y-2.5">
+                  <div className="mt-4 p-4 rounded-2xl bg-white dark:bg-[#121d1a] border border-slate-200 dark:border-white/10 space-y-2.5">
                     <div className="flex items-center justify-between text-[11px] font-semibold border-b border-slate-100 dark:border-white/5 pb-2">
                       <span className="text-sky-600 dark:text-sky-400 flex items-center gap-1.5 font-bold">
                         <Target className="w-3.5 h-3.5" /> {msg.tacticalCard.title}
@@ -420,7 +420,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
           ))}
 
           {isTyping && (
-            <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-sky-600 dark:text-sky-400 font-semibold shadow-sm">
+            <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-full w-fit text-xs text-sky-600 dark:text-sky-400 font-semibold shadow-sm">
               <Sparkles className="w-3.5 h-3.5 animate-spin" />
               <span>Analyzing Tactical Telemetry & Match Data...</span>
             </div>
@@ -430,7 +430,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
         </div>
 
         {/* Preset Prompt Chips */}
-        <div className="px-4 py-2 bg-slate-50/80 dark:bg-[#131926]/80 border-t border-slate-200 dark:border-white/10 flex gap-2 overflow-x-auto">
+        <div className="px-4 py-2 bg-slate-50/80 dark:bg-[#121d1a]/80 border-t border-slate-200 dark:border-white/10 flex gap-2 overflow-x-auto">
           {PRESET_TACTICAL_PROMPTS.map((prompt, idx) => (
             <button
               key={idx}
@@ -445,10 +445,10 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
 
         {/* Pending Draft Attachments Tray */}
         {pendingAttachments.length > 0 && (
-          <div className="px-4 py-2 bg-slate-100/90 dark:bg-[#131926]/90 border-t border-slate-200 dark:border-white/10 flex items-center gap-2 overflow-x-auto animate-fadeIn">
+          <div className="px-4 py-2 bg-slate-100/90 dark:bg-[#121d1a]/90 border-t border-slate-200 dark:border-white/10 flex items-center gap-2 overflow-x-auto animate-fadeIn">
             <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 shrink-0">Attached:</span>
             {pendingAttachments.map((att, idx) => (
-              <div key={att.id} className="relative flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-[#1c2438] border border-slate-200 dark:border-white/10 rounded-xl text-xs shrink-0 shadow-sm">
+              <div key={att.id} className="relative flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-[#162521] border border-slate-200 dark:border-white/10 rounded-xl text-xs shrink-0 shadow-sm">
                 {att.type === 'image' ? (
                   <img src={att.url} alt="thumbnail" className="w-5 h-5 rounded object-cover" />
                 ) : (
@@ -470,7 +470,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
         )}
 
         {/* Input Bar with Attachment Trigger */}
-        <div className="p-3.5 bg-white dark:bg-[#101622] border-t border-slate-200 dark:border-white/10">
+        <div className="p-3.5 bg-white dark:bg-[#101c18] border-t border-slate-200 dark:border-white/10">
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -507,7 +507,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
               placeholder="Ask EE AI or attach photos/documents for diagnostic review..."
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
+              className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-full text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-sky-500"
             />
             <button
               type="submit"

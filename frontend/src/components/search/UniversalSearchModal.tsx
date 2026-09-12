@@ -558,7 +558,7 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
       ></div>
 
       {/* Main Command Center Modal */}
-      <div className="relative w-full max-w-3xl bg-white dark:bg-[#0f1422] border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] z-10 transition-colors">
+      <div className="relative w-full max-w-3xl bg-white dark:bg-[#101c18] border border-slate-200 dark:border-[#91baaf]/25 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] z-10 transition-colors">
         
         {/* Search Input Bar */}
         <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3 bg-slate-50/70 dark:bg-white/[0.02]">
@@ -732,7 +732,7 @@ export const UniversalSearchModal: React.FC<UniversalSearchModalProps> = ({
         )}
 
         {/* Modal Keyboard Helper Bar */}
-        <div className="px-4 py-2 bg-white dark:bg-[#0c101c] border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+        <div className="px-4 py-2 bg-white dark:bg-[#0d1614] border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[11px] text-slate-400">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1 font-mono">
               <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 font-bold text-slate-600 dark:text-slate-300">↑</kbd>

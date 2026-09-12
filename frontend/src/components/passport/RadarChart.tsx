@@ -109,8 +109,8 @@ export const RadarChart: React.FC<RadarChartProps> = ({
         {/* Primary Polygon */}
         <polygon
           points={primaryPoints}
-          fill="rgba(14, 165, 233, 0.2)"
-          stroke="#0ea5e9"
+          fill="rgba(145, 186, 175, 0.35)"
+          stroke="#71a396"
           strokeWidth="2"
           className="transition-all duration-500"
         />

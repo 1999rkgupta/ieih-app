@@ -87,7 +87,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
   };
 
   return (
-    <div className="rounded-3xl overflow-hidden shadow-xl bg-white dark:bg-[#101622] border border-slate-200 dark:border-white/10 animate-fadeIn">
+    <div className="rounded-3xl overflow-hidden shadow-xl bg-white dark:bg-[#101c18] border border-slate-200 dark:border-white/10 animate-fadeIn">
       {/* Dynamic Ambient Gamer Banner */}
       <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-slate-900">
         <img
@@ -95,12 +95,12 @@ export const PassportCard: React.FC<PassportCardProps> = ({
           alt="Gamer Banner"
           className="w-full h-full object-cover object-center opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#101622] via-white/40 dark:via-[#101622]/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#101c18] via-white/40 dark:via-[#101c18]/40 to-transparent"></div>
 
         {/* Top Badges & Passport Number */}
         <div className="absolute top-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 z-10">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-white/90 dark:bg-[#101622]/90 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-full text-xs font-mono font-semibold text-slate-900 dark:text-white shadow-sm">
+            <span className="px-3 py-1 bg-white/90 dark:bg-[#101c18]/90 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-full text-xs font-mono font-semibold text-slate-900 dark:text-white shadow-sm">
               {passport.passportNumber}
             </span>
             <span className="px-2.5 py-1 bg-indigo-500/15 backdrop-blur-md border border-indigo-500/20 rounded-full text-xs font-semibold text-indigo-600 dark:text-indigo-400">
@@ -124,7 +124,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
 
         {/* Live Scrim Status Pill */}
         <div className="absolute bottom-3 right-4 z-10">
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-white/90 dark:bg-[#101622]/90 backdrop-blur-md rounded-full border border-slate-200 dark:border-white/10 text-xs font-medium shadow-sm">
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-white/90 dark:bg-[#101c18]/90 backdrop-blur-md rounded-full border border-slate-200 dark:border-white/10 text-xs font-medium shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{passport.availability}</span>
           </div>
@@ -145,7 +145,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
                     setIsPhotoModalOpen(true);
                   }
                 }}
-                className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white dark:border-[#101622] shadow-xl bg-slate-900 flex items-center justify-center relative ${
+                className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white dark:border-[#101c18] shadow-xl bg-slate-900 flex items-center justify-center relative ${
                   isOwner ? 'cursor-pointer' : ''
                 }`}
                 title={isOwner ? "Click to change profile picture" : passport.gamerTag}
@@ -185,7 +185,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
                     soundManager.playClickSound();
                     setIsPhotoModalOpen(true);
                   }}
-                  className="absolute bottom-0 -left-1 p-2 bg-sky-500 hover:bg-sky-400 text-white rounded-full shadow-lg border-2 border-white dark:border-[#101622] transition-transform hover:scale-110 active:scale-95"
+                  className="absolute bottom-0 -left-1 p-2 bg-sky-500 hover:bg-sky-400 text-white rounded-full shadow-lg border-2 border-white dark:border-[#101c18] transition-transform hover:scale-110 active:scale-95"
                   title="Change Profile Picture"
                   aria-label="Change Profile Picture"
                 >
@@ -263,7 +263,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
         </div>
 
         {/* Level XP Bar */}
-        <div className="mb-6 p-4 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col gap-2">
+        <div className="mb-6 p-4 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col gap-2">
           <div className="flex justify-between items-center text-xs">
             <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1.5 font-medium">
               <TrendingUp className="w-3.5 h-3.5 text-sky-500" />
@@ -384,7 +384,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
             {/* Left: Deep Stats Matrix */}
             <div className="lg:col-span-7 space-y-4">
               {/* In-Game Rank Banner */}
-              <div className="p-4 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 flex items-center justify-between shadow-sm">
+              <div className="p-4 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 flex items-center justify-between shadow-sm">
                 <div>
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Competitive Rank</div>
                   <div className="text-lg font-bold text-sky-600 dark:text-sky-400 mt-0.5">
@@ -404,7 +404,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
 
               {/* Stat Grid 2x3 */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">K/D Ratio</div>
                   <div className="text-xl font-bold text-slate-900 dark:text-white mt-1 flex items-baseline gap-1">
                     {performance?.kdRatio.toFixed(2)}
@@ -412,35 +412,35 @@ export const PassportCard: React.FC<PassportCardProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Win Rate</div>
                   <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                     {performance?.winRate}%
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Headshot %</div>
                   <div className="text-xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
                     {performance?.headshotPct}%
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">MVPs Won</div>
                   <div className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1">
                     {performance?.mvpCount} 🏆
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Clutches</div>
                   <div className="text-xl font-bold text-sky-600 dark:text-sky-400 mt-1">
                     {performance?.clutchesWon}
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hours Logged</div>
                   <div className="text-xl font-bold text-slate-900 dark:text-white mt-1">
                     {performance?.hoursPlayed}h
@@ -450,7 +450,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
 
               {/* Main Agents / Weapons */}
               {performance?.mainCharactersOrWeapons && performance.mainCharactersOrWeapons.length > 0 && (
-                <div className="p-3.5 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+                <div className="p-3.5 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
                   <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Signature Picks & Loadouts</div>
                   <div className="flex flex-wrap gap-1.5">
                     {performance.mainCharactersOrWeapons.map((item, idx) => (
@@ -464,7 +464,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
             </div>
 
             {/* Right: Radar Skill Chart */}
-            <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
+            <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-sm">
               <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 tracking-wider uppercase flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-sky-500" />
                 Tactical Radar Matrix
@@ -480,7 +480,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
             {passport.trophies.map(trophy => (
               <div
                 key={trophy.id}
-                className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 hover:border-amber-500/40 transition-all group relative overflow-hidden shadow-sm"
+                className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 hover:border-amber-500/40 transition-all group relative overflow-hidden shadow-sm"
               >
                 <div className="flex items-start gap-3.5">
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
@@ -514,7 +514,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
             {passport.tournamentHistory.map(record => (
               <div
                 key={record.id}
-                className="p-4 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-500/40 transition-all shadow-sm"
+                className="p-4 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-500/40 transition-all shadow-sm"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
@@ -553,7 +553,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
         {/* Tab 4: Hardware Gear */}
         {activeTab === 'gear' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 space-y-3 shadow-sm">
+            <div className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 space-y-3 shadow-sm">
               <div className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-2 uppercase tracking-wider">
                 <Cpu className="w-4 h-4" />
                 System & Rig
@@ -570,7 +570,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#151c2c]/90 border border-slate-200/80 dark:border-white/10 space-y-3 shadow-sm">
+            <div className="p-5 rounded-2xl bg-slate-50/90 dark:bg-[#121d1a]/90 border border-slate-200/80 dark:border-white/10 space-y-3 shadow-sm">
               <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-2 uppercase tracking-wider">
                 <Crosshair className="w-4 h-4" />
                 Peripherals & Settings
@@ -596,7 +596,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
               <div
                 key={clip.id}
                 onClick={() => onOpenClip && onOpenClip(clip)}
-                className="group relative rounded-2xl overflow-hidden bg-slate-50 dark:bg-[#151c2c] border border-slate-200 dark:border-white/10 hover:border-rose-500/40 cursor-pointer transition-all shadow-sm"
+                className="group relative rounded-2xl overflow-hidden bg-slate-50 dark:bg-[#121d1a] border border-slate-200 dark:border-white/10 hover:border-rose-500/40 cursor-pointer transition-all shadow-sm"
               >
                 <div className="aspect-video relative overflow-hidden bg-slate-900">
                   <img
@@ -640,7 +640,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
       {/* Change Profile Picture Modal (Directly Editable from Profile) */}
       {isPhotoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-md bg-white dark:bg-[#111726] rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-white/10 space-y-5">
+          <div className="relative w-full max-w-md bg-white dark:bg-[#101c18] rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-white/10 space-y-5">
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
               <div className="flex items-center gap-2.5">
@@ -748,7 +748,7 @@ export const PassportCard: React.FC<PassportCardProps> = ({
                   placeholder="https://example.com/avatar.jpg"
                   value={customUrlInput}
                   onChange={(e) => setCustomUrlInput(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-slate-50 dark:bg-[#182032] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+                  className="flex-1 px-3 py-2 bg-slate-50 dark:bg-[#15231f] border border-slate-200 dark:border-white/10 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
                 />
                 <button
                   type="button"

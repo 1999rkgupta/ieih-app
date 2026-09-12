@@ -12,12 +12,12 @@ interface ClipPlayerModalProps {
 export const ClipPlayerModal: React.FC<ClipPlayerModalProps> = ({ clip, gamerTag, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-3xl bg-white dark:bg-[#111726] rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10">
+      <div className="relative w-full max-w-3xl bg-white dark:bg-[#101c18] rounded-3xl overflow-hidden shadow-2xl border border-[#91baaf]/40 dark:border-[#91baaf]/25">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-white/90 dark:bg-[#101622]/90 border-b border-slate-200 dark:border-white/10">
+        <div className="flex items-center justify-between p-4 bg-[#eaf5f2] dark:bg-[#121d1a] border-b border-[#91baaf]/30 dark:border-[#91baaf]/20">
           <div className="flex items-center gap-2">
             <Flame className="w-4 h-4 text-rose-500" />
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate">
+            <h3 className="font-bold text-sm text-[#0d2620] dark:text-white truncate">
               {clip.title}
             </h3>
           </div>

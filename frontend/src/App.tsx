@@ -142,13 +142,13 @@ export function App() {
         {currentTab === 'passport' && (
           <div className="space-y-6 animate-fadeIn">
             {/* Top Toolbar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-[#131926]/90 border border-slate-200 dark:border-white/10 shadow-sm backdrop-blur-xl">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-[#121d1a]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-sm backdrop-blur-xl">
               <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Viewing Passport:</span>
-                <span className="font-bold text-sm text-sky-600 dark:text-sky-400">
+                <span className="text-xs font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">Viewing Passport:</span>
+                <span className="font-bold text-sm text-[#18483d] dark:text-[#91baaf]">
                   {selectedPlayer.gamerTag}
                 </span>
-                <span className="text-xs font-mono text-slate-500 dark:text-slate-400">({selectedPlayer.passportNumber})</span>
+                <span className="text-xs font-mono text-[#385e54] dark:text-[#88b5a9]">({selectedPlayer.passportNumber})</span>
               </div>
 
               <div className="flex items-center gap-2">
