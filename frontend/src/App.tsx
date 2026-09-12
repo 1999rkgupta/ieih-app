@@ -111,7 +111,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#d6ede7] via-[#ecf6f3] to-[#ddf0ea] text-[#0f2721] flex flex-col font-sans transition-colors duration-200 selection:bg-[#91baaf] selection:text-slate-950">
+    <div className="min-h-screen bg-gradient-to-b from-[#d6ede7] via-[#ecf6f3] to-[#ddf0ea] dark:from-[#090e0c] dark:via-[#0e1614] dark:to-[#080d0b] text-[#0f2721] dark:text-[#e4f3ef] flex flex-col font-sans transition-colors duration-200 selection:bg-[#91baaf] selection:text-slate-950">
       {/* Subtle Dot Mesh & Ambient Radial Glow */}
       <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none z-0"></div>
       <div className="fixed inset-0 bg-radial-glow pointer-events-none z-0"></div>
