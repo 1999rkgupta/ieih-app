@@ -24,7 +24,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'discovery', label: 'Radar', icon: Radar },
-    { id: 'tournaments', label: 'Tourneys', icon: Trophy },
+    { id: 'tournaments', label: 'Tournaments', icon: Trophy },
     { id: 'post', label: 'Post', icon: Plus, isAction: true },
     { id: 'campus', label: 'Campus', icon: GraduationCap },
     { id: 'careers', label: 'Careers', icon: Briefcase },
@@ -102,7 +102,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   </div>
 
                   {/* iOS Style Micro Typography */}
-                  <span className={`text-[9px] sm:text-[10px] tracking-tight leading-none text-center truncate max-w-[52px] ${
+                  <span className={`text-[8px] min-[380px]:text-[9px] sm:text-[10px] tracking-tight leading-none text-center truncate max-w-[62px] ${
                     isActive
                       ? 'font-extrabold text-[#103a30] dark:text-[#91baaf]'
                       : 'font-medium text-[#30594f] dark:text-[#80ada2]'
