@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Volume2, 
   VolumeX, 
@@ -68,14 +69,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Lock body scroll when mobile menu drawer is open
   useEffect(() => {
-    if (menuDrawerOpen && window.innerWidth < 768) {
+    if (menuDrawerOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [menuDrawerOpen]);
 
   // Click outside to close desktop menu drawer
@@ -169,6 +169,215 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsMuted(muted);
   };
 
+  // Shared Menu Content (Used in both Mobile Drawer & Desktop Dropdown)
+  const renderMenuContent = (isMobile = false) => (
+    <>
+      {/* 1. Athlete Profile Section */}
+      <div className="p-3 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-xs space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#91baaf]/40 dark:border-[#91baaf]/30 bg-[#153e34] dark:bg-[#1b2f29] flex items-center justify-center">
+              {currentUser.avatarUrl ? (
+                <img src={currentUser.avatarUrl} alt={currentUser.gamerTag} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xs font-bold font-mono text-[#91baaf]">
+                  {currentUser.gamerTag.slice(0, 2).toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[#0d2620] dark:text-white truncate">
+                  {currentUser.gamerTag}
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-[#dff1ec] dark:bg-[#1a2d27] text-[9px] font-mono font-bold text-[#0d2620] dark:text-white shrink-0">
+                  L{currentUser.level}
+                </span>
+              </div>
+              <p className="text-[10px] text-[#30594f] dark:text-[#88b5a9] truncate">
+                {currentUser.primaryGame} • {currentUser.primaryRole}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              soundManager.playClickSound();
+              onNavigate('passport');
+              setMenuDrawerOpen(false);
+            }}
+            className="px-2.5 py-1.5 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] text-[10px] font-bold rounded-xl shrink-0 shadow-xs hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            View Passport
+          </button>
+        </div>
+
+        {/* Athlete Switcher Collapsible Accordion */}
+        <div className="pt-2 border-t border-[#91baaf]/20 dark:border-[#91baaf]/15">
+          <button
+            onClick={() => setMobileSwitchUserOpen(!mobileSwitchUserOpen)}
+            className="w-full flex items-center justify-between text-[11px] font-semibold text-[#285b50] dark:text-[#91baaf] hover:text-[#0d2620] dark:hover:text-white transition-colors cursor-pointer"
+          >
+            <span className="flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5" />
+              <span>Switch Athlete ({allPlayers.length})</span>
+            </span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileSwitchUserOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {mobileSwitchUserOpen && (
+            <div className="mt-2 space-y-1.5 max-h-44 overflow-y-auto pt-1 animate-fadeIn">
+              {allPlayers.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    soundManager.playSuccessBeep();
+                    onSwitchUser(p);
+                    setMobileSwitchUserOpen(false);
+                    if (isMobile) setMenuDrawerOpen(false);
+                  }}
+                  className={`w-full p-2 rounded-xl text-left flex items-center justify-between text-xs transition-all cursor-pointer ${
+                    p.id === currentUser.id
+                      ? 'bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#103a30] dark:text-[#91baaf] font-bold border border-[#91baaf]/40'
+                      : 'bg-white/50 dark:bg-white/5 hover:bg-white text-[#285045] dark:text-[#afd2c6]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-[#91baaf]/30 bg-[#153e34] dark:bg-[#1b2f29] flex items-center justify-center">
+                      {p.avatarUrl ? (
+                        <img src={p.avatarUrl} alt={p.gamerTag} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[8px] font-bold font-mono text-[#91baaf]">
+                          {p.gamerTag.slice(0, 2).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <span className="truncate text-xs">{p.gamerTag}</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-[#3d655a] dark:text-[#88b5a9]">L{p.level}</span>
+                </button>
+              ))}
+
+              <button
+                onClick={() => {
+                  soundManager.playSuccessBeep();
+                  onNavigate('onboarding');
+                  setMenuDrawerOpen(false);
+                }}
+                className="w-full py-1.5 px-2 bg-white dark:bg-white/5 hover:bg-[#91baaf]/20 text-[#153e34] dark:text-[#91baaf] font-semibold text-[11px] rounded-xl text-center border border-dashed border-[#91baaf]/40 transition-colors flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Mint New Passport</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 2. Quick Mobile Controls: Theme & Sound (Always shown inside menu) */}
+      <div className="grid grid-cols-2 gap-2">
+        {/* Theme Toggle Button */}
+        <button
+          onClick={() => {
+            soundManager.playClickSound();
+            toggleTheme();
+          }}
+          className="p-2.5 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 flex items-center gap-2 text-xs font-semibold text-[#0d2620] dark:text-white shadow-xs hover:bg-white dark:hover:bg-[#182b26] transition-all cursor-pointer"
+        >
+          {theme === 'light' ? (
+            <>
+              <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 shrink-0">
+                <Moon className="w-4 h-4" />
+              </div>
+              <div className="text-left leading-tight min-w-0">
+                <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Theme</span>
+                <span className="text-xs font-bold truncate">Dark Mode</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
+                <Sun className="w-4 h-4" />
+              </div>
+              <div className="text-left leading-tight min-w-0">
+                <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Theme</span>
+                <span className="text-xs font-bold truncate">Light Mode</span>
+              </div>
+            </>
+          )}
+        </button>
+
+        {/* Sound FX Toggle Button */}
+        <button
+          onClick={handleToggleMute}
+          className="p-2.5 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 flex items-center gap-2 text-xs font-semibold text-[#0d2620] dark:text-white shadow-xs hover:bg-white dark:hover:bg-[#182b26] transition-all cursor-pointer"
+        >
+          <div className={`p-1.5 rounded-lg shrink-0 ${isMuted ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </div>
+          <div className="text-left leading-tight min-w-0">
+            <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Sound FX</span>
+            <span className="text-xs font-bold truncate">{isMuted ? 'Muted' : 'Enabled'}</span>
+          </div>
+        </button>
+      </div>
+
+      {/* 3. The 7 Keys Navigation List */}
+      <div className="space-y-1">
+        <div className="px-1 text-[10px] font-bold text-[#30594f] dark:text-[#88b5a9] uppercase tracking-wider">
+          Platform Portals (7 Keys)
+        </div>
+
+        {all7Keys.map((item, idx) => {
+          const Icon = item.icon;
+          const isActive = currentTab === item.id;
+
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                soundManager.playClickSound();
+                onNavigate(item.id);
+                setMenuDrawerOpen(false);
+              }}
+              className={`w-full p-2.5 rounded-2xl text-left flex items-center justify-between gap-3 transition-all duration-150 cursor-pointer ${
+                isActive
+                  ? 'bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#103a30] dark:text-[#91baaf] font-bold border border-[#91baaf]/50 dark:border-[#91baaf]/30 shadow-xs'
+                  : 'hover:bg-white/80 dark:hover:bg-white/5 text-[#285045] dark:text-[#afd2c6] border border-transparent'
+              }`}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                  isActive
+                    ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] shadow-sm'
+                    : 'bg-[#91baaf]/20 dark:bg-[#91baaf]/15 text-[#153e34] dark:text-[#afd2c6]'
+                }`}>
+                  <Icon className="w-4 h-4" />
+                </div>
+
+                <div className="truncate min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-[#0d2620] dark:text-white truncate">
+                      {item.label}
+                    </span>
+                    <span className="text-[9px] font-mono text-[#3d655a] dark:text-[#88b5a9]">#{idx + 1}</span>
+                  </div>
+                  <p className="text-[10px] text-[#3d655a] dark:text-[#88b5a9] truncate mt-0.5">
+                    {item.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              <ArrowRight className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+                isActive ? 'text-[#153e34] dark:text-[#91baaf] translate-x-0.5' : 'text-[#3d655a] dark:text-[#88b5a9] opacity-50'
+              }`} />
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+
   return (
     <header className="sticky top-0 z-40 w-full bg-[#d7ece6]/95 dark:bg-[#0c1412]/95 backdrop-blur-2xl border-b border-[#91baaf]/40 dark:border-[#91baaf]/20 transition-colors duration-200 shadow-xs">
       {/* Top Ticker Bar */}
@@ -216,7 +425,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 onNavigate('passport');
               }}
-              className={`flex items-center gap-2 py-1 pl-1.5 pr-2.5 rounded-full border transition-all duration-200 select-none ${
+              className={`flex items-center gap-2 py-1 pl-1.5 pr-2.5 rounded-full border transition-all duration-200 select-none cursor-pointer ${
                 currentTab === 'passport'
                   ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] border-transparent shadow-sm'
                   : 'bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] border-[#91baaf]/40 dark:border-[#91baaf]/25 text-[#0d2620] dark:text-[#e4f3ef] shadow-sm'
@@ -253,7 +462,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 setUserDropdownOpen(!userDropdownOpen);
               }}
-              className="p-1 ml-0.5 rounded-full hover:bg-[#91baaf]/25 dark:hover:bg-[#91baaf]/20 text-[#285348] dark:text-[#afd2c6] transition-colors"
+              className="p-1 ml-0.5 rounded-full hover:bg-[#91baaf]/25 dark:hover:bg-[#91baaf]/20 text-[#285348] dark:text-[#afd2c6] transition-colors cursor-pointer"
               title="Switch Athlete"
               aria-label="Switch athlete"
             >
@@ -276,7 +485,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSwitchUser(p);
                         setUserDropdownOpen(false);
                       }}
-                      className={`w-full px-2.5 py-1.5 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all ${
+                      className={`w-full px-2.5 py-1.5 rounded-xl text-left flex items-center gap-2.5 text-xs transition-all cursor-pointer ${
                         p.id === currentUser.id
                           ? 'bg-[#91baaf]/25 dark:bg-[#91baaf]/20 text-[#133c32] dark:text-[#91baaf] font-semibold'
                           : 'hover:bg-white dark:hover:bg-white/5 text-[#0d2620] dark:text-[#e4f3ef]'
@@ -308,7 +517,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setUserDropdownOpen(false);
                       onNavigate('passport');
                     }}
-                    className="w-full py-1.5 text-[#153e34] dark:text-[#afd2c6] hover:bg-white dark:hover:bg-white/5 font-medium text-xs rounded-xl text-center transition-colors"
+                    className="w-full py-1.5 text-[#153e34] dark:text-[#afd2c6] hover:bg-white dark:hover:bg-white/5 font-medium text-xs rounded-xl text-center transition-colors cursor-pointer"
                   >
                     View Full Profile &rarr;
                   </button>
@@ -318,7 +527,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setUserDropdownOpen(false);
                       onNavigate('onboarding');
                     }}
-                    className="w-full py-2 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] hover:bg-[#0f2e26] dark:hover:bg-[#7db0a3] font-semibold text-xs rounded-xl text-center shadow-sm transition-colors"
+                    className="w-full py-2 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] hover:bg-[#0f2e26] dark:hover:bg-[#7db0a3] font-semibold text-xs rounded-xl text-center shadow-sm transition-colors cursor-pointer"
                   >
                     + Create New Passport
                   </button>
@@ -358,7 +567,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all"
+            className="p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all cursor-pointer"
             title="Search app (⌘K)"
             aria-label="Open search"
           >
@@ -372,7 +581,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 setNotificationsOpen(!notificationsOpen);
               }}
-              className={`relative p-2 rounded-full border transition-all duration-200 shadow-sm ${
+              className={`relative p-2 rounded-full border transition-all duration-200 shadow-sm cursor-pointer ${
                 notificationsOpen
                   ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] border-transparent'
                   : 'border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6]'
@@ -390,7 +599,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Notification Dropdown Panel */}
             {notificationsOpen && (
-              <div className="fixed sm:absolute inset-x-3 sm:inset-x-auto sm:right-0 top-16 sm:top-full mt-2 max-w-sm sm:w-96 bg-[#f2faf7] dark:bg-[#0f1916] border border-[#91baaf]/40 dark:border-[#91baaf]/25 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
+              <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 bg-[#f2faf7] dark:bg-[#0f1916] border border-[#91baaf]/40 dark:border-[#91baaf]/25 rounded-2xl shadow-2xl overflow-hidden z-50 animate-fadeIn">
                 {/* Header */}
                 <div className="p-3.5 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20 flex items-center justify-between bg-[#e5f5f0] dark:bg-[#13201c]">
                   <div className="flex items-center gap-2">
@@ -407,7 +616,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllRead}
-                      className="text-[11px] font-semibold text-[#286b5c] dark:text-[#91baaf] hover:text-[#153e34] dark:hover:text-white flex items-center gap-1 transition-colors"
+                      className="text-[11px] font-semibold text-[#286b5c] dark:text-[#91baaf] hover:text-[#153e34] dark:hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
                       <span>Mark all read</span>
@@ -470,7 +679,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               soundManager.playClickSound();
               toggleTheme();
             }}
-            className="hidden md:flex p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all duration-200"
+            className="hidden md:flex p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all duration-200 cursor-pointer"
             title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
             aria-label="Toggle theme"
           >
@@ -484,7 +693,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Desktop Sound Toggle (Hidden on mobile, inside Hamburger Menu) */}
           <button
             onClick={handleToggleMute}
-            className="hidden md:flex p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all duration-200"
+            className="hidden md:flex p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all duration-200 cursor-pointer"
             title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
           >
             {isMuted ? <VolumeX className="w-4 h-4 text-[#3d655a] dark:text-[#88b5a9]" /> : <Volume2 className="w-4 h-4 text-[#286b5c] dark:text-[#91baaf]" />}
@@ -497,7 +706,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 soundManager.playClickSound();
                 setMenuDrawerOpen(!menuDrawerOpen);
               }}
-              className={`p-2 rounded-full border transition-all duration-200 shadow-sm flex items-center justify-center ${
+              className={`p-2 rounded-full border transition-all duration-200 shadow-sm flex items-center justify-center cursor-pointer ${
                 menuDrawerOpen
                   ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] border-transparent scale-105'
                   : 'border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6]'
@@ -512,266 +721,109 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
-            {/* Menu Drawer */}
+            {/* Desktop Dropdown Panel (Anchored to Hamburger on md+ screens) */}
             {menuDrawerOpen && (
-              <>
-                {/* Mobile Backdrop Overlay */}
-                <div 
-                  onClick={() => setMenuDrawerOpen(false)}
-                  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fadeIn"
-                />
-
-                {/* Menu Panel (Mobile full-sheet / Desktop Dropdown) */}
-                <div className="fixed md:absolute inset-x-3 top-16 bottom-4 md:inset-auto md:right-0 md:top-full md:mt-2 md:w-84 max-h-[85vh] md:max-h-[80vh] bg-[#f2faf7] dark:bg-[#0f1916] border border-[#91baaf]/40 dark:border-[#91baaf]/25 rounded-3xl shadow-2xl overflow-hidden z-50 flex flex-col animate-fadeIn">
-                  {/* Drawer Header */}
-                  <div className="p-3.5 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20 flex items-center justify-between bg-[#e5f5f0] dark:bg-[#13201c] shrink-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-[#0d2620] dark:text-white uppercase tracking-wider">
-                        Navigation & Settings
-                      </span>
-                      <span className="px-2 py-0.5 text-[10px] font-bold bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#153e34] dark:text-[#91baaf] border border-[#91baaf]/50 dark:border-[#91baaf]/30 rounded-full">
-                        7 Keys
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[#3d655a] dark:text-[#88b5a9] hidden xs:inline">v2.6</span>
-                      <button
-                        onClick={() => setMenuDrawerOpen(false)}
-                        className="p-1 rounded-full hover:bg-black/10 dark:hover:bg-white/10 text-[#153e34] dark:text-[#afd2c6] md:hidden"
-                        aria-label="Close menu"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
+              <div className="hidden md:flex absolute right-0 top-full mt-2 w-84 max-h-[80vh] bg-[#f2faf7] dark:bg-[#0f1916] border border-[#91baaf]/40 dark:border-[#91baaf]/25 rounded-3xl shadow-2xl overflow-hidden z-50 flex-col animate-fadeIn">
+                {/* Desktop Drawer Header */}
+                <div className="p-3.5 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20 flex items-center justify-between bg-[#e5f5f0] dark:bg-[#13201c] shrink-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-[#0d2620] dark:text-white uppercase tracking-wider">
+                      Navigation Menu
+                    </span>
+                    <span className="px-2 py-0.5 text-[10px] font-bold bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#153e34] dark:text-[#91baaf] border border-[#91baaf]/50 dark:border-[#91baaf]/30 rounded-full">
+                      7 Keys
+                    </span>
                   </div>
-
-                  {/* Scrollable Drawer Body */}
-                  <div className="flex-1 overflow-y-auto p-3 space-y-3.5">
-                    {/* 1. Athlete Profile Section (Specially Prominent on Mobile) */}
-                    <div className="p-3 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-xs space-y-2.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#91baaf]/40 dark:border-[#91baaf]/30 bg-[#153e34] dark:bg-[#1b2f29] flex items-center justify-center">
-                            {currentUser.avatarUrl ? (
-                              <img src={currentUser.avatarUrl} alt={currentUser.gamerTag} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-xs font-bold font-mono text-[#91baaf]">
-                                {currentUser.gamerTag.slice(0, 2).toUpperCase()}
-                              </span>
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-bold text-xs text-[#0d2620] dark:text-white truncate">
-                                {currentUser.gamerTag}
-                              </span>
-                              <span className="px-1.5 py-0.2 rounded bg-[#dff1ec] dark:bg-[#1a2d27] text-[9px] font-mono font-bold text-[#0d2620] dark:text-white shrink-0">
-                                L{currentUser.level}
-                              </span>
-                            </div>
-                            <p className="text-[10px] text-[#30594f] dark:text-[#88b5a9] truncate">
-                              {currentUser.primaryGame} • {currentUser.primaryRole}
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            soundManager.playClickSound();
-                            onNavigate('passport');
-                            setMenuDrawerOpen(false);
-                          }}
-                          className="px-2.5 py-1.5 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] text-[10px] font-bold rounded-xl shrink-0 shadow-xs hover:opacity-90 transition-opacity"
-                        >
-                          View Passport
-                        </button>
-                      </div>
-
-                      {/* Athlete Switcher Collapsible Accordion */}
-                      <div className="pt-2 border-t border-[#91baaf]/20 dark:border-[#91baaf]/15">
-                        <button
-                          onClick={() => setMobileSwitchUserOpen(!mobileSwitchUserOpen)}
-                          className="w-full flex items-center justify-between text-[11px] font-semibold text-[#285b50] dark:text-[#91baaf] hover:text-[#0d2620] dark:hover:text-white transition-colors"
-                        >
-                          <span className="flex items-center gap-1.5">
-                            <Users className="w-3.5 h-3.5" />
-                            <span>Switch Athlete ({allPlayers.length})</span>
-                          </span>
-                          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileSwitchUserOpen ? 'rotate-180' : ''}`} />
-                        </button>
-
-                        {mobileSwitchUserOpen && (
-                          <div className="mt-2 space-y-1.5 max-h-40 overflow-y-auto pt-1 animate-fadeIn">
-                            {allPlayers.map(p => (
-                              <button
-                                key={p.id}
-                                onClick={() => {
-                                  soundManager.playSuccessBeep();
-                                  onSwitchUser(p);
-                                  setMobileSwitchUserOpen(false);
-                                }}
-                                className={`w-full p-2 rounded-xl text-left flex items-center justify-between text-xs transition-all ${
-                                  p.id === currentUser.id
-                                    ? 'bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#103a30] dark:text-[#91baaf] font-bold border border-[#91baaf]/40'
-                                    : 'bg-white/50 dark:bg-white/5 hover:bg-white text-[#285045] dark:text-[#afd2c6]'
-                                }`}
-                              >
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-[#91baaf]/30 bg-[#153e34] dark:bg-[#1b2f29] flex items-center justify-center">
-                                    {p.avatarUrl ? (
-                                      <img src={p.avatarUrl} alt={p.gamerTag} className="w-full h-full object-cover" />
-                                    ) : (
-                                      <span className="text-[8px] font-bold font-mono text-[#91baaf]">
-                                        {p.gamerTag.slice(0, 2).toUpperCase()}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <span className="truncate text-xs">{p.gamerTag}</span>
-                                </div>
-                                <span className="text-[10px] font-mono text-[#3d655a] dark:text-[#88b5a9]">L{p.level}</span>
-                              </button>
-                            ))}
-
-                            <button
-                              onClick={() => {
-                                soundManager.playSuccessBeep();
-                                onNavigate('onboarding');
-                                setMenuDrawerOpen(false);
-                              }}
-                              className="w-full py-1.5 px-2 bg-white dark:bg-white/5 hover:bg-[#91baaf]/20 text-[#153e34] dark:text-[#91baaf] font-semibold text-[11px] rounded-xl text-center border border-dashed border-[#91baaf]/40 transition-colors flex items-center justify-center gap-1"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                              <span>Mint New Passport</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* 2. Quick Mobile Controls: Theme & Sound */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {/* Theme Toggle Button */}
-                      <button
-                        onClick={() => {
-                          soundManager.playClickSound();
-                          toggleTheme();
-                        }}
-                        className="p-2.5 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 flex items-center gap-2 text-xs font-semibold text-[#0d2620] dark:text-white shadow-xs hover:bg-white dark:hover:bg-[#182b26] transition-all"
-                      >
-                        {theme === 'light' ? (
-                          <>
-                            <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600">
-                              <Moon className="w-4 h-4" />
-                            </div>
-                            <div className="text-left leading-tight">
-                              <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Theme</span>
-                              <span className="text-xs font-bold">Dark Mode</span>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400">
-                              <Sun className="w-4 h-4" />
-                            </div>
-                            <div className="text-left leading-tight">
-                              <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Theme</span>
-                              <span className="text-xs font-bold">Light Mode</span>
-                            </div>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Sound FX Toggle Button */}
-                      <button
-                        onClick={handleToggleMute}
-                        className="p-2.5 rounded-2xl bg-white/80 dark:bg-[#14221e]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 flex items-center gap-2 text-xs font-semibold text-[#0d2620] dark:text-white shadow-xs hover:bg-white dark:hover:bg-[#182b26] transition-all"
-                      >
-                        <div className={`p-1.5 rounded-lg ${isMuted ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}`}>
-                          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                        </div>
-                        <div className="text-left leading-tight">
-                          <span className="block text-[10px] text-[#3d655a] dark:text-[#88b5a9]">Sound FX</span>
-                          <span className="text-xs font-bold">{isMuted ? 'Muted' : 'Enabled'}</span>
-                        </div>
-                      </button>
-                    </div>
-
-                    {/* 3. The 7 Keys Navigation List */}
-                    <div className="space-y-1">
-                      <div className="px-1 text-[10px] font-bold text-[#30594f] dark:text-[#88b5a9] uppercase tracking-wider">
-                        Platform Portals
-                      </div>
-
-                      {all7Keys.map((item, idx) => {
-                        const Icon = item.icon;
-                        const isActive = currentTab === item.id;
-
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={() => {
-                              soundManager.playClickSound();
-                              onNavigate(item.id);
-                              setMenuDrawerOpen(false);
-                            }}
-                            className={`w-full p-2.5 rounded-2xl text-left flex items-center justify-between gap-3 transition-all duration-150 ${
-                              isActive
-                                ? 'bg-[#91baaf]/30 dark:bg-[#91baaf]/20 text-[#103a30] dark:text-[#91baaf] font-bold border border-[#91baaf]/50 dark:border-[#91baaf]/30 shadow-xs'
-                                : 'hover:bg-white/80 dark:hover:bg-white/5 text-[#285045] dark:text-[#afd2c6] border border-transparent'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                                isActive
-                                  ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] shadow-sm'
-                                  : 'bg-[#91baaf]/20 dark:bg-[#91baaf]/15 text-[#153e34] dark:text-[#afd2c6]'
-                              }`}>
-                                <Icon className="w-4 h-4" />
-                              </div>
-
-                              <div className="truncate min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-bold text-xs text-[#0d2620] dark:text-white truncate">
-                                    {item.label}
-                                  </span>
-                                  <span className="text-[9px] font-mono text-[#3d655a] dark:text-[#88b5a9]">#{idx + 1}</span>
-                                </div>
-                                <p className="text-[10px] text-[#3d655a] dark:text-[#88b5a9] truncate mt-0.5">
-                                  {item.subtitle}
-                                </p>
-                              </div>
-                            </div>
-
-                            <ArrowRight className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-                              isActive ? 'text-[#153e34] dark:text-[#91baaf] translate-x-0.5' : 'text-[#3d655a] dark:text-[#88b5a9] opacity-50'
-                            }`} />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Drawer Footer CTA */}
-                  <div className="p-3 border-t border-[#91baaf]/30 dark:border-[#91baaf]/20 bg-[#e5f5f0] dark:bg-[#13201c] shrink-0">
-                    <button
-                      onClick={() => {
-                        soundManager.playSuccessBeep();
-                        onNavigate('onboarding');
-                        setMenuDrawerOpen(false);
-                      }}
-                      className="w-full py-2.5 px-3 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] hover:bg-[#0f2e26] dark:hover:bg-[#7db0a3] font-semibold text-xs rounded-2xl flex items-center justify-center gap-1.5 shadow-sm transition-all"
-                    >
-                      <Zap className="w-3.5 h-3.5 fill-current" />
-                      <span>+ Mint New E-Player Passport</span>
-                    </button>
-                  </div>
+                  <span className="text-[10px] font-mono text-[#3d655a] dark:text-[#88b5a9]">v2.6</span>
                 </div>
-              </>
+
+                {/* Desktop Scrollable Body */}
+                <div className="flex-1 overflow-y-auto p-3 space-y-3.5">
+                  {renderMenuContent(false)}
+                </div>
+
+                {/* Desktop Drawer Footer */}
+                <div className="p-3 border-t border-[#91baaf]/30 dark:border-[#91baaf]/20 bg-[#e5f5f0] dark:bg-[#13201c] shrink-0">
+                  <button
+                    onClick={() => {
+                      soundManager.playSuccessBeep();
+                      onNavigate('onboarding');
+                      setMenuDrawerOpen(false);
+                    }}
+                    className="w-full py-2.5 px-3 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] hover:bg-[#0f2e26] dark:hover:bg-[#7db0a3] font-semibold text-xs rounded-2xl flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                  >
+                    <Zap className="w-3.5 h-3.5 fill-current" />
+                    <span>+ Mint New E-Player Passport</span>
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* MOBILE FULL-SCREEN SLIDING DRAWER VIA PORTAL (Completely solves z-index, backdrop-blur stacking context & height issues on mobile) */}
+      {menuDrawerOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex justify-end md:hidden">
+          {/* Full Screen Dark Backdrop */}
+          <div 
+            onClick={() => setMenuDrawerOpen(false)}
+            className="fixed inset-0 bg-black/70 backdrop-blur-md transition-opacity animate-fadeIn cursor-pointer"
+          />
+
+          {/* Full-Height Drawer Sheet */}
+          <div className="relative z-10 w-full max-w-[340px] sm:max-w-sm h-full max-h-[100dvh] bg-[#f2faf7] dark:bg-[#0c1512] border-l border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-2xl flex flex-col overflow-hidden animate-slideLeft">
+            {/* Mobile Header */}
+            <div className="p-4 border-b border-[#91baaf]/30 dark:border-[#91baaf]/20 flex items-center justify-between bg-[#e5f5f0] dark:bg-[#13201c] shrink-0">
+              <div className="flex items-center gap-2">
+                <IEIHLogo size="xs" showText={false} />
+                <div>
+                  <span className="font-bold text-xs text-[#0d2620] dark:text-white uppercase tracking-wider block leading-tight">
+                    Navigation & Settings
+                  </span>
+                  <span className="text-[10px] font-mono text-[#3d655a] dark:text-[#88b5a9]">
+                    IEIH Protocol v2.6
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  soundManager.playClickSound();
+                  setMenuDrawerOpen(false);
+                }}
+                className="p-1.5 rounded-full bg-white/80 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 text-[#153e34] dark:text-[#afd2c6] transition-colors cursor-pointer shadow-xs"
+                aria-label="Close menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Mobile Scrollable Body */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-3.5 pb-24">
+              {renderMenuContent(true)}
+            </div>
+
+            {/* Mobile Footer CTA */}
+            <div className="p-3 border-t border-[#91baaf]/30 dark:border-[#91baaf]/20 bg-[#e5f5f0] dark:bg-[#13201c] shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+              <button
+                onClick={() => {
+                  soundManager.playSuccessBeep();
+                  onNavigate('onboarding');
+                  setMenuDrawerOpen(false);
+                }}
+                className="w-full py-3 px-3 bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] hover:bg-[#0f2e26] dark:hover:bg-[#7db0a3] font-bold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
+              >
+                <Zap className="w-4 h-4 fill-current" />
+                <span>+ Mint New E-Player Passport</span>
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </header>
   );
 };
+
+export default Navbar;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Home, 
   Trophy, 
@@ -16,11 +16,62 @@ interface BottomNavBarProps {
   onOpenPost?: () => void;
 }
 
+const AUTO_HIDE_DELAY = 2000; // 2 seconds of inactivity before disappearing
+
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   currentTab,
   onNavigate,
   onOpenPost
 }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isHoveringRef = useRef(false);
+
+  const resetHideTimer = useCallback(() => {
+    // Show immediately
+    setIsVisible(true);
+
+    // Don't start timer if currently hovering the nav
+    if (isHoveringRef.current) return;
+
+    // Clear existing timer
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+
+    // Start 2-second countdown to auto-hide
+    hideTimerRef.current = setTimeout(() => {
+      if (!isHoveringRef.current) {
+        setIsVisible(false);
+      }
+    }, AUTO_HIDE_DELAY);
+  }, []);
+
+  useEffect(() => {
+    const events = ['mousemove', 'touchstart', 'touchmove', 'scroll', 'keydown'];
+
+    events.forEach(evt => window.addEventListener(evt, resetHideTimer, { passive: true }));
+
+    // Start initial 2s timer
+    resetHideTimer();
+
+    return () => {
+      events.forEach(evt => window.removeEventListener(evt, resetHideTimer));
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, [resetHideTimer]);
+
+  const handleNavMouseEnter = () => {
+    isHoveringRef.current = true;
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    setIsVisible(true);
+  };
+
+  const handleNavMouseLeave = () => {
+    isHoveringRef.current = false;
+    resetHideTimer();
+  };
+
   const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'discovery', label: 'Radar', icon: Radar },
@@ -32,12 +83,20 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 select-none pointer-events-none pb-[max(0.5rem,env(safe-area-inset-bottom))] px-2 sm:px-4 transition-all duration-300">
+    <div 
+      onMouseEnter={handleNavMouseEnter}
+      onMouseLeave={handleNavMouseLeave}
+      className={`fixed bottom-0 inset-x-0 z-40 select-none pb-[max(0.5rem,env(safe-area-inset-bottom))] px-2 sm:px-4 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+        isVisible
+          ? 'opacity-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 translate-y-6 pointer-events-none'
+      }`}
+    >
       <div className="w-full max-w-[calc(100vw-0.75rem)] sm:max-w-xl mx-auto flex flex-col items-center">
         {/* iPhone Floating Glass Dock */}
         <nav 
           aria-label="Mobile Navigation Dock"
-          className="pointer-events-auto w-full relative rounded-[22px] sm:rounded-[28px] bg-[#d7ece6]/95 dark:bg-[#0d1614]/95 backdrop-blur-2xl saturate-150 border border-white/80 dark:border-[#91baaf]/30 shadow-[0_12px_36px_rgba(20,50,45,0.18),0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_18px_45px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(145,186,175,0.2)] transition-all duration-300 p-1 sm:p-1.5 overflow-hidden"
+          className="w-full relative rounded-[22px] sm:rounded-[28px] bg-[#d7ece6]/95 dark:bg-[#0d1614]/95 backdrop-blur-2xl saturate-150 border border-white/80 dark:border-[#91baaf]/30 shadow-[0_12px_36px_rgba(20,50,45,0.18),0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_18px_45px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(145,186,175,0.2)] transition-all duration-300 p-1 sm:p-1.5 overflow-hidden"
         >
           {/* Subtle Specular Top Sheen */}
           <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/90 dark:via-white/25 to-transparent pointer-events-none" />
