@@ -33,27 +33,22 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({
         <div className="absolute -top-24 -left-24 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="relative z-10 max-w-3xl space-y-6">
+        <div className="relative z-10 max-w-5xl space-y-6">
           {/* Tagline Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-full text-xs font-semibold border border-sky-500/20">
             <span className="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
             <span>INDIA ESPORTS INNOVATION HUB • DIGITAL ARENA</span>
           </div>
 
-          {/* Main Display Heading */}
-          <h1 className="font-extrabold text-[28px] sm:text-[40px] text-slate-900 dark:text-white tracking-tight leading-snug">
-            <span>
-              Discover{' '}
-              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
-              Develop{' '}
-              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>
-            </span>
-            <br />
-            <span>
-              Verify{' '}
-              <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1.5 sm:mx-2"></span>{' '}
-              Connect
-            </span>
+          {/* Main Display Heading (Single Line) */}
+          <h1 className="font-extrabold text-[20px] min-[460px]:text-[26px] sm:text-[32px] md:text-[40px] text-slate-900 dark:text-white tracking-tight leading-snug whitespace-nowrap">
+            Discover{' '}
+            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            Develop{' '}
+            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            Verify{' '}
+            <span className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-black dark:bg-white align-middle -translate-y-0.5 mx-1 sm:mx-2"></span>{' '}
+            Connect
           </h1>
 
           {/* Subheading */}
