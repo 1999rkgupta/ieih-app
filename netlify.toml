@@ -1,9 +1,7 @@
-# Netlify Deploy Configuration for India Esports Hub (IEIH)
-
+# Netlify Configuration (Build from repository root)
 [build]
-  base = "frontend"
-  publish = "dist"
-  command = "npm run build"
+  command = "npm --prefix frontend install && npm --prefix frontend run build"
+  publish = "frontend/dist"
 
 [build.environment]
   NODE_VERSION = "20"
