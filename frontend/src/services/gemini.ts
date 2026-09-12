@@ -1,9 +1,14 @@
 /**
  * Google Gemini LLM Integration for EE AI Esports Tactical Companion
- * Grounded for India Esports Hub (IEIH)
+ * Grounded for India Esports Hub (IEIH) with Full Platform Awareness
  */
 
-import { PlayerPassport } from '../types';
+import { 
+  PlayerPassport, 
+  Tournament, 
+  CollegiateClub, 
+  JobOpportunity 
+} from '../types';
 import { queryKnowledgeBase } from '../data/arenaXKnowledgeBase';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
@@ -27,111 +32,241 @@ export interface TacticalCardData {
   checklist?: string[];
 }
 
+export interface PlatformAction {
+  id: string;
+  label: string;
+  actionType: 'NAVIGATE' | 'VIEW_TOURNAMENT' | 'VIEW_CAMPUS' | 'VIEW_JOB' | 'SCOUT_PLAYER' | 'EDIT_PASSPORT' | 'CREATE_POST' | 'SEARCH';
+  targetId?: string;
+}
+
 export interface CoachResponse {
   replyText: string;
   tacticalCard?: TacticalCardData;
+  actions?: PlatformAction[];
   modelUsed: string;
 }
 
-/**
- * System prompt to ground EE AI as the tier-1 competitive esports coach
- */
-const buildSystemInstruction = (athlete: PlayerPassport) => `
-You are EE AI, the competitive esports coach and tactical intelligence companion for the India Esports Hub (IEIH).
-You are working directly with athlete ${athlete.gamerTag} (${athlete.passportNumber}), who is a Level ${athlete.level} Contender playing primary role: ${athlete.primaryRole} in ${athlete.primaryGame}.
+export interface PlatformContext {
+  currentUser: PlayerPassport;
+  allPlayers?: PlayerPassport[];
+  tournaments?: Tournament[];
+  campusClubs?: CollegiateClub[];
+  jobs?: JobOpportunity[];
+}
 
-Coaching Guidelines:
-1. Provide sharp, high-IQ esports tactical advice. Be encouraging yet authoritative and analytically rigorous.
-2. Structure your answers with clear formatting:
-   - **Tactical Assessment / Breakdown**
-   - **Positioning & Utility Protocols**
-   - **Win Conditions & Counter-Play**
-   - **Team Fight / Rotation Checklist**
-3. When analyzing gameplay screenshots or match photos:
-   - Breakdown crosshair placement, minimap information, cover density, distance to nearest trade teammate, and upcoming zone timing.
-4. When analyzing tournament rules or documents:
-   - Identify roster integrity, POV recording mandates, dispute protest windows (usually 15 min), and device/ping restrictions.
-5. At the very end of your response, append a structured card block in this exact format:
----TACTICAL_CARD---
-Title: <Short 3-6 word Title>
-Category: <Category e.g. Zone Rotation | Utility Execution | Roster Audit | Clutch Mechanics>
-KeyPoint: <Point 1>
-KeyPoint: <Point 2>
-KeyPoint: <Point 3>
-ActionItem: <One clear immediate drill or match takeaway>
-Checklist: <Checklist item 1>
-Checklist: <Checklist item 2>
-Checklist: <Checklist item 3>
----END_TACTICAL_CARD---
+/**
+ * Serializes the entire platform state into a high-density intelligence briefing for Gemini
+ */
+export const buildPlatformContextBriefing = (context: PlatformContext): string => {
+  const { currentUser, allPlayers = [], tournaments = [], campusClubs = [], jobs = [] } = context;
+
+  // 1. Current Athlete Profile Details
+  const perf = currentUser.gamePerformances[currentUser.primaryGame] || Object.values(currentUser.gamePerformances)[0];
+  const athleteSection = `
+[CURRENT ATHLETE PROFILE DOSSIER]
+- Handle: ${currentUser.gamerTag} (Real Name: ${currentUser.realName || 'Private'})
+- Passport Number: ${currentUser.passportNumber} (ID: ${currentUser.id})
+- Rank & Tier: Level ${currentUser.level} Contender (${currentUser.tier}) | XP: ${currentUser.currentXp}/${currentUser.nextLevelXp}
+- Discipline & Role: ${currentUser.primaryGame} | Primary: ${currentUser.primaryRole} (Secondary: ${currentUser.secondaryRoles?.join(', ') || 'Flex'})
+- Verified Badges: ${currentUser.verificationBadgeType} (KYC: ${currentUser.isKycVerified ? 'Verified' : 'Pending'}, Status: ${currentUser.availability})
+- Competitive Telemetry (${currentUser.primaryGame}):
+  * In-Game IGN: ${perf?.inGameName || 'N/A'} (UID: ${perf?.inGameId || 'N/A'})
+  * Current Tier: ${perf?.currentRank || 'Diamond'} (Peak: ${perf?.peakRank || 'Crown/Predator'})
+  * K/D Ratio: ${perf?.kdRatio || 3.4} | Win Rate: ${perf?.winRate || 68}% | Headshot %: ${perf?.headshotPct || 42}%
+  * Clutches Won: ${perf?.clutchesWon || 24} | Scrim MMR: ${perf?.scrimMmr || 1850} | Hours Played: ${perf?.hoursPlayed || 1200} hrs
+  * Signature Weapons/Agents: ${perf?.mainCharactersOrWeapons?.join(', ') || 'M416, Kar98k'}
+- Radar Performance Attributes (0-100):
+  Aim: ${currentUser.radarStats.aim}, GameSense: ${currentUser.radarStats.gameSense}, Clutch: ${currentUser.radarStats.clutch}, Utility: ${currentUser.radarStats.utility}, Communication: ${currentUser.radarStats.communication}, Aggression: ${currentUser.radarStats.aggression}
+- Hardware & Gear:
+  * Platform: ${currentUser.gear.deviceOrPlatform}
+  * Peripherals: ${currentUser.gear.peripherals}
+  * Audio: ${currentUser.gear.audio}
+  * Sensitivity: ${currentUser.gear.sensDpi}
+- Trophies & Placements: ${currentUser.trophies.map(t => `${t.title} (${t.event}, ${t.tier} Tier)`).join('; ') || 'Contender Scrim Honors'}
+- Scrim Attendance: ${currentUser.scrimAttendanceRate}% | Fair-Play Reputation: ${currentUser.reputationScore}/100
 `;
 
-/**
- * Parses the structured card block from the model output
- */
-const parseTacticalCard = (fullText: string, athlete: PlayerPassport): { cleanText: string; card?: TacticalCardData } => {
-  const cardMatch = fullText.match(/---TACTICAL_CARD---([\s\S]*?)---END_TACTICAL_CARD---/);
+  // 2. Platform Tournaments Feed
+  const tournamentsSection = `
+[ACTIVE PLATFORM TOURNAMENTS HUB]
+${tournaments.map(t => `- [ID: ${t.id}] "${t.title}"
+  * Game: ${t.game} | Status: ${t.status} | Format: ${t.type}
+  * Prize Pool: ${t.prizePoolFormatted} (1st Place: ${t.prizeDistribution?.[0]?.amount || 'Top Share'})
+  * Entry Fee: ${t.entryFee} | Capacity: ${t.registeredSlots}/${t.totalSlots} Teams Registered
+  * Dates: ${t.startDate} to ${t.endDate} | Venue: ${t.location}
+  * Rules / Anti-Cheat: ${t.rulesSummary?.slice(0, 2).join('; ') || 'POV Recording Mandatory'}`).join('\n')}
+`;
 
-  if (!cardMatch) {
-    // Fallback: build card from lines or default
-    return { cleanText: fullText.trim() };
-  }
+  // 3. Collegiate Campus Standings
+  const campusSection = `
+[COLLEGIATE CAMPUS GUILDS & UNIVERSITY CHAPTERS]
+${campusClubs.map(c => `- [ID: ${c.id}] "${c.collegeName}" (${c.shortName})
+  * Standing: ${c.rankingTier} | City: ${c.city}, ${c.state}
+  * Student Roster: ${c.studentRosterCount} Athletes | Top Games: ${c.topGames.join(', ')}
+  * Chapter Captain: ${c.captain.gamerTag} | Scrims Contact: ${c.contactEmail}`).join('\n')}
+`;
 
-  const cleanText = fullText.replace(/---TACTICAL_CARD---[\s\S]*?---END_TACTICAL_CARD---/, '').trim();
-  const cardBlock = cardMatch[1];
+  // 4. Careers & Scouting Opportunities
+  const jobsSection = `
+[ESPORTS CAREERS & CONTRACT OPPORTUNITIES]
+${jobs.map(j => `- [ID: ${j.id}] "${j.title}" at ${j.organization}
+  * Category: ${j.roleCategory} (${j.type}) | Game: ${j.game}
+  * Location: ${j.location} | Compensation: ${j.compensation}
+  * Key Requirements: ${j.requirements?.slice(0, 2).join('; ') || 'Tier-1 Scrim experience'} | Applicants: ${j.applicantCount}`).join('\n')}
+`;
 
-  const titleMatch = cardBlock.match(/Title:\s*(.+)/i);
-  const catMatch = cardBlock.match(/Category:\s*(.+)/i);
-  const actionMatch = cardBlock.match(/ActionItem:\s*(.+)/i);
+  // 5. Radar Candidates
+  const otherAthletes = allPlayers.filter(p => p.id !== currentUser.id).slice(0, 5);
+  const radarSection = `
+[TOP SCOUT RADAR CANDIDATES ON PLATFORM]
+${otherAthletes.map(p => `- [ID: ${p.id}] ${p.gamerTag} (${p.passportNumber}) | ${p.primaryGame} ${p.primaryRole} | Level ${p.level} ${p.tier} | K/D: ${p.gamePerformances[p.primaryGame]?.kdRatio || 3.1} | Status: ${p.availability} | Location: ${p.city}, ${p.state}`).join('\n')}
+`;
 
-  const keyPoints: string[] = [];
-  const keyMatches = cardBlock.matchAll(/KeyPoint:\s*(.+)/gi);
-  for (const m of keyMatches) {
-    if (m[1]?.trim()) keyPoints.push(m[1].trim());
-  }
-
-  const checklist: string[] = [];
-  const checkMatches = cardBlock.matchAll(/Checklist:\s*(.+)/gi);
-  for (const m of checkMatches) {
-    if (m[1]?.trim()) checklist.push(m[1].trim());
-  }
-
-  const card: TacticalCardData = {
-    title: titleMatch ? titleMatch[1].trim() : `${athlete.primaryGame} Tactical Directive`,
-    category: catMatch ? catMatch[1].trim() : 'Competitive Intelligence',
-    keyPoints: keyPoints.length > 0 ? keyPoints : [
-      `Athlete: ${athlete.gamerTag} (${athlete.primaryRole})`,
-      `Game Discipline: ${athlete.primaryGame}`,
-      'Execution: Verified by EE AI Live Engine'
-    ],
-    actionItem: actionMatch ? actionMatch[1].trim() : 'Execute this protocol in your next scrim lobby.',
-    checklist: checklist.length > 0 ? checklist : [
-      'Confirm team line of sight & spacing',
-      'Track utility cooldowns before engaging',
-      'Designate primary target & trade-man'
-    ]
-  };
-
-  return { cleanText, card };
+  return [athleteSection, tournamentsSection, campusSection, jobsSection, radarSection].join('\n');
 };
 
 /**
- * Main query function to call Google Gemini LLM
+ * System prompt to ground EE AI with both tactical expertise and platform co-pilot powers
+ */
+const buildSystemInstruction = (platformBriefing: string) => `
+You are EE AI — the omniscient Competitive Esports Coach, Tactical Intelligence Companion, and AI Operating System for the India Esports Hub (IEIH).
+
+YOU HAVE FULL ACCESS TO THE ENTIRE IEIH PLATFORM:
+${platformBriefing}
+
+CORE OPERATING PROTOCOLS:
+1. Ground every answer in the athlete's real profile, tournaments, university campus chapters, and career board data above.
+2. If the user asks about tournaments, colleges, jobs, or scouting, give exact figures (e.g. ₹25,00,000 prize pool, IIT Bombay #1 Campus, etc.) from the live platform data.
+3. If the user asks tactical questions or for VOD/screenshot review:
+   - Provide high-IQ competitive analysis (Positioning, Crosshair placement, Spacing, Utility protocols, Rotation checklists).
+4. ACTION ENGINE & INTERACTIVE BUTTONS:
+   Whenever relevant, recommend direct platform actions by placing an action block at the very end of your response.
+   Available action types:
+   - NAVIGATE: tournaments | campus | careers | discovery | passport
+   - VIEW_TOURNAMENT: <tournament_id>
+   - VIEW_CAMPUS: <campus_id>
+   - VIEW_JOB: <job_id>
+   - SCOUT_PLAYER: <player_id>
+   - EDIT_PASSPORT
+   - CREATE_POST
+   - SEARCH
+
+FORMATTING INSTRUCTIONS:
+Always structure your responses cleanly.
+If you include actions or tactical card, format them as:
+---TACTICAL_CARD---
+Title: <Short 3-6 word Title>
+Category: <Category e.g. Tournament Briefing | Scrim Strategy | Career Scouting | Visual Telemetry>
+KeyPoint: <Point 1>
+KeyPoint: <Point 2>
+KeyPoint: <Point 3>
+ActionItem: <Immediate match or platform action item>
+Checklist: <Checklist item 1>
+Checklist: <Checklist item 2>
+---END_TACTICAL_CARD---
+
+---ACTIONS---
+Action: <Button Label> | <ACTION_TYPE> | <TARGET_ID_IF_ANY>
+Action: <Button Label> | <ACTION_TYPE> | <TARGET_ID_IF_ANY>
+---END_ACTIONS---
+`;
+
+/**
+ * Parses structured card block and platform action block
+ */
+const parseResponseMeta = (
+  fullText: string, 
+  athlete: PlayerPassport
+): { cleanText: string; card?: TacticalCardData; actions?: PlatformAction[] } => {
+  let cleanText = fullText;
+
+  // 1. Parse Tactical Card
+  let card: TacticalCardData | undefined = undefined;
+  const cardMatch = cleanText.match(/---TACTICAL_CARD---([\s\S]*?)---END_TACTICAL_CARD---/);
+  if (cardMatch) {
+    cleanText = cleanText.replace(/---TACTICAL_CARD---[\s\S]*?---END_TACTICAL_CARD---/, '').trim();
+    const cardBlock = cardMatch[1];
+    const titleMatch = cardBlock.match(/Title:\s*(.+)/i);
+    const catMatch = cardBlock.match(/Category:\s*(.+)/i);
+    const actionMatch = cardBlock.match(/ActionItem:\s*(.+)/i);
+
+    const keyPoints: string[] = [];
+    const keyMatches = cardBlock.matchAll(/KeyPoint:\s*(.+)/gi);
+    for (const m of keyMatches) {
+      if (m[1]?.trim()) keyPoints.push(m[1].trim());
+    }
+
+    const checklist: string[] = [];
+    const checkMatches = cardBlock.matchAll(/Checklist:\s*(.+)/gi);
+    for (const m of checkMatches) {
+      if (m[1]?.trim()) checklist.push(m[1].trim());
+    }
+
+    card = {
+      title: titleMatch ? titleMatch[1].trim() : `${athlete.primaryGame} Tactical Directive`,
+      category: catMatch ? catMatch[1].trim() : 'Platform Intelligence',
+      keyPoints: keyPoints.length > 0 ? keyPoints : [
+        `Athlete: ${athlete.gamerTag} (${athlete.primaryRole})`,
+        `Discipline: ${athlete.primaryGame}`,
+        'Status: Verified Live'
+      ],
+      actionItem: actionMatch ? actionMatch[1].trim() : 'Execute this directive in your next lobby.',
+      checklist: checklist.length > 0 ? checklist : [
+        'Confirm squad positioning & trade angles',
+        'Verify tournament eligibility'
+      ]
+    };
+  }
+
+  // 2. Parse Actions
+  const actions: PlatformAction[] = [];
+  const actionMatch = cleanText.match(/---ACTIONS---([\s\S]*?)---END_ACTIONS---/);
+  if (actionMatch) {
+    cleanText = cleanText.replace(/---ACTIONS---[\s\S]*?---END_ACTIONS---/, '').trim();
+    const actionBlock = actionMatch[1];
+    const lines = actionBlock.split('\n');
+    for (const line of lines) {
+      const match = line.match(/Action:\s*([^|]+)\|\s*([^|]+)(?:\|\s*(.+))?/i);
+      if (match) {
+        const label = match[1].trim();
+        const actionType = match[2].trim() as PlatformAction['actionType'];
+        const targetId = match[3] ? match[3].trim() : undefined;
+        actions.push({
+          id: `act_${Math.random().toString(36).substring(2, 7)}`,
+          label,
+          actionType,
+          targetId
+        });
+      }
+    }
+  }
+
+  return { cleanText: cleanText.trim(), card, actions: actions.length > 0 ? actions : undefined };
+};
+
+/**
+ * Main query function to call Google Gemini LLM with Full Platform Context
  */
 export async function askEEAICoach(
   userQuery: string,
-  athlete: PlayerPassport,
+  platformContext: PlatformContext,
   attachments: MessageAttachment[] = [],
   conversationHistory: { sender: 'user' | 'assistant'; text: string }[] = []
 ): Promise<CoachResponse> {
-  // If no API key configured, fallback to offline KB
+  const { currentUser } = platformContext;
+
+  // Fallback if no key is configured
   if (!GEMINI_API_KEY) {
-    const local = queryKnowledgeBase(userQuery, athlete.primaryGame);
+    const local = queryKnowledgeBase(userQuery, currentUser.primaryGame);
     return {
       replyText: local.replyText,
       tacticalCard: local.tacticalCard,
       modelUsed: 'ARENA-X Offline Grounding Engine'
     };
   }
+
+  // Build high-density platform briefing
+  const platformBriefing = buildPlatformContextBriefing(platformContext);
 
   // Build payload contents
   const contents: any[] = [];
@@ -170,22 +305,21 @@ export async function askEEAICoach(
     }
   }
 
-  // Add the query text
+  // Add query text
   const promptText = userQuery.trim() 
     ? userQuery 
     : attachments.length > 0 
-      ? `Please inspect this attached ${attachments[0].type} (${attachments[0].name}) and give me a full competitive esports tactical breakdown for ${athlete.primaryGame}.`
-      : 'Hello Coach, I need tactical guidance.';
+      ? `Please inspect this attached ${attachments[0].type} (${attachments[0].name}) and give me a full competitive tactical review for ${currentUser.primaryGame}.`
+      : 'Hello Coach, give me an update on my status and upcoming tournaments.';
 
   currentParts.push({ text: promptText });
   contents.push({ role: 'user', parts: currentParts });
 
-  // System instruction
+  // System instruction with full platform context
   const systemInstruction = {
-    parts: [{ text: buildSystemInstruction(athlete) }]
+    parts: [{ text: buildSystemInstruction(platformBriefing) }]
   };
 
-  // Try calling primary model, fallback if needed
   const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
   let lastError: any = null;
 
@@ -199,8 +333,8 @@ export async function askEEAICoach(
           contents,
           systemInstruction,
           generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 1200
+            temperature: 0.35,
+            maxOutputTokens: 1400
           }
         })
       });
@@ -214,10 +348,11 @@ export async function askEEAICoach(
       const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (rawText) {
-        const { cleanText, card } = parseTacticalCard(rawText, athlete);
+        const { cleanText, card, actions } = parseResponseMeta(rawText, currentUser);
         return {
           replyText: cleanText,
           tacticalCard: card,
+          actions,
           modelUsed: `Gemini ${model.replace('models/', '').replace('-preview', '')}`
         };
       }
@@ -227,9 +362,9 @@ export async function askEEAICoach(
     }
   }
 
-  // Graceful fallback to embedded tactical knowledge base
+  // Fallback to local tactical knowledge base
   console.warn('[EE AI] Falling back to local tactical database due to:', lastError);
-  const fallback = queryKnowledgeBase(userQuery, athlete.primaryGame);
+  const fallback = queryKnowledgeBase(userQuery, currentUser.primaryGame);
   return {
     replyText: fallback.replyText,
     tacticalCard: fallback.tacticalCard,
