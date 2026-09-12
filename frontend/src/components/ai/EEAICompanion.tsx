@@ -19,6 +19,7 @@ import {
 import { PlayerPassport } from '../../types';
 import { soundManager } from '../../utils/audio';
 import { queryKnowledgeBase } from '../../data/arenaXKnowledgeBase';
+import { askEEAICoach } from '../../services/gemini';
 
 export interface MessageAttachment {
   id: string;
@@ -35,6 +36,7 @@ interface EEAIMessage {
   text: string;
   timestamp: string;
   attachments?: MessageAttachment[];
+  modelUsed?: string;
   tacticalCard?: {
     title: string;
     category: string;
@@ -129,7 +131,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
     setPendingAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const text = textToSend || inputValue;
     const attachmentsToSend = [...pendingAttachments];
 
@@ -145,84 +147,49 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
       attachments: attachmentsToSend.length > 0 ? attachmentsToSend : undefined
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const currentHistory = [...messages, userMsg];
+    setMessages(currentHistory);
     if (!textToSend) setInputValue('');
     setPendingAttachments([]);
     setIsTyping(true);
 
-    // AI Tactical Response Generation Grounded in Competitive Knowledge Base
-    setTimeout(() => {
+    try {
+      const historyForLlm = currentHistory.map(m => ({ sender: m.sender, text: m.text }));
+      const coachResult = await askEEAICoach(
+        text,
+        currentUser,
+        attachmentsToSend,
+        historyForLlm
+      );
+
       soundManager.playSuccessBeep();
-
-      let replyText = '';
-      let tacticalCard: EEAIMessage['tacticalCard'] = undefined;
-
-      // Check if user uploaded photos or documents
-      const hasImage = attachmentsToSend.some(a => a.type === 'image');
-      const hasDoc = attachmentsToSend.some(a => a.type === 'document');
-
-      if (hasImage && !text.trim()) {
-        const firstImg = attachmentsToSend.find(a => a.type === 'image')!;
-        replyText = `I have received and parsed your uploaded gameplay screenshot: **${firstImg.name}**.\n\n**Visual Telemetry Analysis:**\n• **Combat & Spacing:** Reticle placement and engagement distance match competitive ${currentUser.primaryGame} standards.\n• **Information Advantage:** Before committing to this duel, verify whether trade support is within 15 meters.\n• **VOD Review Protocol:** Inspect whether you have immediate hard cover within one stride and confirm whether enemy utility is active.\n\nWould you like me to generate a specific drill or break down rotation options for this position?`;
-        tacticalCard = {
-          title: `Visual Telemetry: ${firstImg.name}`,
-          category: 'Screenshot & VOD Diagnostics',
-          keyPoints: [
-            `Analyzed File: ${firstImg.name} (${firstImg.sizeFormatted})`,
-            `Primary Game Alignment: ${currentUser.primaryGame}`,
-            `Status: Tactical Breakdown Complete`
-          ],
-          actionItem: 'Run the Team Fight Checklist (First-Contact, Trade, Flank, Reset) on this scenario.',
-          checklist: [
-            'Who had first contact in this frame?',
-            'Was there hard cover within 1 step?',
-            'Could a teammate trade this position?',
-            'Was an exit/retreat route maintained?'
-          ]
-        };
-      } else if (hasDoc && !text.trim()) {
-        const firstDoc = attachmentsToSend.find(a => a.type === 'document')!;
-        replyText = `I have ingested and analyzed your document: **${firstDoc.name}** (${firstDoc.sizeFormatted}).\n\n**Tournament & Compliance Audit:**\n• **Roster Verification:** Match player passport numbers with official tournament registration sheets.\n• **Integrity Clause:** Ensure recording/POV software is active throughout match brackets.\n• **Dispute Windows:** Official rulebooks mandate protests must be submitted within 15 minutes of match conclusion.\n\nAll athletes on your roster should complete their pre-match technical and latency checks.`;
-        tacticalCard = {
-          title: `Document Audit: ${firstDoc.name}`,
-          category: 'Tournament & Rulebook Compliance',
-          keyPoints: [
-            `Verified Document: ${firstDoc.name}`,
-            `Format: ${firstDoc.fileExtension.toUpperCase()} Document`,
-            `Audit Standard: Official Tournament Regulations`
-          ],
-          actionItem: 'Verify player registration IDs in your team roster before the tournament check-in deadline.',
-          checklist: [
-            'Official rulebook clauses confirmed?',
-            'Roster IDs match player passports?',
-            'POV recording software tested?',
-            'Protest appeal procedure understood?'
-          ]
-        };
-      } else {
-        // Text query (with or without attachments)
-        const knowledgeResult = queryKnowledgeBase(text, currentUser.primaryGame);
-        replyText = knowledgeResult.replyText;
-        tacticalCard = knowledgeResult.tacticalCard;
-
-        if (hasImage) {
-          replyText = `*(Attached Photo: ${attachmentsToSend.find(a => a.type === 'image')?.name})*\n\n` + replyText;
-        } else if (hasDoc) {
-          replyText = `*(Attached Document: ${attachmentsToSend.find(a => a.type === 'document')?.name})*\n\n` + replyText;
-        }
-      }
 
       const botReply: EEAIMessage = {
         id: `bot_${Date.now()}`,
         sender: 'assistant',
-        text: replyText,
+        text: coachResult.replyText,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        tacticalCard
+        tacticalCard: coachResult.tacticalCard,
+        modelUsed: coachResult.modelUsed
       };
 
       setMessages(prev => [...prev, botReply]);
+    } catch (err) {
+      console.error('[EE AI Error]', err);
+      // Local fallback in case of catastrophic error
+      const local = queryKnowledgeBase(text, currentUser.primaryGame);
+      const botReply: EEAIMessage = {
+        id: `bot_${Date.now()}`,
+        sender: 'assistant',
+        text: local.replyText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        tacticalCard: local.tacticalCard,
+        modelUsed: 'ARENA-X Offline Engine'
+      };
+      setMessages(prev => [...prev, botReply]);
+    } finally {
       setIsTyping(false);
-    }, 700);
+    }
   };
 
   // Helper to render markdown-style bold and paragraphs
@@ -286,7 +253,11 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
             <div>
               <div className="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-2">
                 <span>EE AI Core System v4.2</span>
-                <span className="px-2 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Multimodal Photo & Doc Ingestion</span>
+                <span className="px-2 py-0.5 bg-[#91baaf]/20 text-[#244b40] dark:text-[#91baaf] text-[10px] font-semibold rounded-full border border-[#91baaf]/30 flex items-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5" />
+                  Google Gemini Live LLM Active
+                </span>
+                <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold rounded-full">Multimodal Vision</span>
               </div>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Synchronized with {currentUser.gamerTag} • {currentUser.primaryGame}</p>
             </div>
@@ -314,7 +285,7 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
             >
               <div className="flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                 {msg.sender === 'assistant' ? (
-                  <span className="text-sky-600 dark:text-sky-400 font-semibold flex items-center gap-1">
+                  <span className="text-[#336356] dark:text-[#91baaf] font-semibold flex items-center gap-1">
                     <Bot className="w-3 h-3" /> EE AI Coach
                   </span>
                 ) : (
@@ -324,6 +295,15 @@ export const EEAICompanion: React.FC<{ currentUser: PlayerPassport }> = ({ curre
                 )}
                 <span>•</span>
                 <span className="font-mono text-slate-400 dark:text-slate-500">{msg.timestamp}</span>
+                {msg.modelUsed && (
+                  <>
+                    <span>•</span>
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#91baaf]/15 text-[#244b40] dark:text-[#91baaf] text-[9px] font-mono border border-[#91baaf]/20">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      {msg.modelUsed}
+                    </span>
+                  </>
+                )}
               </div>
 
               <div

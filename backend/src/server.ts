@@ -142,17 +142,53 @@ app.post('/api/jobs/:id/apply', (req, res) => {
 
 import { queryBackendKnowledgeBase } from './data/arenaXKnowledgeBase.js';
 
-// EE AI Tactical Assistant Endpoint (Grounded by ARENA-X Knowledge Base)
-app.post('/api/ai/chat', (req, res) => {
-  const { query, gamerTag, game } = req.body;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+
+// EE AI Tactical Assistant Endpoint (Grounded by Gemini LLM & ARENA-X Knowledge Base)
+app.post('/api/ai/chat', async (req, res) => {
+  const { query, gamerTag, game, role } = req.body;
   if (!query) {
     return res.status(400).json({ error: 'Query is required' });
   }
 
+  // Attempt Gemini API call if key configured
+  if (GEMINI_API_KEY) {
+    try {
+      const systemInstruction = `You are EE AI, the competitive esports coach for India Esports Hub (IEIH). Ground your advice in tactical competitive rigor for ${game || 'competitive esports'} for athlete ${gamerTag || 'Player'} (${role || 'Contender'}). Be sharp, structured, and strategic.`;
+      
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: query }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.4, maxOutputTokens: 1000 }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (replyText) {
+          return res.json({
+            reply: replyText,
+            source: 'Google Gemini 3.6 Flash (Live LLM)',
+            gamerTag,
+            timestamp: new Date().toISOString()
+          });
+        }
+      }
+    } catch (llmErr) {
+      console.warn('Gemini backend call failed, falling back to local KB:', llmErr);
+    }
+  }
+
+  // Fallback to local knowledge base
   const result = queryBackendKnowledgeBase(query, game);
   res.json({
     reply: result.replyText,
     tacticalCard: result.tacticalCard,
+    source: 'ARENA-X Grounding Engine',
     gamerTag,
     timestamp: new Date().toISOString()
   });
