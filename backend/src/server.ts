@@ -357,6 +357,11 @@ app.post(['/api/ai/chat', '/api/api/ai/chat'], async (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`⚡ IEIH REST API Server running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`⚡ IEIH REST API Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
+export { app };

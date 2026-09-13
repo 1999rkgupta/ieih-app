@@ -281,7 +281,8 @@ export async function askEEAICoach(
   // 1. If QWEN Provider is chosen, route through our backend Qwen API
   if (provider === 'qwen') {
     try {
-      const rawBase = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+      const rawBase = import.meta.env.VITE_API_URL 
+        || (import.meta.env.DEV ? 'http://localhost:5001/api' : '/api');
       const apiBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/+$/, '')}/api`;
       const response = await fetch(`${apiBase}/ai/qwen`, {
         method: 'POST',
