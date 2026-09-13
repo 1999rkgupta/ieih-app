@@ -50,13 +50,13 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
   useEffect(() => {
     const events = ['mousemove', 'touchstart', 'touchmove', 'scroll', 'keydown'];
 
-    events.forEach(evt => window.addEventListener(evt, resetHideTimer, { passive: true }));
+    events.forEach(evt => window.addEventListener(evt, resetHideTimer, { passive: true, capture: true }));
 
     // Start initial 2s timer
     resetHideTimer();
 
     return () => {
-      events.forEach(evt => window.removeEventListener(evt, resetHideTimer));
+      events.forEach(evt => window.removeEventListener(evt, resetHideTimer, true));
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     };
   }, [resetHideTimer]);

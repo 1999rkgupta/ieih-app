@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { BottomNavBar } from './components/layout/BottomNavBar';
 import { Footer } from './components/layout/Footer';
@@ -39,6 +39,9 @@ export function App() {
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerPassport>(currentUser);
   const [isMuted, setIsMuted] = useState(soundManager.getMuted());
 
+  // Scroll ref for locked navbar / internal page scroll
+  const mainScrollRef = useRef<HTMLDivElement>(null);
+
   // Modals & Slider Drawers
   const [isAISliderOpen, setIsAISliderOpen] = useState(false);
   const [aiInitialPrompt, setAiInitialPrompt] = useState<string | undefined>(undefined);
@@ -75,6 +78,12 @@ export function App() {
     setIsMuted(muted);
   };
 
+  // Scroll helper
+  const scrollToTop = () => {
+    mainScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Handle Tab navigation
   const handleNavigate = (tab: string) => {
     if (tab === 'ai') {
@@ -83,14 +92,14 @@ export function App() {
       return;
     }
     setCurrentTab(tab);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   // Handle Player Selection for Passport View
   const handleSelectPlayer = (player: PlayerPassport) => {
     setSelectedPlayer(player);
     setCurrentTab('passport');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   // Handle switching active user profile
@@ -114,16 +123,16 @@ export function App() {
     setCurrentUser(newPassport);
     setSelectedPlayer(newPassport);
     setCurrentTab('passport');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-[#d6ede7] via-[#ecf6f3] to-[#ddf0ea] dark:from-[#090e0c] dark:via-[#0e1614] dark:to-[#080d0b] text-[#0f2721] dark:text-[#e4f3ef] flex flex-col font-sans transition-colors duration-200 selection:bg-[#91baaf] selection:text-slate-950">
+    <div className="h-[100dvh] w-full overflow-hidden bg-gradient-to-b from-[#d6ede7] via-[#ecf6f3] to-[#ddf0ea] dark:from-[#090e0c] dark:via-[#0e1614] dark:to-[#080d0b] text-[#0f2721] dark:text-[#e4f3ef] flex flex-col font-sans transition-colors duration-200 selection:bg-[#91baaf] selection:text-slate-950 relative">
       {/* Subtle Dot Mesh & Ambient Radial Glow */}
       <div className="fixed inset-0 bg-grid-pattern opacity-30 pointer-events-none z-0"></div>
       <div className="fixed inset-0 bg-radial-glow pointer-events-none z-0"></div>
 
-      {/* Top Navbar */}
+      {/* Top Navbar & Live Ticker (Pinned firmly at top, never scrolls) */}
       <Navbar
         currentTab={currentTab}
         onNavigate={handleNavigate}
@@ -133,112 +142,122 @@ export function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-28 sm:pb-32 relative z-10">
-        {/* Tab 1: Hub Command Center (Home) */}
-        {currentTab === 'home' && (
-          <HeroCommandCenter
-            onNavigate={handleNavigate}
-            featuredPlayers={allPlayers}
-            featuredTournament={MOCK_TOURNAMENTS[0]}
-            onSelectPlayer={handleSelectPlayer}
-          />
-        )}
-
-        {/* Tab 2: E-Player Passport View */}
-        {currentTab === 'passport' && (
-          <div className="space-y-6 animate-fadeIn">
-            {/* Top Toolbar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-[#121d1a]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-sm backdrop-blur-xl">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">Viewing Passport:</span>
-                <span className="font-bold text-sm text-[#18483d] dark:text-[#91baaf]">
-                  {selectedPlayer.gamerTag}
-                </span>
-                <span className="text-xs font-mono text-[#385e54] dark:text-[#88b5a9]">({selectedPlayer.passportNumber})</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    soundManager.playClickSound();
-                    setSelectedPlayer(currentUser);
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                    selectedPlayer.id === currentUser.id
-                      ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
-                      : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-white/10'
-                  }`}
-                >
-                  My Passport
-                </button>
-                <button
-                  onClick={() => {
-                    soundManager.playClickSound();
-                    handleNavigate('discovery');
-                  }}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
-                >
-                  Browse Other Athletes &rarr;
-                </button>
-              </div>
-            </div>
-
-            {/* Flagship Passport Card */}
-            <PassportCard
-              passport={selectedPlayer}
-              isOwner={selectedPlayer.id === currentUser.id}
-              onEdit={() => setIsEditorOpen(true)}
-              onShare={() => setIsShareOpen(true)}
-              onScout={() => setIsRecruitOpen(true)}
-              onOpenClip={clip => setActiveClip(clip)}
-              onUpdateAvatar={(newAvatarUrl) => {
-                const updated = { ...selectedPlayer, avatarUrl: newAvatarUrl };
-                handleSavePassport(updated);
-              }}
+      {/* Internal Page Scrolling Viewport */}
+      <div
+        ref={mainScrollRef}
+        id="main-scroll-container"
+        className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col z-10"
+      >
+        {/* Main Content Area */}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 sm:pb-12 relative z-10">
+          {/* Tab 1: Hub Command Center (Home) */}
+          {currentTab === 'home' && (
+            <HeroCommandCenter
+              onNavigate={handleNavigate}
+              featuredPlayers={allPlayers}
+              featuredTournament={MOCK_TOURNAMENTS[0]}
+              onSelectPlayer={handleSelectPlayer}
             />
-          </div>
-        )}
+          )}
 
-        {/* Tab 3: Talent Discovery & Scout Engine */}
-        {currentTab === 'discovery' && (
-          <TalentDiscovery
-            players={allPlayers}
-            onSelectPlayer={handleSelectPlayer}
-          />
-        )}
+          {/* Tab 2: E-Player Passport View */}
+          {currentTab === 'passport' && (
+            <div className="space-y-6 animate-fadeIn">
+              {/* Top Toolbar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-[#121d1a]/90 border border-[#91baaf]/40 dark:border-[#91baaf]/25 shadow-sm backdrop-blur-xl">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-semibold text-[#385e54] dark:text-[#88b5a9] uppercase tracking-wider">Viewing Passport:</span>
+                  <span className="font-bold text-sm text-[#18483d] dark:text-[#91baaf]">
+                    {selectedPlayer.gamerTag}
+                  </span>
+                  <span className="text-xs font-mono text-[#385e54] dark:text-[#88b5a9]">({selectedPlayer.passportNumber})</span>
+                </div>
 
-        {/* Tab 4: Tournament Hub & Brackets */}
-        {currentTab === 'tournaments' && (
-          <TournamentHub
-            tournaments={MOCK_TOURNAMENTS}
-            currentUser={currentUser}
-          />
-        )}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      soundManager.playClickSound();
+                      setSelectedPlayer(currentUser);
+                    }}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                      selectedPlayer.id === currentUser.id
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-transparent shadow-sm'
+                        : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-white/10'
+                    }`}
+                  >
+                    My Passport
+                  </button>
+                  <button
+                    onClick={() => {
+                      soundManager.playClickSound();
+                      handleNavigate('discovery');
+                    }}
+                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    Browse Other Athletes &rarr;
+                  </button>
+                </div>
+              </div>
 
-        {/* Tab 5: Collegiate Campus Arena */}
-        {currentTab === 'campus' && (
-          <CollegiateCampus
-            clubs={MOCK_COLLEGIATE_CLUBS}
-          />
-        )}
+              {/* Flagship Passport Card */}
+              <PassportCard
+                passport={selectedPlayer}
+                isOwner={selectedPlayer.id === currentUser.id}
+                onEdit={() => setIsEditorOpen(true)}
+                onShare={() => setIsShareOpen(true)}
+                onScout={() => setIsRecruitOpen(true)}
+                onOpenClip={clip => setActiveClip(clip)}
+                onUpdateAvatar={(newAvatarUrl) => {
+                  const updated = { ...selectedPlayer, avatarUrl: newAvatarUrl };
+                  handleSavePassport(updated);
+                }}
+              />
+            </div>
+          )}
 
-        {/* Tab 6: Career & Opportunities Board */}
-        {currentTab === 'careers' && (
-          <CareerBoard
-            jobs={MOCK_JOBS}
-            currentUser={currentUser}
-          />
-        )}
+          {/* Tab 3: Talent Discovery & Scout Engine */}
+          {currentTab === 'discovery' && (
+            <TalentDiscovery
+              players={allPlayers}
+              onSelectPlayer={handleSelectPlayer}
+            />
+          )}
 
-        {/* Tab 7: Onboarding Wizard */}
-        {currentTab === 'onboarding' && (
-          <OnboardingWizard
-            onComplete={handleOnboardingComplete}
-            onCancel={() => handleNavigate('home')}
-          />
-        )}
-      </main>
+          {/* Tab 4: Tournament Hub & Brackets */}
+          {currentTab === 'tournaments' && (
+            <TournamentHub
+              tournaments={MOCK_TOURNAMENTS}
+              currentUser={currentUser}
+            />
+          )}
+
+          {/* Tab 5: Collegiate Campus Arena */}
+          {currentTab === 'campus' && (
+            <CollegiateCampus
+              clubs={MOCK_COLLEGIATE_CLUBS}
+            />
+          )}
+
+          {/* Tab 6: Career & Opportunities Board */}
+          {currentTab === 'careers' && (
+            <CareerBoard
+              jobs={MOCK_JOBS}
+              currentUser={currentUser}
+            />
+          )}
+
+          {/* Tab 7: Onboarding Wizard */}
+          {currentTab === 'onboarding' && (
+            <OnboardingWizard
+              onComplete={handleOnboardingComplete}
+              onCancel={() => handleNavigate('home')}
+            />
+          )}
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
 
       {/* Global Modals */}
       {isEditorOpen && (
@@ -351,9 +370,6 @@ export function App() {
           setIsSearchOpen(true);
         }}
       />
-
-      {/* Footer */}
-      <Footer />
 
       {/* Fixed Bottom Menu Bar */}
       <BottomNavBar

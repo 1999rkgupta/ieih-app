@@ -379,7 +379,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#d7ece6]/95 dark:bg-[#0c1412]/95 backdrop-blur-2xl border-b border-[#91baaf]/40 dark:border-[#91baaf]/20 transition-colors duration-200 shadow-xs">
+    <header className="shrink-0 z-40 w-full bg-[#d7ece6]/95 dark:bg-[#0c1412]/95 backdrop-blur-2xl border-b border-[#91baaf]/40 dark:border-[#91baaf]/20 transition-colors duration-200 shadow-xs">
       {/* Top Ticker Bar */}
       <div className="border-b border-[#91baaf]/25 dark:border-[#91baaf]/15 py-1.5 px-3 sm:px-8 flex items-center justify-between text-xs bg-[#c9e8df]/90 dark:bg-[#09100e]/90 backdrop-blur-md overflow-hidden">
         <div className="flex items-center gap-2 min-w-0 overflow-hidden">
