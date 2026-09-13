@@ -284,6 +284,8 @@ export async function askEEAICoach(
       const rawBase = import.meta.env.VITE_API_URL 
         || (import.meta.env.DEV ? 'http://localhost:5001/api' : '/api');
       const apiBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/+$/, '')}/api`;
+      const platformBriefing = buildPlatformContextBriefing(platformContext);
+      
       const response = await fetch(`${apiBase}/ai/qwen`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -292,7 +294,8 @@ export async function askEEAICoach(
           gamerTag: currentUser.gamerTag,
           game: currentUser.primaryGame,
           role: currentUser.primaryRole,
-          history: conversationHistory
+          history: conversationHistory,
+          platformBriefing
         })
       });
 

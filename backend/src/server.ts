@@ -171,16 +171,26 @@ STRICT DOMAIN & BEHAVIOR PROTOCOLS:
    "I am the EE AI Tactical Assistant dedicated exclusively to Sports, Esports, and the India Esports Innovation Hub (IEIH) ecosystem. Please ask questions related to competitive gaming, esports athlete passports, tournament registrations, collegiate scrims, or sports training."
 
 4. RESPONSE FORMATTING:
-   - Keep answers clear, structured, and strategic with bold headers and bullet points.`;
+   - Provide sharp, high-IQ competitive and career advice with bold headers and bullet points.
+   - You can include tactical cards and action buttons using this syntax:
+     ---TACTICAL_CARD---
+     Title: <Short Title>
+     Category: <Category e.g. Career Strategy | Match Tactics | Tournament Briefing>
+     KeyPoint: <Point 1>
+     KeyPoint: <Point 2>
+     ActionItem: <Action recommendation>
+     ---END_TACTICAL_CARD---`;
 
 // Helper function to call Qwen model on remote Ollama server
-async function callRemoteQwenModel(prompt: string, athleteContext?: any, messagesHistory: any[] = []) {
-  const systemPrompt = `${STRICT_SPORTS_ESPORTS_RULES}\n\n[CURRENT ATHLETE PROFILE]: GamerTag: ${athleteContext?.gamerTag || 'Player'} | Game: ${athleteContext?.game || 'Esports'} | Role: ${athleteContext?.role || 'Contender'}`;
+async function callRemoteQwenModel(prompt: string, athleteContext?: any, messagesHistory: any[] = [], platformBriefing?: string) {
+  const systemPrompt = `${STRICT_SPORTS_ESPORTS_RULES}
+  
+${platformBriefing || `[CURRENT ATHLETE PROFILE]: GamerTag: ${athleteContext?.gamerTag || 'Player'} | Game: ${athleteContext?.game || 'Esports'} | Role: ${athleteContext?.role || 'Contender'}`}`;
   
   for (const modelName of QWEN_MODELS) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
 
       // Try Ollama /api/chat endpoint
       const response = await fetch(`${OLLAMA_REMOTE_BASE}/api/chat`, {
@@ -225,7 +235,7 @@ async function callRemoteQwenModel(prompt: string, athleteContext?: any, message
   // If remote /api/chat fails, try /api/generate as secondary protocol
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const genResponse = await fetch(`${OLLAMA_REMOTE_BASE}/api/generate`, {
       method: 'POST',
@@ -259,13 +269,13 @@ async function callRemoteQwenModel(prompt: string, athleteContext?: any, message
 
 // Dedicated Qwen AI Endpoint
 app.post(['/api/ai/qwen', '/api/api/ai/qwen'], async (req, res) => {
-  const { query, gamerTag, game, role, history } = req.body;
+  const { query, gamerTag, game, role, history, platformBriefing } = req.body;
   if (!query) {
     return res.status(400).json({ error: 'Query is required' });
   }
 
   try {
-    const qwenResult = await callRemoteQwenModel(query, { gamerTag, game, role }, history || []);
+    const qwenResult = await callRemoteQwenModel(query, { gamerTag, game, role }, history || [], platformBriefing);
     if (qwenResult) {
       return res.json({
         reply: qwenResult.reply,
