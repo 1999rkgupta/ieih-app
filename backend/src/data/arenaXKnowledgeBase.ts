@@ -185,11 +185,150 @@ export const ARENA_X_KNOWLEDGE_BASE: KnowledgeEntry[] = [
     checklist: ['Verified digital passport number?', 'At least 3 clean VODs with team audio?', '95%+ scrim attendance logged?', 'No history of toxicity or bans?'],
     rules: ['Rule 11: Do not promise a player will become professional.', 'Rule 25: Respect tournament integrity.'],
     tags: ['career', 'scout', 'scouting', 'trials', 'pro team', 'recruitment', 'tier 1', 'contracts', 'portfolio']
+  },
+  {
+    id: 'career_esports_future',
+    game: 'Esports Industry',
+    mode: 'Industry',
+    topic: 'Future & Industry Scope',
+    entity: 'Future of Esports & Sports in India (2026-2030)',
+    definition: 'The rapid structural expansion of competitive gaming into an officially recognized national sport, multi-crore broadcast industry, and structured collegiate athletic career.',
+    mechanics: 'Government recognition of esports under Youth Affairs & Sports, Asian Games & Olympic Esports inclusion, 5G mobile infrastructure, and collegiate varsity leagues.',
+    strategy: 'Athletes who build verified credentials, maintain high integrity ratings, and diversify into coaching, analysis, or content have a 10+ year sustainable career path in Indian esports.',
+    counterplay: 'Relying exclusively on prize pools without contract stability, education balance, or physical health protocols.',
+    drill: 'Dual-Track Development: Allocate 65% of time to tactical gameplay mastery and 35% to communication, brand building, and mental conditioning.',
+    checklist: ['Is your athlete passport KYC verified?', 'Are you participating in official state/national tournaments?', 'Are you maintaining physical fitness and sleep discipline?'],
+    rules: ['Rule 49: Build sustainable esports habits.', 'Rule 50: Respect sportsmanship above all.'],
+    tags: ['future', 'scope', 'future in esports', 'growth', 'india esports', 'industry', 'market', 'opportunity', 'potential', '2026', 'sports future']
+  },
+  {
+    id: 'career_diverse_pathways',
+    game: 'Esports Industry',
+    mode: 'Industry',
+    topic: 'Career Options & Roles',
+    entity: 'Esports & Sports Career Ecosystem',
+    definition: 'The diverse spectrum of high-paying professional roles beyond being a pro athlete, including coaching, data telemetry, tournament operations, casting, and sports science.',
+    mechanics: 'Role specialization across Tactical Coaching, VOD Analytics, In-Game Leadership, Tournament Admin/Referees, Broadcast Production, and Sports Physiotherapy.',
+    strategy: 'Understand your natural strengths: analytical minds excel in Data/Scouting, vocal motivators excel in Coaching/IGL, and charismatic communicators thrive in Esports Casting and Content Creation.',
+    counterplay: 'Tunnel vision assuming pro player is the only career path in competitive gaming.',
+    drill: 'Career Alignment Audit: Shadow a collegiate scrim as an analyst for 3 matches and produce a 1-page tactical breakdown report.',
+    checklist: ['Identified primary strength (Mechanics vs Analysis vs Leadership)?', 'Building a portfolio of match breakdowns?', 'Networked with collegiate guild leaders?'],
+    rules: ['Rule 12: Guide players toward realistic, diverse career avenues.'],
+    tags: ['career options', 'jobs', 'roles', 'opportunities', 'career in sports', 'career in esports', 'esports career', 'analyst', 'coach', 'manager', 'caster']
+  },
+  {
+    id: 'career_salary_economics',
+    game: 'Esports Industry',
+    mode: 'Industry',
+    topic: 'Salaries & Financial Model',
+    entity: 'Esports Salaries & Financial Ecosystem',
+    definition: 'The multi-tiered revenue model for competitive athletes in India, comprising fixed monthly salaries, prize pool shares (typically 75-85% to players), streaming bonuses, and brand deals.',
+    mechanics: 'Tier-1 athletes earn ₹50,000 - ₹3,50,000/month on contract, Tier-2 contenders earn ₹15,000 - ₹50,000/month + prize cuts, while collegiate athletes receive scholarships and tournament stipends.',
+    strategy: 'Prioritize organizations that provide signed contracts with transparent prize distribution and medical/physio support. Use the IEIH platform to verify recruiter credentials.',
+    counterplay: 'Playing for unverified orgs without written contracts or agreeing to unfair prize pool withholding.',
+    drill: 'Contract Literacy Checklist: Verify term length, minimum salary, prize cut percentage, release clause, and streaming obligations before signing.',
+    checklist: ['Contract reviewed by a mentor/legal guardian?', 'Prize payout timeline explicitly stated in writing?', 'Equipment and travel allowances covered?'],
+    rules: ['Rule 20: Protect athlete rights and integrity.'],
+    tags: ['salary', 'income', 'money', 'earnings', 'how much', 'pay', 'financial', 'contract salary', 'prize pool share']
   }
 ];
 
 export function queryBackendKnowledgeBase(query: string, userGame?: string) {
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
+
+  // 1. Check for greetings or casual opening phrases
+  const greetings = ['hi', 'hello', 'hey', 'yo', 'sup', 'namaste', 'good morning', 'good afternoon', 'good evening', 'how are you', 'who are you', 'what can you do', 'help', 'start'];
+  const isGreeting = greetings.some(g => q === g || q.startsWith(`${g} `) || q.startsWith(`${g}!`) || q.startsWith(`${g}?`));
+
+  if (isGreeting) {
+    return {
+      replyText: `Hello Athlete! I am **EE AI**, your Competitive Tactical Intelligence Coach and AI Operating System for the India Esports Innovation Hub (IEIH).\n\nI am synchronized with live tournaments, collegiate campus chapters, career contracts, and athlete dossiers.\n\nHere are some tactical topics you can ask me about:\n- 🏆 **Tournaments:** Bracket schedules, prize pools, and squad registration status\n- 🎓 **Collegiate Standings:** Campus rankings, university chapter leaders, and scrim MMR\n- 🎯 **Tactical Playbooks:** BGMI Erangel rotations, VALORANT site retakes, Free Fire gloo-wall discipline\n- 💼 **Careers & Scouting:** Pro team contracts, scout trials, salary expectations, and analyst openings\n- ⚡ **Physical & Reaction Drills:** Aim benchmarks, eye fatigue management, and clutch mindset routines`,
+      tacticalCard: {
+        title: 'EE AI Sports & Tactical Guidance',
+        category: 'Live Platform Grounding',
+        keyPoints: [
+          '🏆 Explore 15+ Active National Tournaments',
+          '🎓 Review Top 20 Collegiate Campus Guilds',
+          '🎯 Master Tactical Playbooks for VALORANT, BGMI & Free Fire',
+          '💼 Discover Verified Pro Careers & Scout Trials'
+        ],
+        actionItem: 'Ask a tactical match question, audit your passport, or search open tournaments.'
+      }
+    };
+  }
+
+  // 2. Specialized Career & Future in Sports/Esports Handler
+  if (q.includes('future') || q.includes('scope') || q.includes('grow') || q.includes('2026') || q.includes('2030') || q.includes('industry')) {
+    return {
+      replyText: `### The Future of Esports & Sports in India (2026–2030)\n\nThe esports and competitive sports industry in India is experiencing an unprecedented structural boom:\n\n1. **Official Government Recognition**: Esports is now officially recognized under the Ministry of Youth Affairs & Sports, paving the way for state-level sports quotas, collegiate scholarships, and inclusion in national sports festivals.\n2. **Tier-1 Tournaments & Massive Prize Pools**: Flagship tournaments across **BGMI, VALORANT, Free Fire MAX, and CS2** feature annual prize pools exceeding ₹15–25 Crores, backed by global brands and broadcast networks.\n3. **Collegiate & Grassroots Varsity Hubs**: Universities across India (IITs, BITS, Delhi University) are institutionalizing official esports clubs and competitive scrim leagues, creating clear feeder pipelines into Tier-1 pro organizations.\n4. **Longevity Beyond Playing**: The ecosystem now offers diverse 10+ year careers in **Tactical Coaching, Data Analytics, Tournament Operations, Broadcast Production, and Sports Physiotherapy**.\n\n**Key Takeaway:** With verified digital athlete credentials (like your IEIH Passport) and tournament discipline, esports is now a legitimate, high-growth professional career path.`,
+      tacticalCard: {
+        title: 'Future of Indian Esports (2026-2030)',
+        category: 'Industry Intelligence & Growth',
+        keyPoints: [
+          'Official recognition under Ministry of Youth Affairs & Sports',
+          'Annual prize pools exceeding ₹20+ Crores across flagship titles',
+          'Collegiate varsity pipelines offering scholarships & guild support',
+          'Sustainable long-term careers in coaching, analytics & broadcast'
+        ],
+        actionItem: 'Keep your IEIH Athlete Passport updated, participate in verified collegiate scrims, and maintain a clean competitive fair-play record.'
+      }
+    };
+  }
+
+  // 3. Career Options, Jobs & Pathways Handler
+  if (q.includes('career') || q.includes('job') || q.includes('role') || q.includes('option') || q.includes('path') || q.includes('pro player') || q.includes('become') || q.includes('opportunity') || q.includes('opportunities')) {
+    return {
+      replyText: `### Professional Career Pathways in Sports & Esports\n\nBeyond competing as a professional athlete, the esports and sports industry offers multiple thriving career verticals:\n\n1. 🎮 **Professional Athlete / IGL**: Compete in Tier-1 national and international tournaments on signed monthly salaries (₹50,000–₹3,50,000/mo) plus prize pool cuts.\n2. 📊 **Tactical Analyst & Data Scout**: Breakdown opponent VODs, track kill-zone heatmaps, economy curves, and discover rising radar talents.\n3. 🧠 **Head Coach & Performance Mentor**: Formulate macro playbooks, map rotations, trade spacing protocols, and mental composure drills for squads.\n4. 🎙️ **Esports Caster & Broadcast Host**: Provide live multilingual play-by-play commentary for major tournament stadium broadcasts and LANs.\n5. 📋 **Tournament Administrator & League Referee**: Manage bracket rules, anti-cheat hardware checks, and tournament match integrity.\n6. 🏃 **Sports Physiotherapist & Performance Coach**: Design ergonomics, wrist/neck tendon routines, reaction speed drills, and stamina plans.\n\n**How to Start on IEIH:** Head to the **Careers Hub** on our platform to explore open recruitment notices, scout trials, and analyst internships.`,
+      tacticalCard: {
+        title: 'Esports Career Matrix',
+        category: 'Professional Pathways',
+        keyPoints: [
+          'Pro Athlete / In-Game Leader: Core tactical competition',
+          'Data Analyst & VOD Scout: High-IQ competitive telemetry',
+          'Head Coach & Mental Trainer: Squad leadership & composure',
+          'Tournament Operations & Broadcasting: Event execution'
+        ],
+        actionItem: 'Audit your skills, build your VOD portfolio with clear voice comms, and apply directly through the IEIH Careers tab.'
+      }
+    };
+  }
+
+  // 4. Salary, Income & Earnings Handler
+  if (q.includes('salary') || q.includes('income') || q.includes('earn') || q.includes('money') || q.includes('pay') || q.includes('how much')) {
+    return {
+      replyText: `### Esports Salaries & Compensation Structure in India\n\nCompetitive compensation in Indian esports is structured across multiple tiers:\n\n- **Tier-1 Signed Athletes (GodLike, Soul, S8UL, Revenant, Orangutan, etc.)**: Fixed base salary of **₹75,000 to ₹3,50,000 per month** + 75–85% share of tournament prize pools + streaming & brand sponsorships.\n- **Tier-2 Rising Contenders**: Base stipend of **₹15,000 to ₹50,000 per month** + tournament winnings and team boot-camp accommodations.\n- **Collegiate Athletes & Grassroots**: Tournament prize purses, equipment sponsorships, and university athletic grants.\n- **Support Staff (Coaches, Analysts, Managers)**: Fixed salaries ranging from **₹40,000 to ₹1,50,000 per month** depending on team tier and tournament placements.\n\n**Recommendation:** Always sign verified contracts that clearly specify monthly compensation dates, prize pool distribution ratios, and equipment support.`,
+      tacticalCard: {
+        title: 'Esports Compensation Framework',
+        category: 'Financial Intelligence',
+        keyPoints: [
+          'Tier-1 Athlete: ₹75K - ₹3.5L/mo fixed + prize cuts',
+          'Tier-2 Contender: ₹15K - ₹50K/mo + bootcamp perks',
+          'Tactical Coach / Analyst: ₹40K - ₹1.5L/mo',
+          'Standard Prize Pool Distribution: 75-85% directly to players'
+        ],
+        actionItem: 'Verify prospective organizations on the IEIH Scouting Hub before signing contract commitments.'
+      }
+    };
+  }
+
+  // 5. Scouting & How to Get Signed Handler
+  if (q.includes('scout') || q.includes('trial') || q.includes('sign') || q.includes('team') || q.includes('recruitment') || q.includes('get noticed')) {
+    return {
+      replyText: `### How to Get Scouted by Pro Teams on IEIH\n\nPro recruiters on India Esports Hub evaluate athletes using a 5-pillar dossier:\n\n1. **Verified Digital Passport**: Complete your KYC and sync your in-game IGN and peak rank.\n2. **Consistent Scrim Attendance (95%+)**: Tier-1 recruiters value reliability and punctuality above all else.\n3. **Composed Voice Comms & Coachability**: Upload match VODs demonstrating calm, concise callouts without tilt or toxicity.\n4. **Role Mastery & Adaptability**: Master your designated role (Entry Duelist, In-Game Leader, Anchor, or Support Rusher).\n5. **Tournament Track Record**: Participate in open collegiate and national IEIH tournaments to generate verified match MMR.\n\n**Actionable Step:** Check the **Scouting Radar** in the Discovery tab to see how your combat telemetry compares with top scouted prospects.`,
+      tacticalCard: {
+        title: '5-Step Scouting Blueprint',
+        category: 'Scouting & Recruitment',
+        keyPoints: [
+          '1. Maintain verified IEIH Athlete Digital Passport',
+          '2. 95%+ Scrim attendance and zero toxicity record',
+          '3. Build a 3-VOD portfolio with clean tactical comms',
+          '4. Compete in weekly open platform tournaments'
+        ],
+        actionItem: 'Keep your athlete profile stats up-to-date to rank higher on the recruiter Scout Radar.'
+      }
+    };
+  }
+
   let bestEntry: KnowledgeEntry | undefined;
   let bestScore = 0;
 
@@ -208,7 +347,7 @@ export function queryBackendKnowledgeBase(query: string, userGame?: string) {
     }
   }
 
-  if (bestEntry && bestScore >= 4) {
+  if (bestEntry && bestScore >= 3) {
     return {
       replyText: `**In simple words:** ${bestEntry.definition}\n\n**In competitive play (${bestEntry.game}):** ${bestEntry.strategy}\n\n**Counterplay & Risk:** ${bestEntry.counterplay}\n\n**Actionable Drill:** ${bestEntry.drill}`,
       tacticalCard: {
@@ -226,17 +365,17 @@ export function queryBackendKnowledgeBase(query: string, userGame?: string) {
   }
 
   return {
-    replyText: `Competitive success requires disciplined trade spacing and macro zone foresight. What tactical scenario or match mechanics would you like to review?`,
+    replyText: `I am your **EE AI Sports & Esports Tactical Coach**. I can help you with match mechanics, tournament brackets, collegiate scrims, athlete passport audits, career opportunities, or physical reaction training. What specific area would you like to explore?`,
     tacticalCard: {
       title: 'Competitive Tactical Advisory',
       category: 'Pro Tactical Intelligence',
       keyPoints: [
+        'Careers & Future: Scouting roadmap, salaries, coaching pathways, industry growth',
         'BGMI: Erangel compounds, vehicle convoys, edge rotations, endgame smoke walls',
-        'Free Fire MAX: Gloo-wall peeking, Bermuda high-ground, Clash Squad economy',
         'VALORANT: Attack defaults, Bind teleporter fakes, site retakes, economy buying',
-        'Careers: Scrim trials, scouting readiness, contracts, tournament rulebooks'
+        'Free Fire MAX: Gloo-wall peeking, Bermuda high-ground, Clash Squad economy'
       ],
-      actionItem: 'Ask a specific tactical or career question to unlock the grounded playbook.'
+      actionItem: 'Ask a specific question about sports careers, game tactics, or tournaments to retrieve the complete playbook.'
     }
   };
 }

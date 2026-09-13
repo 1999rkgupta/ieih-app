@@ -22,7 +22,8 @@ import {
   Award,
   Maximize2,
   Minimize2,
-  Search
+  Search,
+  Cpu
 } from 'lucide-react';
 import { 
   PlayerPassport, 
@@ -96,13 +97,14 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
   onOpenPostModal,
   onOpenSearch
 }) => {
+  const [selectedProvider, setSelectedProvider] = useState<'gemini' | 'qwen'>('gemini');
   const [messages, setMessages] = useState<EEAIMessage[]>([
     {
       id: 'init_welcome',
       sender: 'assistant',
-      text: `Hello ${currentUser.gamerTag}. I am **EE AI** — your Competitive Esports Tactical Companion and Operating System for the India Esports Hub.\n\nI am synchronized with **your verified athlete dossier**, as well as the **entire live platform database** (${tournaments.length} tournaments, ${campusClubs.length} campus clubs, ${jobs.length} career postings, and ${allPlayers.length} verified athletes).\n\nAsk me about tournament brackets, collegiate standings, scout trials, aim benchmarks, or attach match screenshots for instant multimodal tactical analysis.`,
+      text: `Hello ${currentUser.gamerTag}. I am **EE AI** — your Competitive Esports Tactical Companion and Operating System for the India Esports Hub.\n\nI am strictly dedicated to **Sports, Esports, and the IEIH ecosystem**. I am synchronized with **your verified athlete dossier**, as well as the **live platform database** (${tournaments.length} tournaments, ${campusClubs.length} campus clubs, ${jobs.length} career postings, and ${allPlayers.length} verified athletes).\n\nYou can switch models anytime using the **Gemini / Qwen** switcher above. Ask me about tournament brackets, collegiate standings, scout trials, aim benchmarks, or sports training routines!`,
       timestamp: 'Online',
-      modelUsed: 'Gemini 3.6 Flash (Platform Grounded)',
+      modelUsed: 'Gemini 3.6 Flash (Sports/Esports Grounded)',
       tacticalCard: {
         title: `${currentUser.primaryGame} Tactical Dossier`,
         category: 'Live Platform Grounding',
@@ -346,7 +348,8 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
         text,
         platformContext,
         attachmentsToSend,
-        historyForLlm
+        historyForLlm,
+        selectedProvider
       );
 
       setIsTyping(false);
@@ -363,7 +366,7 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
       const botMsgId = `bot_${Date.now()}`;
       streamBotResponse(botMsgId, local.replyText, {
         tacticalCard: local.tacticalCard,
-        modelUsed: 'ARENA-X Offline Engine'
+        modelUsed: selectedProvider === 'qwen' ? 'Qwen 30B / ARENA-X' : 'ARENA-X Offline Engine'
       });
     }
   };
@@ -423,19 +426,19 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
 
   return typeof document !== 'undefined' ? createPortal(
     <div className="fixed inset-0 z-[100] flex justify-end">
-      {/* Dark Backdrop Overlay */}
+      {/* Light Backdrop Overlay so website stays visible */}
       <div 
         onClick={() => {
           soundManager.playClickSound();
           if (onClose) onClose();
         }}
-        className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity animate-fadeIn cursor-pointer"
+        className="fixed inset-0 bg-black/25 dark:bg-black/35 backdrop-blur-[2px] transition-opacity animate-fadeIn cursor-pointer"
         aria-hidden="true"
       />
 
       {/* Main Sliding Drawer Panel (100% Solid Non-Transparent Background) */}
       <div 
-        className={`relative z-10 h-full max-h-[100dvh] bg-[#edf7f4] dark:bg-[#0a1411] text-[#0d2620] dark:text-[#e4f3ef] border-l border-[#91baaf]/50 dark:border-[#91baaf]/30 shadow-[-20px_0_60px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden animate-slideLeft transition-all duration-300 ${
+        className={`relative z-10 h-full max-h-[100dvh] bg-[#edf7f4] dark:bg-[#0a1411] text-[#0d2620] dark:text-[#e4f3ef] border-l border-[#91baaf]/50 dark:border-[#91baaf]/30 shadow-[-10px_0_30px_rgba(0,0,0,0.2)] dark:shadow-[-10px_0_30px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden animate-slideLeft transition-all duration-300 ${
           isExpanded 
             ? 'w-full md:w-[75vw] lg:w-[65vw]' 
             : 'w-full md:w-[50vw] lg:w-[48vw] xl:w-[45vw] min-w-[340px] md:min-w-[480px] max-w-3xl'
@@ -453,17 +456,63 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
                   EE AI Tactical Coach
                 </span>
                 <span className="px-2 py-0.5 bg-[#91baaf]/30 text-[#133c32] dark:text-[#91baaf] text-[9px] font-bold rounded-full border border-[#91baaf]/40 hidden sm:inline-flex items-center gap-1 font-mono">
-                  <Sparkles className="w-2.5 h-2.5" />
-                  Gemini Live
+                  {selectedProvider === 'gemini' ? (
+                    <>
+                      <Sparkles className="w-2.5 h-2.5 text-amber-500 dark:text-amber-300" />
+                      Gemini 3.6
+                    </>
+                  ) : (
+                    <>
+                      <Cpu className="w-2.5 h-2.5 text-cyan-600 dark:text-cyan-400" />
+                      Qwen 30B
+                    </>
+                  )}
                 </span>
               </div>
               <p className="text-[10px] text-[#30594f] dark:text-[#88b5a9] font-mono truncate">
-                Synchronized with {currentUser.gamerTag} • {currentUser.primaryGame}
+                Strict Sports & Esports Mode • {currentUser.gamerTag}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Model Switch Button */}
+            <div className="flex items-center p-0.5 bg-[#c8e2dc] dark:bg-[#162722] rounded-xl border border-[#91baaf]/50 shadow-inner">
+              <button
+                type="button"
+                onClick={() => {
+                  soundManager.playClickSound();
+                  setSelectedProvider('gemini');
+                }}
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                  selectedProvider === 'gemini'
+                    ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] shadow-xs'
+                    : 'text-[#30594f] dark:text-[#88b5a9] hover:text-[#0d2620] dark:hover:text-white'
+                }`}
+                title="Switch to Google Gemini 3.6 Flash"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span className="hidden xs:inline">Gemini</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  soundManager.playClickSound();
+                  setSelectedProvider('qwen');
+                }}
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                  selectedProvider === 'qwen'
+                    ? 'bg-[#153e34] dark:bg-[#91baaf] text-white dark:text-[#090e0c] shadow-xs'
+                    : 'text-[#30594f] dark:text-[#88b5a9] hover:text-[#0d2620] dark:hover:text-white'
+                }`}
+                title="Switch to Qwen 30B Ollama Model"
+              >
+                <Cpu className="w-3 h-3" />
+                <span className="hidden xs:inline">Qwen 30B</span>
+              </button>
+            </div>
+
             {/* Expand / Minimize (Desktop only) */}
             <button
               onClick={() => {
@@ -518,7 +567,9 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
             <span>•</span>
             <span>{allPlayers.length} Athletes</span>
           </div>
-          <span className="hidden sm:inline text-[9px] opacity-75">Protocol v2.6</span>
+          <div className="flex items-center gap-1.5 text-[9px] font-bold text-[#1e4d41] dark:text-[#91baaf]">
+            <span className="hidden sm:inline text-[9px] opacity-75">Protocol v2.6</span>
+          </div>
         </div>
 
         {/* Solid High-Contrast Chat Message Container */}
@@ -544,15 +595,6 @@ export const EEAICompanion: React.FC<EEAICompanionProps> = ({
                   )}
                   <span>•</span>
                   <span className="font-mono text-[9px] opacity-75">{msg.timestamp}</span>
-                  {msg.modelUsed && (
-                    <>
-                      <span>•</span>
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full bg-[#91baaf]/25 text-[#153e34] dark:text-[#91baaf] text-[8.5px] font-mono border border-[#91baaf]/30">
-                        <Sparkles className="w-2 h-2" />
-                        {msg.modelUsed}
-                      </span>
-                    </>
-                  )}
                 </div>
 
                 {/* Solid Message Bubble */}

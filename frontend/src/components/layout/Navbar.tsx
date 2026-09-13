@@ -561,13 +561,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Search Button */}
+          {/* Search Button (Mobile Only) */}
           <button
             onClick={() => {
               soundManager.playClickSound();
               onOpenSearch();
             }}
-            className="p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all cursor-pointer"
+            className="md:hidden p-2 rounded-full border border-[#91baaf]/40 dark:border-[#91baaf]/25 bg-white/90 dark:bg-[#121c19]/90 hover:bg-white dark:hover:bg-[#162521] text-[#153e34] dark:text-[#afd2c6] shadow-sm transition-all cursor-pointer"
             title="Search app (⌘K)"
             aria-label="Open search"
           >

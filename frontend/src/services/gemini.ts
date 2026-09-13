@@ -126,10 +126,32 @@ ${otherAthletes.map(p => `- [ID: ${p.id}] ${p.gamerTag} (${p.passportNumber}) | 
 };
 
 /**
- * System prompt to ground EE AI with both tactical expertise and platform co-pilot powers
+ * System prompt to ground EE AI with both tactical expertise, sports/esports guardrails and platform co-pilot powers
  */
 const buildSystemInstruction = (platformBriefing: string) => `
 You are EE AI — the omniscient Competitive Esports Coach, Tactical Intelligence Companion, and AI Operating System for the India Esports Hub (IEIH).
+
+STRICT DOMAIN & BEHAVIOR PROTOCOLS:
+1. GREETINGS & CASUAL TALK:
+   When the user sends friendly greetings or casual opening messages (e.g. "hi", "hello", "hey", "how are you", "who are you", "what can you do", "help", "good morning", "yo"):
+   - Warmly welcome the user and introduce yourself as their dedicated EE AI Tactical Coach for the India Esports Hub.
+   - Proactively suggest and guide the user on what website and sports/esports topics they can explore:
+     * 🏆 Active Tournaments, prize pools & team registrations
+     * 🎓 Collegiate Campus Standings, university chapters & scrims
+     * 🎯 Tactical Game Playbooks (VALORANT, BGMI, Free Fire MAX, CS2, etc.)
+     * 💼 Pro Esports Careers, contracts & scouting trials
+     * ⚡ Sports Conditioning, aim benchmarks & reaction drills
+     * 🪪 Athlete E-Passport stats audit & verification
+
+2. EXCLUSIVE SPORTS & ESPORTS DOMAIN:
+   You are strictly permitted to discuss:
+   - Competitive Esports (all competitive games, metas, mechanics, positioning, weapon stats, tournament brackets)
+   - Traditional Sports & Physical Training (cricket, football, badminton, athletics, stamina, hand-eye reaction drills)
+   - The IEIH Application (tournaments, campus guilds, player passports, scouting, careers, ranking)
+
+3. IMMEDIATE REFUSAL FOR IRRELEVANT OFF-TOPIC QUESTIONS:
+   If the user asks questions completely outside sports, esports, athletic training, or the IEIH platform (e.g. cooking recipes, movies, politics, school homework, unrelated programming, general finance, etc.), politely decline with:
+   "I am the EE AI Tactical Assistant dedicated exclusively to Sports, Esports, and the India Esports Innovation Hub (IEIH) ecosystem. Please ask questions related to competitive gaming, esports athlete passports, tournament registrations, collegiate scrims, or sports training."
 
 YOU HAVE FULL ACCESS TO THE ENTIRE IEIH PLATFORM:
 ${platformBriefing}
@@ -245,16 +267,60 @@ const parseResponseMeta = (
 };
 
 /**
- * Main query function to call Google Gemini LLM with Full Platform Context
+ * Main query function to call AI Engine (Google Gemini or Qwen Ollama Model) with Full Platform Context
  */
 export async function askEEAICoach(
   userQuery: string,
   platformContext: PlatformContext,
   attachments: MessageAttachment[] = [],
-  conversationHistory: { sender: 'user' | 'assistant'; text: string }[] = []
+  conversationHistory: { sender: 'user' | 'assistant'; text: string }[] = [],
+  provider: 'gemini' | 'qwen' = 'gemini'
 ): Promise<CoachResponse> {
   const { currentUser } = platformContext;
 
+  // 1. If QWEN Provider is chosen, route through our backend Qwen API
+  if (provider === 'qwen') {
+    try {
+      const rawBase = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+      const apiBase = rawBase.endsWith('/api') ? rawBase : `${rawBase.replace(/\/+$/, '')}/api`;
+      const response = await fetch(`${apiBase}/ai/qwen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: userQuery,
+          gamerTag: currentUser.gamerTag,
+          game: currentUser.primaryGame,
+          role: currentUser.primaryRole,
+          history: conversationHistory
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.reply) {
+          const { cleanText, card, actions } = parseResponseMeta(data.reply, currentUser);
+          return {
+            replyText: cleanText,
+            tacticalCard: card || data.tacticalCard,
+            actions,
+            modelUsed: data.modelUsed || 'Qwen 30B (qspiders.com)'
+          };
+        }
+      }
+    } catch (qwenErr) {
+      console.warn('[EE AI] Backend Qwen API failed, falling back to local KB:', qwenErr);
+    }
+
+    // Fallback to local tactical knowledge base
+    const local = queryKnowledgeBase(userQuery, currentUser.primaryGame);
+    return {
+      replyText: local.replyText,
+      tacticalCard: local.tacticalCard,
+      modelUsed: 'Qwen 30B / ARENA-X Fallback'
+    };
+  }
+
+  // 2. GEMINI Provider
   // Fallback if no key is configured
   if (!GEMINI_API_KEY) {
     const local = queryKnowledgeBase(userQuery, currentUser.primaryGame);
@@ -315,7 +381,7 @@ export async function askEEAICoach(
   currentParts.push({ text: promptText });
   contents.push({ role: 'user', parts: currentParts });
 
-  // System instruction with full platform context
+  // System instruction with full platform context and strict sports/esports guardrails
   const systemInstruction = {
     parts: [{ text: buildSystemInstruction(platformBriefing) }]
   };
